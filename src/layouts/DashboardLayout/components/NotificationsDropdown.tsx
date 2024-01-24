@@ -1,4 +1,6 @@
-import { Dropdown, Segmented, Tabs, TabsProps, theme } from 'antd'
+import Dropdown from 'antd/es/dropdown'
+import Tabs, { TabsProps } from 'antd/es/tabs'
+import theme from 'antd/es/theme'
 import { ReactNode, useState } from 'react'
 
 const { useToken } = theme

@@ -17,17 +17,29 @@ import {
     Gear,
     House,
     List,
+    ListBullets,
     LockKey,
+    MagnifyingGlass,
+    Money,
     Tag,
     User,
     UserCircle,
+    Wallet,
 } from '@phosphor-icons/react'
 import { Outlet, Route, useNavigate } from '@tanstack/react-router'
-import { Avatar, Button, Flex, Input, Layout, Menu, theme } from 'antd'
+import Avatar from 'antd/es/avatar/avatar'
+import Button from 'antd/es/button'
+import Flex from 'antd/es/flex'
+import Grid from 'antd/es/grid'
+import Input from 'antd/es/input'
+import Layout from 'antd/es/layout'
+import Menu from 'antd/es/menu'
+import theme from 'antd/es/theme'
 import { useState } from 'react'
 
 const { useToken } = theme
 const { Sider, Header, Content } = Layout
+const { useBreakpoint } = Grid
 
 export const DashboardLayoutRoute = new Route({
     component: DashboardLayout,
@@ -36,8 +48,8 @@ export const DashboardLayoutRoute = new Route({
 })
 
 function DashboardLayout() {
-    const [collapsed, setCollapsed] = useState(false)
-    const [isForcedOpen, setIsForcedOpen] = useState(false)
+    const { md: isDesktop } = useBreakpoint()
+    const [collapsed, setCollapsed] = useState(isDesktop)
     const navigate = useNavigate()
     const { token } = useToken()
 
@@ -135,6 +147,18 @@ function DashboardLayout() {
                     ],
                 }),
                 getItem_1({
+                    key: 'transactions',
+                    label: 'Transactions',
+                    icon: <Money />,
+                    onClick: () => {},
+                }),
+                getItem_1({
+                    key: 'wallet',
+                    label: 'Wallet',
+                    icon: <Wallet />,
+                    onClick: () => {},
+                }),
+                getItem_1({
                     key: 'customers',
                     label: 'Customers',
                     icon: <UserCircle />,
@@ -169,14 +193,19 @@ function DashboardLayout() {
             }}
         >
             <Sider
-                collapsible
                 collapsed={collapsed}
-                onCollapse={to => setIsForcedOpen(to)}
-                onMouseOver={() => {
-                    if (isForcedOpen) setCollapsed(false)
+                collapsible
+                onCollapse={() => setCollapsed(prev => !prev)}
+                breakpoint='md'
+                onBreakpoint={() => setCollapsed(false)}
+                collapsedWidth={isDesktop ? 80 : 0}
+                style={{
+                    position: isDesktop ? 'relative' : 'absolute',
+                    height: isDesktop ? 'auto' : '100%',
+                    zIndex: '100',
                 }}
-                onMouseLeave={() => {
-                    if (isForcedOpen) setCollapsed(true)
+                zeroWidthTriggerStyle={{
+                    display: 'none',
                 }}
             >
                 <Flex
@@ -198,54 +227,91 @@ function DashboardLayout() {
                     defaultSelectedKeys={['1']}
                     mode='inline'
                     theme='dark'
+                    inlineIndent={10}
                 />
             </Sider>
+            {!isDesktop && !collapsed && (
+                <div
+                    style={{
+                        backgroundColor: 'black',
+                        opacity: 0.3,
+                        position: 'fixed',
+                        inset: 0,
+                        zIndex: 99,
+                        width: '100%',
+                        height: '100%',
+                    }}
+                    onClick={() => setCollapsed(true)}
+                ></div>
+            )}
             <Layout>
                 <Header
                     style={{
                         backgroundColor: token.colorBgBase,
                         boxShadow: token.boxShadow,
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        width: '100%',
                     }}
                 >
-                    <Flex
-                        align='center'
-                        justify='space-between'
-                        style={{ height: '100%' }}
-                    >
-                        <Button type='primary' icon={<Browser />}>
-                            Browse Website
-                        </Button>
-                        <Flex gap='1rem'>
-                            <Input.Search />
-                            <NotificationsDropdown>
+                    <Flex gap='1rem'>
+                        {!isDesktop && (
+                            <>
                                 <Button
-                                    icon={<Bell size={20} weight='fill' />}
-                                    type='text'
-                                    shape='circle'
-                                    style={{
-                                        aspectRatio: '1/1',
-                                    }}
+                                    icon={<ListBullets />}
+                                    onClick={() => setCollapsed(prev => !prev)}
                                 />
-                            </NotificationsDropdown>
-                            <ProfileDropdown>
-                                <Avatar
-                                    size='large'
-                                    icon={<User size={20} weight='fill' />}
-                                    style={{
-                                        height: '100%',
-                                        display: 'grid',
-                                        placeItems: 'center',
-                                        aspectRatio: '1/1',
-                                        cursor: 'pointer',
-                                    }}
-                                />
-                            </ProfileDropdown>
-                        </Flex>
+                            </>
+                        )}
+                        {isDesktop && (
+                            <Button type='primary' icon={<Browser />}>
+                                Browse Website
+                            </Button>
+                        )}
+                    </Flex>
+                    <Flex gap='1rem' align='center'>
+                        {isDesktop ? (
+                            <Input.Search />
+                        ) : (
+                            <Button
+                                icon={
+                                    <MagnifyingGlass weight='fill' size={20} />
+                                }
+                                type='text'
+                                shape='circle'
+                            />
+                        )}
+                        <NotificationsDropdown>
+                            <Button
+                                icon={<Bell size={20} weight='fill' />}
+                                type='text'
+                                shape='circle'
+                                style={{
+                                    aspectRatio: '1/1',
+                                }}
+                            />
+                        </NotificationsDropdown>
+                        <ProfileDropdown>
+                            <Avatar
+                                size='large'
+                                icon={<User size={20} weight='fill' />}
+                                style={{
+                                    height: '100%',
+                                    display: 'grid',
+                                    placeItems: 'center',
+                                    aspectRatio: '1/1',
+                                    cursor: 'pointer',
+                                }}
+                            />
+                        </ProfileDropdown>
                     </Flex>
                 </Header>
                 <Content
                     style={{
                         backgroundColor: token['geekblue-1'],
+                        paddingInline: '100px',
+                        paddingBlock: token.paddingLG,
                     }}
                 >
                     <Outlet />

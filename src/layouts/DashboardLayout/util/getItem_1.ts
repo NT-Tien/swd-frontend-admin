@@ -18,6 +18,7 @@ export function getItem_1(props: getItem_1Props): MenuItem {
         style: {
             textTransform: 'capitalize',
             fontWeight: 'normal',
+            userSelect: 'none',
         },
     } satisfies MenuItem
 }

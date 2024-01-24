@@ -1,5 +1,7 @@
 import { Gear, ShoppingBag, User } from '@phosphor-icons/react'
-import { Dropdown, MenuProps, theme } from 'antd'
+import Dropdown from 'antd/es/dropdown'
+import { MenuProps } from 'antd/es/menu'
+import theme from 'antd/es/theme'
 import { ReactNode } from 'react'
 
 const { useToken } = theme

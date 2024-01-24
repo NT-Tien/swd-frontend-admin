@@ -1,6 +1,10 @@
 import { DashboardRoute } from '@/routes/Dashboard'
 import { useNavigate } from '@tanstack/react-router'
-import { Button, Form, FormProps, Input, message, theme } from 'antd'
+import Button from 'antd/es/button'
+import Form, { FormProps } from 'antd/es/form'
+import Input from 'antd/es/input'
+import message from 'antd/es/message'
+import theme from 'antd/es/theme'
 
 const { useToken } = theme
 const { Item } = Form

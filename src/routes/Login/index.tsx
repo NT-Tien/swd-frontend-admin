@@ -1,17 +1,14 @@
 import { rootRoute } from '@/router'
 import CredentialsLoginForm from '@/routes/Login/components/CredentialsLoginForm'
 import { Route } from '@tanstack/react-router'
-import { Button, Row, Typography, theme } from 'antd'
+import Button from 'antd/es/button'
+import Row from 'antd/es/row'
+import theme from 'antd/es/theme'
+import Typography from 'antd/es/typography'
 
 const { useToken } = theme
 
-export const LoginRoute = new Route({
-    component: LoginPage,
-    getParentRoute: () => rootRoute,
-    path: '/',
-})
-
-function LoginPage() {
+const component = function LoginPage() {
     const { token } = useToken()
 
     return (
@@ -59,3 +56,9 @@ function LoginPage() {
         </Row>
     )
 }
+
+export const LoginRoute = new Route({
+    component,
+    getParentRoute: () => rootRoute,
+    path: '/',
+})

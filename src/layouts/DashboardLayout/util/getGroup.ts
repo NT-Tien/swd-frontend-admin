@@ -13,6 +13,7 @@ export function getGroup(props: getGroupProps): MenuItem {
         style: {
             textTransform: 'uppercase',
             fontWeight: 'bold',
+            userSelect: 'none',
         },
     } satisfies MenuItem
 }

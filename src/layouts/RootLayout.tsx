@@ -1,13 +1,9 @@
 import { Outlet } from '@tanstack/react-router'
-import { App } from 'antd'
+import App from 'antd/es/app'
 
 export default function RootLayout() {
     return (
-        <App
-            style={{
-                minHeight: '100vh',
-            }}
-        >
+        <App>
             <Outlet />
         </App>
     )

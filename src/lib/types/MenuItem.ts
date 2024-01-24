@@ -1,3 +1,3 @@
-import { type MenuProps } from 'antd'
+import { MenuProps } from 'antd/es/menu'
 
 export type MenuItem = Required<MenuProps>['items'][number]
