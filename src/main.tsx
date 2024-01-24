@@ -1,9 +1,12 @@
+import { router } from '@/router'
+import '@/styles/index.css'
+import { RouterProvider } from '@tanstack/react-router'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import './index.css'
+import '@/styles/reset.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-        <div>Hello world</div>
+        <RouterProvider router={router} />
     </React.StrictMode>,
 )
