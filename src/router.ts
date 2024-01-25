@@ -3,13 +3,18 @@ import RootLayout from '@/layouts/RootLayout'
 import { CategoryCreateRoute } from '@/routes/Categories/CategoryCreate'
 import { CategoryListRoute } from '@/routes/Categories/CategoryList'
 import { DashboardRoute } from '@/routes/Dashboard'
-import { LoginRoute } from '@/routes/Login'
+import { LoginRoute } from './routes/Login'
 import { ProductCreateRoute } from '@/routes/Products/ProductCreate'
 import { ProductListRoute } from '@/routes/Products/ProductList'
 import { ProductReviewRoute } from '@/routes/Products/ProductReview'
-import { RootRoute, Router } from '@tanstack/react-router'
+import { QueryClient } from '@tanstack/react-query'
+import { rootRouteWithContext, createRouter } from '@tanstack/react-router'
 
-export const rootRoute = new RootRoute({
+export const queryClient = new QueryClient()
+
+export const rootRoute = rootRouteWithContext<{
+    queryClient: QueryClient
+}>()({
     component: RootLayout,
 })
 
@@ -24,7 +29,12 @@ const routeTree = rootRoute.addChildren([
         CategoryCreateRoute,
     ]),
 ])
-export const router = new Router({ routeTree })
+export const router = createRouter({
+    routeTree,
+    context: { queryClient },
+    defaultPreload: 'intent',
+    defaultPreloadStaleTime: 0,
+})
 
 declare module '@tanstack/react-router' {
     interface Register {

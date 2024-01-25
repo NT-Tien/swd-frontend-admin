@@ -1,11 +1,11 @@
 import { DashboardLayoutRoute } from '@/layouts/DashboardLayout'
-import { Route } from '@tanstack/react-router'
+import { createRoute } from '@tanstack/react-router'
 
 const component = function DashboardPage() {
     return <div>Hello world</div>
 }
 
-export const DashboardRoute = new Route({
+export const DashboardRoute = createRoute({
     component,
     getParentRoute: () => DashboardLayoutRoute,
     path: '/dashboard',

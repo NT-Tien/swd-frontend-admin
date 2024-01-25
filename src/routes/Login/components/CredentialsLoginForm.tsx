@@ -23,6 +23,7 @@ export default function CredentialsLoginForm({ ...props }: LoginFormProps) {
     const [messageApi, contextHolder] = message.useMessage()
 
     function handleFinish() {
+        // TODO modify this to use login API
         if (
             form.getFieldsValue().username === 'admin' &&
             form.getFieldsValue().password === '123'
@@ -61,6 +62,7 @@ export default function CredentialsLoginForm({ ...props }: LoginFormProps) {
             },
         ])
         messageApi.error('Invalid username or password.')
+        // TODO remove test
         // ! TEST start
         messageApi.info(
             <Button

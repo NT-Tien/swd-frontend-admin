@@ -1,6 +1,6 @@
 import { rootRoute } from '@/router'
 import CredentialsLoginForm from '@/routes/Login/components/CredentialsLoginForm'
-import { Route } from '@tanstack/react-router'
+import { createRoute } from '@tanstack/react-router'
 import Button from 'antd/es/button'
 import Row from 'antd/es/row'
 import theme from 'antd/es/theme'
@@ -57,7 +57,7 @@ const component = function LoginPage() {
     )
 }
 
-export const LoginRoute = new Route({
+export const LoginRoute = createRoute({
     component,
     getParentRoute: () => rootRoute,
     path: '/',
