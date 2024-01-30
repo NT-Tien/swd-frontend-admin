@@ -11,11 +11,13 @@ type DeleteCategoryModalProps = {
         handleOpen: (categoryIds: string[]) => void
     }) => ReactNode
     categories: Category[]
+    afterDelete?: () => void
 }
 
 export default function DeleteCategoryModal({
     children,
     categories,
+    afterDelete,
 }: DeleteCategoryModalProps) {
     const [messageApi, contextHolder] = message.useMessage()
     const [open, setOpen] = useState(false)
@@ -39,7 +41,9 @@ export default function DeleteCategoryModal({
 
     async function handleOk() {
         await Promise.all(
-            selectedCategories.map(val => deleteCategories.mutateAsync(val)),
+            selectedCategories.map(val =>
+                deleteCategories.mutateAsync({ id: val }),
+            ),
         )
         handleClose()
         messageApi.success(
@@ -50,6 +54,10 @@ export default function DeleteCategoryModal({
         queryClient.invalidateQueries({
             queryKey: ['categories'],
         })
+
+        if (afterDelete) {
+            afterDelete()
+        }
     }
 
     const data = useMemo(

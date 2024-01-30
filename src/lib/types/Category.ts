@@ -7,7 +7,13 @@ export type Category = {
     name: string
 }
 
-export function ResponseToCategory(response: Record<string, any>): Category {
+export function ResponseToCategory(
+    response: Record<string, any>,
+): Category | null {
+    if (!response) {
+        return null
+    }
+
     return {
         id: response.id,
         key: response.id,
@@ -20,6 +26,6 @@ export function ResponseToCategory(response: Record<string, any>): Category {
 
 export function ResponseToCategoryList(
     response: Record<string, any>[],
-): Category[] {
+): (Category | null)[] {
     return response.map(item => ResponseToCategory(item))
 }

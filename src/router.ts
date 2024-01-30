@@ -3,12 +3,14 @@ import RootLayout from '@/layouts/RootLayout'
 import { CategoryCreateRoute } from '@/routes/Categories/CategoryCreate'
 import { CategoryListRoute } from '@/routes/Categories/CategoryList'
 import { DashboardRoute } from '@/routes/Dashboard'
-import { LoginRoute } from './routes/Login'
 import { ProductCreateRoute } from '@/routes/Products/ProductCreate'
 import { ProductListRoute } from '@/routes/Products/ProductList'
 import { ProductReviewRoute } from '@/routes/Products/ProductReview'
+import { ProductViewRoute } from '@/routes/Products/ProductView'
 import { QueryClient } from '@tanstack/react-query'
-import { rootRouteWithContext, createRouter } from '@tanstack/react-router'
+import { createRouter, rootRouteWithContext } from '@tanstack/react-router'
+import { LoginRoute } from './routes/Login'
+import { TestRoute } from '@/routes/Test'
 
 export const queryClient = new QueryClient()
 
@@ -27,7 +29,9 @@ const routeTree = rootRoute.addChildren([
         ProductReviewRoute,
         CategoryListRoute,
         CategoryCreateRoute,
+        ProductViewRoute,
     ]),
+    TestRoute,
 ])
 export const router = createRouter({
     routeTree,

@@ -86,7 +86,7 @@ export default function AddCategoryModal({
                     </Button>,
                 ]}
             >
-                <Form<FieldType>
+                <Form
                     form={form}
                     name='add-category-form'
                     initialValues={{
