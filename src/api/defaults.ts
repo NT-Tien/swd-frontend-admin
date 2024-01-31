@@ -37,3 +37,8 @@ export function getUrl(url: string) {
 
     return env.BACKEND_URL + '/' + url
 }
+
+export function ParseResponse(data: any) {
+    if (!data) throw new Error('No data received')
+    return JSON.parse(data) as ApiResponse<any>
+}

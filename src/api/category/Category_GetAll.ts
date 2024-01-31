@@ -1,20 +1,27 @@
+import { ParseResponse } from '@/api/defaults'
 import { Category, ResponseToCategoryList } from '@/lib/types/Category'
 import axios from 'axios'
 
-export type Category_GetAll_Res = GetResponse<Category> | null
-
+/**
+ * Retrieves all categories from the server.
+ * @returns A promise that resolves to an object containing the category data and total count.
+ * @throws NoDataError if no data is received from the server.
+ */
 export async function Category_GetAll() {
-    return await axios.get<Category_GetAll_Res>('/category/get-all', {
+    return await axios.get<GetResponse<Category>>('/category/get-all', {
         transformResponse: [
-            (data: any) => {
-                const dataParsed = JSON.parse(data)
-
-                return dataParsed
-                    ? {
-                          data: ResponseToCategoryList(dataParsed[0]),
-                          total: dataParsed[1],
-                      }
-                    : null
+            ParseResponse,
+            (res: ApiResponse<string[]>) => {
+                if ('data' in res) {
+                    return {
+                        data: ResponseToCategoryList(res.data[0] as unknown as Record<string, any>[]),
+                        total: res.data[1],
+                    }
+                } else {
+                    // error
+                    console.error('Error while getting categories', res.message, ' (', res.statusCode, ')')
+                    throw new Error(res.message)
+                }
             },
         ],
     })
