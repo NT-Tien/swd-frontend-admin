@@ -9,24 +9,23 @@ export type Product_Delete_Res = {
 }
 
 export type Product_Delete_Res_Raw = {
-    statusCode: number
-    message: string
+    affected: number
+    generatedMaps: string[]
+    raw: string[]
 }
 
 export function Product_Delete({ id }: Product_Delete_Req) {
-    return axios.delete<Product_Delete_Res>(
-        'product/delete/' + encodeURIComponent(id),
-        {
-            transformResponse: [
-                (data: any) => {
-                    const dataParsed = JSON.parse(
-                        data,
-                    ) as Product_Delete_Res_Raw
-                    return {
-                        success: dataParsed.statusCode === 200,
-                    }
-                },
-            ],
-        },
-    )
+    return axios.delete<Product_Delete_Res>('product/delete/' + encodeURIComponent(id), {
+        transformResponse: [
+            (data: any) => {
+                const dataParsed = JSON.parse(data) as Product_Delete_Res_Raw
+
+                console.log(dataParsed)
+
+                return {
+                    success: dataParsed.affected > 0,
+                }
+            },
+        ],
+    })
 }

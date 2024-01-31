@@ -37,9 +37,3 @@ export function getUrl(url: string) {
 
     return env.BACKEND_URL + '/' + url
 }
-
-export type ApiConfig =
-    | {
-          autoParse?: boolean
-      }
-    | undefined

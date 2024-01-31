@@ -25,7 +25,7 @@ const component = function ProductListPage() {
         isLoading,
         isError,
     } = useQuery({
-        queryKey: ['products'],
+        queryKey: ['products', page],
         queryFn: () =>
             Product_GetAll({
                 page,
@@ -105,6 +105,7 @@ const component = function ProductListPage() {
                                 render: value => format(new Date(value), 'dd/MM/yyyy'),
                                 sorter: (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
                                 sortDirections: ['ascend', 'descend'],
+                                defaultSortOrder: 'descend',
                             },
                             {
                                 title: 'Updated At',

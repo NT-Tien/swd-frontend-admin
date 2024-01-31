@@ -39,12 +39,7 @@ const component = function ProductCreatePage() {
                 optionals: form.getFieldValue('optional'),
             })
         },
-    })
-
-    async function handleFinish() {
-        await createProduct.mutateAsync()
-
-        if (createProduct.isSuccess) {
+        onSuccess() {
             form.resetFields()
             navigate({
                 to: ProductListRoute.to,
@@ -52,11 +47,14 @@ const component = function ProductCreatePage() {
                     page: 1,
                 },
             })
-        }
-
-        if (createProduct.isError) {
+        },
+        onError() {
             console.log(createProduct.error)
-        }
+        },
+    })
+
+    async function handleFinish() {
+        await createProduct.mutateAsync()
     }
 
     function handleFinishFailed() {}

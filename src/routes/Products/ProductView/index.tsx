@@ -13,11 +13,8 @@ const component = function ProductViewPage() {
 
     return (
         <div>
-            This is the product review page {id}{' '}
             <Suspense fallback={<div>Loading...</div>}>
-                <Await promise={product}>
-                    {data => <div>{JSON.stringify(data, null, 2)}</div>}
-                </Await>
+                <Await promise={product}>{data => <div>Hello</div>}</Await>
             </Suspense>
         </div>
     )
