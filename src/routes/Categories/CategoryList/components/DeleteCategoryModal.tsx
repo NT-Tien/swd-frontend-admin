@@ -1,5 +1,4 @@
 import { Category_DeleteMany } from '@/api/category/Category_DeleteMany'
-import env from '@/env'
 import { Category } from '@/lib/types/Category'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button, Modal, Table, message } from 'antd'
@@ -31,12 +30,8 @@ export default function DeleteCategoryModal({ children, categories, afterDelete 
             }
         },
         onError: error => {
-            if (env.APP_MODE === 'development') {
-                console.error(error)
-                messageApi.error(error.name + error.message)
-            } else {
-                messageApi.error('Something went wrong. Please try again.')
-            }
+            devLog('Error deleting category: ', error.message)
+            messageApi.error('Something went wrong. Please try again.')
         },
     })
 

@@ -6,11 +6,12 @@ import { DashboardRoute } from '@/routes/Dashboard'
 import { ProductCreateRoute } from '@/routes/Products/ProductCreate'
 import { ProductListRoute } from '@/routes/Products/ProductList'
 import { ProductReviewRoute } from '@/routes/Products/ProductReview'
-import { ProductViewRoute } from '@/routes/Products/ProductView'
+import { ProductUpdateRoute } from '@/routes/Products/ProductUpdate'
 import { QueryClient } from '@tanstack/react-query'
 import { createRouter, rootRouteWithContext } from '@tanstack/react-router'
 import { LoginRoute } from './routes/Login'
 import { TestRoute } from '@/routes/Test'
+import { ProductViewRoute } from '@/routes/Products/ProductView'
 
 export const queryClient = new QueryClient()
 
@@ -27,9 +28,10 @@ const routeTree = rootRoute.addChildren([
         ProductListRoute,
         ProductCreateRoute,
         ProductReviewRoute,
+        ProductUpdateRoute,
+        ProductViewRoute,
         CategoryListRoute,
         CategoryCreateRoute,
-        ProductViewRoute,
     ]),
     TestRoute,
 ])

@@ -72,14 +72,12 @@ function DashboardLayout() {
                         getItem_2({
                             key: 'product-list',
                             label: 'Product List',
-                            onClick: () =>
-                                navigate({ to: ProductListRoute.to }),
+                            onClick: () => navigate({ to: ProductListRoute.to, search: { page: 1 } }),
                         }),
                         getItem_2({
                             key: 'product-create',
                             label: 'Create Product',
-                            onClick: () =>
-                                navigate({ to: ProductCreateRoute.to }),
+                            onClick: () => navigate({ to: ProductCreateRoute.to }),
                         }),
                         getItem_2({
                             key: 'product-review',
@@ -99,8 +97,7 @@ function DashboardLayout() {
                         getItem_2({
                             key: 'category-list',
                             label: 'Category List',
-                            onClick: () =>
-                                navigate({ to: CategoryListRoute.to }),
+                            onClick: () => navigate({ to: CategoryListRoute.to }),
                         }),
                         getItem_2({
                             key: 'category-create',
@@ -222,13 +219,7 @@ function DashboardLayout() {
                         {collapsed ? 'AD' : 'Admin'}
                     </h1>
                 </Flex>
-                <Menu
-                    items={menuItems}
-                    defaultSelectedKeys={['1']}
-                    mode='inline'
-                    theme='dark'
-                    inlineIndent={10}
-                />
+                <Menu items={menuItems} defaultSelectedKeys={['1']} mode='inline' theme='dark' inlineIndent={10} />
             </Sider>
             {!isDesktop && !collapsed && (
                 <div
@@ -253,15 +244,13 @@ function DashboardLayout() {
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         width: '100%',
+                        paddingInline: '100px',
                     }}
                 >
                     <Flex gap='1rem'>
                         {!isDesktop && (
                             <>
-                                <Button
-                                    icon={<ListBullets />}
-                                    onClick={() => setCollapsed(prev => !prev)}
-                                />
+                                <Button icon={<ListBullets />} onClick={() => setCollapsed(prev => !prev)} />
                             </>
                         )}
                         {isDesktop && (
@@ -274,13 +263,7 @@ function DashboardLayout() {
                         {isDesktop ? (
                             <Input.Search />
                         ) : (
-                            <Button
-                                icon={
-                                    <MagnifyingGlass weight='fill' size={20} />
-                                }
-                                type='text'
-                                shape='circle'
-                            />
+                            <Button icon={<MagnifyingGlass weight='fill' size={20} />} type='text' shape='circle' />
                         )}
                         <NotificationsDropdown>
                             <Button

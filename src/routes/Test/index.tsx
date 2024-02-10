@@ -1,26 +1,19 @@
-import { File_Upload } from '@/api/file/File_Upload'
+import { Product_GetOne } from '@/api/product/Product_GetOne'
 import { rootRoute } from '@/router'
 import { createRoute } from '@tanstack/react-router'
-import { useState } from 'react'
 
 const component = function TestPage() {
-    const [file, setFile] = useState<File>()
-    function handleChange(e: any) {
-        setFile(e.target.files[0] as File)
-    }
-
     async function handleClick() {
-        const res = await File_Upload({
-            fileBinary: file!,
-        })
-
-        console.log('RESPONSE:')
-        console.log(res)
+        try {
+            const data = await Product_GetOne({ id: '123' })
+            console.log(data)
+        } catch (err) {
+            if (err instanceof Error) console.log('Error MESFDS: ' + err.message)
+        }
     }
 
     return (
         <div>
-            <input type='file' onChange={handleChange} />
             <button onClick={handleClick}>CLICK</button>
         </div>
     )

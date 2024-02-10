@@ -7,13 +7,11 @@ export type ProductOptional = {
     product_id: string
     name: string
     material: string
-    price: string
+    price: number
     quantity: number
 }
 
-export function ResponseToProductOptional(
-    response: Record<string, any>,
-): ProductOptional {
+export function ResponseToProductOptional(response: Record<string, any>): ProductOptional {
     return {
         id: response.id,
         key: response.key,
@@ -23,7 +21,7 @@ export function ResponseToProductOptional(
         product_id: response.product_id,
         name: response.name,
         material: response.material,
-        price: response.price,
+        price: Number(response.price),
         quantity: response.quantity,
     } satisfies ProductOptional
 }

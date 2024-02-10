@@ -1,5 +1,6 @@
 import { ParseResponse } from '@/api/defaults'
 import { Category, ResponseToCategory } from '@/lib/types/Category'
+import { queryOptions } from '@tanstack/react-query'
 import axios from 'axios'
 
 export type Category_GetOne_Req = {
@@ -33,3 +34,11 @@ export function Category_GetOne({ id }: Category_GetOne_Req) {
         ],
     })
 }
+
+export const queryCategory_GetOne = ({ id, enabled }: Category_GetOne_Req & { enabled?: boolean }) =>
+    queryOptions({
+        queryKey: ['category', id],
+        queryFn: () => Category_GetOne({ id }),
+        select: data => data.data,
+        enabled: enabled ?? true,
+    })

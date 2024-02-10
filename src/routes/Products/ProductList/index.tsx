@@ -1,12 +1,13 @@
-import { Product_GetAll } from '@/api/product/Product_GetAll'
+import { queryProduct_GetAll } from '@/api/product/Product_GetAll'
 import { DashboardLayoutRoute } from '@/layouts/DashboardLayout'
 import { Category } from '@/lib/types/Category'
 import { Product } from '@/lib/types/Product'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
 import { queryClient } from '@/router'
 import { ProductCreateRoute } from '@/routes/Products/ProductCreate'
-import DeleteProductModal from '@/routes/Products/ProductList/components/DeleteProductModal'
+import { ProductUpdateRoute } from '@/routes/Products/ProductUpdate'
 import { ProductViewRoute } from '@/routes/Products/ProductView'
+import DeleteProductModal from '@/routes/Products/common/components/DeleteProductModal'
 import { ArrowsClockwise, Funnel, Pencil, Plus, Trash } from '@phosphor-icons/react'
 import { useQuery } from '@tanstack/react-query'
 import { createRoute, useNavigate } from '@tanstack/react-router'
@@ -20,21 +21,7 @@ const component = function ProductListPage() {
         select: data => data.page,
     })
 
-    const {
-        data: products,
-        isLoading,
-        isError,
-    } = useQuery({
-        queryKey: ['products', page],
-        queryFn: () =>
-            Product_GetAll({
-                page,
-                size: 5,
-            }),
-        select(res) {
-            return res.data
-        },
-    })
+    const { data: products, isLoading, isError } = useQuery(queryProduct_GetAll({ page, size: 5 }))
 
     const searchColumnProps = GetColumnSearchProps<Product>()
 
@@ -46,11 +33,18 @@ const component = function ProductListPage() {
         <DeleteProductModal>
             {({ handleOpen }) => (
                 <Flex vertical gap={20}>
-                    <Typography.Title level={2}>
+                    <Typography.Title
+                        level={2}
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px',
+                        }}
+                    >
                         Product List{' '}
                         <Button
                             size='small'
-                            icon={<ArrowsClockwise size={16} weight='fill' />}
+                            icon={<ArrowsClockwise size={12} weight='fill' />}
                             onClick={() => {
                                 queryClient.invalidateQueries({
                                     queryKey: ['products'],
@@ -89,6 +83,7 @@ const component = function ProductListPage() {
                             {
                                 title: 'No.',
                                 render: (_, __, index) => index + 1,
+                                width: 70,
                             },
                             {
                                 title: 'Name',
@@ -106,6 +101,7 @@ const component = function ProductListPage() {
                                 sorter: (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
                                 sortDirections: ['ascend', 'descend'],
                                 defaultSortOrder: 'descend',
+                                width: 150,
                             },
                             {
                                 title: 'Updated At',
@@ -114,6 +110,7 @@ const component = function ProductListPage() {
                                 render: value => format(new Date(value), 'dd/MM/yyyy'),
                                 sorter: (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime(),
                                 sortDirections: ['ascend', 'descend'],
+                                width: 150,
                             },
                             {
                                 title: 'Category',
@@ -122,6 +119,9 @@ const component = function ProductListPage() {
                                 render: (value: Category) => {
                                     return value.name
                                 },
+                                width: 150,
+                                ellipsis: true,
+                                filters: [],
                             },
                             {
                                 title: 'Description',
@@ -130,22 +130,8 @@ const component = function ProductListPage() {
                                 render: (value: string) => {
                                     return value.slice(0, 70) + (value.length > 70 ? '...' : '')
                                 },
+                                ellipsis: true,
                                 ...searchColumnProps('description'),
-                            },
-                            {
-                                title: 'Deleted',
-                                dataIndex: 'deletedAt',
-                                key: 'deletedAt',
-                                render: value => {
-                                    if (value === null) return ''
-                                    else return format(new Date(value), 'dd/MM/yyyy')
-                                },
-                                sorter: (a, b) => {
-                                    if (a.deletedAt === null) return -1
-                                    if (b.deletedAt === null) return 1
-                                    return a.deletedAt.getTime() - b.deletedAt.getTime()
-                                },
-                                sortDirections: ['ascend', 'descend'],
                             },
                             {
                                 title: 'Action',
@@ -162,7 +148,7 @@ const component = function ProductListPage() {
                                                     style: {
                                                         marginBottom: '5px',
                                                     },
-                                                    onClick: () => {},
+                                                    onClick: () => navigate({ to: ProductUpdateRoute.to, params: { id: record.id } }),
                                                 },
                                                 {
                                                     label: 'Delete',

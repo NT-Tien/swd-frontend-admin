@@ -1,5 +1,4 @@
 import { Category_Create } from '@/api/category/Category_Create'
-import env from '@/env'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button, Form, Input, Modal, message } from 'antd'
 import { ReactNode, useState } from 'react'
@@ -30,12 +29,8 @@ export default function AddCategoryModal({ children }: AddCategoryModalProps) {
             setOpen(false)
         },
         onError(error) {
-            if (env.APP_MODE === 'development') {
-                console.error(error)
-                messageApi.error(error.name + error.message)
-            } else {
-                messageApi.error('Something went wrong. Please try again.')
-            }
+            devLog('Error creating category: ', error.message)
+            messageApi.error('Something went wrong. Please try again.')
         },
     })
 

@@ -6,28 +6,27 @@ export function configAxios() {
 
     axios.interceptors.request.use(
         config => {
-            env.APP_MODE === 'development' &&
-                console.log(`Sending request to ${config.url} (${config.auth ? 'auth' : 'no auth'}) with body: ${config.data}`)
+            devLog(`Sending request to ${config.url} (${config.auth ? 'auth' : 'no auth'}). Request Body:`)
+            devLog(config.data)
 
             return config
         },
         error => {
-            console.error('Error while sending request', error)
+            devLog('Error while sending request', error)
+            throw error
         },
     )
 
     axios.interceptors.response.use(
         response => {
-            env.APP_MODE === 'development' &&
-                console.log(
-                    `Received response from ${response.config.url} with status ${response.status}.
-                    Response body: ${JSON.stringify(response.data, null, 2)}`,
-                )
+            devLog(`Received response from ${response.config.url}. Response body:`)
+            devLog(response.data)
 
             return response
         },
         error => {
-            console.error('Error while receiving response', error)
+            devLog('Error while receiving response', error)
+            throw error
         },
     )
 }

@@ -1,7 +1,5 @@
-import {
-    ProductOptional,
-    ResponseToProductOptional,
-} from '@/lib/types/ProductOptional'
+import { ParseResponse } from '@/api/defaults'
+import { ProductOptional, ResponseToProductOptional } from '@/lib/types/ProductOptional'
 import axios from 'axios'
 
 export type Optional_Create_Req = {
@@ -15,12 +13,16 @@ export type Optional_Create_Req = {
 export type Optional_Create_Res = ProductOptional
 
 export function Optional_Create(payload: Optional_Create_Req) {
-    return axios.post<ProductOptional>('create', payload, {
+    return axios.post<Optional_Create_Res>('option-products/create', payload, {
         transformResponse: [
-            (data: any) => {
-                const dataParsed = JSON.parse(data)
-
-                return dataParsed ? ResponseToProductOptional(dataParsed) : null
+            ParseResponse,
+            (res: ApiResponse<ProductOptional>) => {
+                if ('data' in res) {
+                    return ResponseToProductOptional(res.data)
+                } else {
+                    console.error('Error while creating optional', res.message, ' (', res.statusCode, ')')
+                    throw new Error(res.message)
+                }
             },
         ],
     })

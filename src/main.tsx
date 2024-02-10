@@ -12,6 +12,18 @@ import ReactDOM from 'react-dom/client'
 env.load()
 configAxios()
 
+// global declarations
+declare global {
+    function devLog(...msg: string[]): void
+}
+
+const _global = (window /* browser */ || global) /* node */ as any
+_global.devLog = function (...msg: string[]) {
+    if (process.env.NODE_ENV === 'development') {
+        console.log('🧑‍💻 DEV MODE: ', ...msg)
+    }
+}
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <QueryClientProvider client={queryClient}>
@@ -19,3 +31,4 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         </QueryClientProvider>
     </React.StrictMode>,
 )
+

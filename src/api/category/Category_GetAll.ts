@@ -1,5 +1,6 @@
 import { ParseResponse } from '@/api/defaults'
 import { Category, ResponseToCategoryList } from '@/lib/types/Category'
+import { queryOptions } from '@tanstack/react-query'
 import axios from 'axios'
 
 /**
@@ -26,3 +27,10 @@ export async function Category_GetAll() {
         ],
     })
 }
+
+export const queryCategory_GetAll = () =>
+    queryOptions({
+        queryKey: ['categories'],
+        queryFn: () => Category_GetAll(),
+        select: data => data.data,
+    })
