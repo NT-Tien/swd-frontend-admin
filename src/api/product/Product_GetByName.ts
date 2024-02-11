@@ -18,7 +18,7 @@ export async function Product_GetByName({ name }: Product_GetByName_Req) {
                 if ('data' in res) {
                     return res.data ? ResponseToProduct(res.data) : null
                 } else {
-                    console.error('Error while getting product by name', res.message, ' (', res.statusCode, ')')
+                    devLog('Error while getting product by name', res.message, ' (', res.statusCode, ')')
                     throw new Error(res.message)
                 }
             },

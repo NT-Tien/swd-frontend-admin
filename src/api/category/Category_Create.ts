@@ -24,7 +24,7 @@ export async function Category_Create(payload: Category_Create_Req) {
                     return ResponseToCategory(data.data)
                 } else {
                     // error
-                    console.error('Error while creating category', data.message, ' (', data.statusCode, ')')
+                    devLog('Error while creating category', data.message, ' (', data.statusCode, ')')
                     throw new Error(data.message)
                 }
             },

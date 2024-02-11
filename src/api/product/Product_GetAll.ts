@@ -24,7 +24,7 @@ export async function Product_GetAll({ page, size }: Product_GetAll_Req) {
                     }
                 } else {
                     // error
-                    console.error('Error while getting products', res.message, ' (', res.statusCode, ')')
+                    devLog('Error while getting products', res.message, ' (', res.statusCode, ')')
                     throw new Error(res.message)
                 }
             },

@@ -20,7 +20,7 @@ export function Optional_Create(payload: Optional_Create_Req) {
                 if ('data' in res) {
                     return ResponseToProductOptional(res.data)
                 } else {
-                    console.error('Error while creating optional', res.message, ' (', res.statusCode, ')')
+                    devLog('Error while creating optional', res.message, ' (', res.statusCode, ')')
                     throw new Error(res.message)
                 }
             },

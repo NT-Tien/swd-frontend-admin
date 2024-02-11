@@ -15,7 +15,7 @@ export function Optional_GetAll() {
                         total: res.data[1],
                     }
                 } else {
-                    console.error('Error while getting optionals', res.message, ' (', res.statusCode, ')')
+                    devLog('Error while getting optionals', res.message, ' (', res.statusCode, ')')
                     throw new Error(res.message)
                 }
             },

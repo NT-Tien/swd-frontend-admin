@@ -21,7 +21,7 @@ export function Product_Delete({ id }: Product_Delete_Req) {
                     }
                 } else {
                     // error
-                    console.error('Error while deleting product', res.message, ' (', res.statusCode, ')')
+                    devLog('Error while deleting product', res.message, ' (', res.statusCode, ')')
                     throw new Error(res.message)
                 }
             },

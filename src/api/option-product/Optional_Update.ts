@@ -21,7 +21,7 @@ export function Optional_Update(payload: Optional_Update_Req) {
                 if ('data' in res) {
                     return ResponseToProductOptional(res.data)
                 } else {
-                    console.error('Error while updating optional', res.message, ' (', res.statusCode, ')')
+                    devLog('Error while updating optional', res.message, ' (', res.statusCode, ')')
                     throw new Error(res.message)
                 }
             },

@@ -20,7 +20,7 @@ export async function Category_Delete({ id }: Category_Delete_Req) {
                     }
                 } else {
                     // error
-                    console.error('Error while deleting category', res.message, ' (', res.statusCode, ')')
+                    devLog('Error while deleting category', res.message, ' (', res.statusCode, ')')
                     throw new Error(res.message)
                 }
             },

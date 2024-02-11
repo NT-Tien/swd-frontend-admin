@@ -80,7 +80,7 @@ export default function AddOrUpdateOptionalProductModal({ children, messageApi }
     return (
         <>
             {children({ handleOpen })}
-            <Modal open={open} onCancel={handleClose} onOk={() => form.submit()}>
+            <Modal open={open} onCancel={handleClose} onOk={() => form.submit()} title='Add Optional Product'>
                 <Form
                     form={form}
                     onFinish={async values => {

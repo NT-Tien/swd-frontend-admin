@@ -27,7 +27,7 @@ export function Category_GetOne({ id }: Category_GetOne_Req) {
                     return ResponseToCategory(res.data)
                 } else {
                     // error
-                    console.error('Error while getting category', res.message, ' (', res.statusCode, ')')
+                    devLog('Error while getting category', res.message, ' (', res.statusCode, ')')
                     throw new Error(res.message)
                 }
             },

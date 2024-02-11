@@ -2,9 +2,10 @@ import { queryCategory_GetAll } from '@/api/category/Category_GetAll'
 import { Product_GetByName } from '@/api/product/Product_GetByName'
 import { queryProduct_GetOne } from '@/api/product/Product_GetOne'
 import ModalWrapper from '@/lib/util/ModalWrapper'
+import { urlToFile } from '@/lib/util/urlToFile'
 import { GetImages } from '@/routes/Products/common/util/GetImages'
 import { UpdateProduct } from '@/routes/Products/common/util/UpdateProduct'
-import { Eye } from '@phosphor-icons/react'
+import { ExpandAltOutlined } from '@ant-design/icons'
 import { useMutation, useQueries, useQuery } from '@tanstack/react-query'
 import { Button, Divider, Flex, Form, Input, Select, Upload, UploadFile, message } from 'antd'
 
@@ -56,7 +57,17 @@ export default function UpdateProductForm({ productId }: UpdateProductFormProps)
         queryFn: () => GetImages(product?.images ?? []),
         enabled: !!product,
         select: data =>
-            data.map((img: string) => ({ uid: img, name: img, status: 'done', url: img, key: img }) as unknown as UploadFile<any>),
+            data.map(
+                (img: string, index) =>
+                    ({
+                        uid: img,
+                        name: `image-${index + 1}`,
+                        status: 'done',
+                        url: img,
+                        key: img,
+                        type: 'image/jpeg',
+                    }) as unknown as UploadFile<any>,
+            ),
     })
 
     const updateProductMutation = useMutation({
@@ -69,19 +80,28 @@ export default function UpdateProductForm({ productId }: UpdateProductFormProps)
         },
     })
 
-    const [form] = Form.useForm()
+    const [form] = Form.useForm<FieldType>()
     async function handleFinish() {
+        console.log(form.getFieldsValue())
         await updateProductMutation.mutateAsync({
             product: {
                 id: productId,
                 payload: {
                     name: form.getFieldValue('name'),
                     description: form.getFieldValue('description'),
-                    category: form.getFieldValue('categoryId'),
+                    category: form.getFieldsValue().categoryId,
                     images: [],
                 },
             },
-            images: form.getFieldValue('images'),
+            images: await Promise.all(
+                form.getFieldsValue().images.map(async img => {
+                    if (typeof img.url === 'string') {
+                        return await urlToFile(img.url, img.name, 'image/jpeg')
+                    } else {
+                        return img.originFileObj as File
+                    }
+                }),
+            ),
         })
     }
     function handleFinishFailed() {}
@@ -160,7 +180,7 @@ export default function UpdateProductForm({ productId }: UpdateProductFormProps)
                                     required: true,
                                 },
                             ]}
-                            initialValue={categories.data.find(cat => cat.id === product.category_id.id)}
+                            initialValue={product.category_id.id}
                         >
                             <Select
                                 showSearch
@@ -182,6 +202,7 @@ export default function UpdateProductForm({ productId }: UpdateProductFormProps)
                 <FormItem<FieldType>
                     name='images'
                     label='Images'
+                    valuePropName='fileList'
                     rules={[{ required: true }]}
                     getValueFromEvent={e => {
                         if (Array.isArray(e)) {
@@ -192,15 +213,35 @@ export default function UpdateProductForm({ productId }: UpdateProductFormProps)
                 >
                     {isSuccess_Images && (
                         <Upload.Dragger
-                            name='upload'
+                            name='files'
                             multiple
-                            maxCount={3}
-                            accept='image/*'
-                            fileList={form.getFieldValue('images')}
                             listType='picture'
+                            accept='image/*'
                             showUploadList
-                            hasControlInside
                             beforeUpload={() => false}
+                            onChange={info => {
+                                const isImage = info.file.type?.startsWith('image/') || info.file.type?.startsWith('blob')
+                                if (!isImage) {
+                                    message.error('You can only upload image files!')
+                                    info.fileList = info.fileList.filter(file => file.type?.startsWith('image/'))
+                                }
+
+                                if (info.file.size && info.file.size > 5 * 1024 * 1024) {
+                                    message.error('You can only upload images smaller than 5MB!')
+                                    info.fileList = info.fileList.filter(file => file.size && file.size <= 5 * 1024 * 1024)
+                                }
+
+                                if (form.getFieldsValue().images.length > 3) {
+                                    message.error('You can only upload 3 images!')
+                                    info.fileList = info.fileList.filter((_, index) => index < 3)
+                                }
+
+                                if (info.fileList.length > 3) {
+                                    info.fileList = info.fileList.filter((_, index) => index < 3)
+                                }
+
+                                form.setFieldsValue({ images: info.fileList })
+                            }}
                         >
                             <div
                                 style={{
@@ -244,12 +285,12 @@ export default function UpdateProductForm({ productId }: UpdateProductFormProps)
                                     <div>Description</div>
                                     <Button
                                         onClick={handleOpen}
+                                        size='small'
                                         style={{
                                             marginLeft: '10px',
                                         }}
-                                    >
-                                        <Eye />
-                                    </Button>
+                                        icon={<ExpandAltOutlined />}
+                                    />
                                 </>
                             }
                             name='description'

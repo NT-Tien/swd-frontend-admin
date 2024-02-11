@@ -25,7 +25,7 @@ export async function createProductWrapper({ name, description, category_id, ima
             }),
         )
     } catch (error) {
-        console.error('Error while uploading images', error)
+        devLog('Error while uploading images', error)
         throw new FileUploadError('Error while uploading images')
     }
 
@@ -39,7 +39,7 @@ export async function createProductWrapper({ name, description, category_id, ima
             name,
         })
     } catch (error) {
-        console.error('Error while creating product', error)
+        devLog('Error while creating product', error)
         throw new CreateProductMainError('Error while creating product')
     }
 
@@ -53,7 +53,7 @@ export async function createProductWrapper({ name, description, category_id, ima
             })),
         })
     } catch (error) {
-        console.error('Error while creating optionals', error)
+        devLog('Error while creating optionals', error)
         throw new CreateProductOptionalsError('Error while creating optionals')
     }
 

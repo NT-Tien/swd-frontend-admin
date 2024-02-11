@@ -19,7 +19,7 @@ export function Optional_Delete({ id }: Optional_Delete_Req) {
                         success: res.statusCode === 200 && res.data.affected > 0,
                     }
                 } else {
-                    console.error('Error while deleting optional', res.message, ' (', res.statusCode, ')')
+                    devLog('Error while deleting optional', res.message, ' (', res.statusCode, ')')
                     throw new Error(res.message)
                 }
             },

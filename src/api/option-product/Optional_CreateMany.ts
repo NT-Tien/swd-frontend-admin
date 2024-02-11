@@ -22,7 +22,7 @@ export function Optional_CreateMany({ list }: Optional_CreateMany_Req) {
                 if ('data' in res) {
                     return ResponseToProductOptionalList(res.data)
                 } else {
-                    console.error('Error while creating optionals', res.message, ' (', res.statusCode, ')')
+                    devLog('Error while creating optionals', res.message, ' (', res.statusCode, ')')
                     throw new Error(res.message)
                 }
             },

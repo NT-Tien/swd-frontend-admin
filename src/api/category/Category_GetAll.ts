@@ -20,7 +20,7 @@ export async function Category_GetAll() {
                     }
                 } else {
                     // error
-                    console.error('Error while getting categories', res.message, ' (', res.statusCode, ')')
+                    devLog('Error while getting categories', res.message, ' (', res.statusCode, ')')
                     throw new Error(res.message)
                 }
             },

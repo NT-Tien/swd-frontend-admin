@@ -1,11 +1,10 @@
 import { File_Upload } from '@/api/file/File_Upload'
 import { Product_Update, Product_Update_Req } from '@/api/product/Product_Update'
 import { FileUploadError } from '@/routes/Products/ProductCreate/util/error'
-import { UploadFile } from 'antd'
 
 type UpdateProductProps = {
     product: Product_Update_Req
-    images: UploadFile<any>[]
+    images: File[]
 }
 
 export async function UpdateProduct({ product, images }: UpdateProductProps) {
@@ -15,7 +14,7 @@ export async function UpdateProduct({ product, images }: UpdateProductProps) {
         uploadedImages = await Promise.all(
             images.map(async image => {
                 const response = await File_Upload({
-                    fileBinary: image.originFileObj as File,
+                    fileBinary: image,
                 })
                 if (!response?.data?.path) {
                     throw new Error('Upload failed')
@@ -24,17 +23,18 @@ export async function UpdateProduct({ product, images }: UpdateProductProps) {
             }),
         )
     } catch (error) {
-        console.error('Error while uploading images', error)
+        devLog('Error while uploading images', (error as Error).message)
         throw new FileUploadError('Error while uploading images')
     }
 
     // Update Product
     let productRes
     product.payload.images = uploadedImages
+    devLog(uploadedImages)
     try {
         productRes = await Product_Update(product)
     } catch (error) {
-        console.error('Error while updating product', error)
+        devLog('Error while updating product', (error as Error).message)
         throw new Error('Error while updating product')
     }
 

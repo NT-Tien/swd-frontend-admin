@@ -23,7 +23,7 @@ export function Product_Update(payload: Product_Update_Req) {
                 if ('data' in res) {
                     return ResponseToProduct(res)
                 } else {
-                    console.error('Error while updating product', res.message, ' (', res.statusCode, ')')
+                    devLog('Error while updating product', res.message, ' (', res.statusCode, ')')
                     throw new Error(res.message)
                 }
             },

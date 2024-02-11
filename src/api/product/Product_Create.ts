@@ -19,7 +19,7 @@ export async function Product_Create(product: Product_Create_Req) {
                 if ('data' in res) {
                     return ResponseToProduct(res.data)
                 } else {
-                    console.error('Error while creating product', res.message, ' (', res.statusCode, ')')
+                    devLog('Error while creating product', res.message, ' (', res.statusCode, ')')
                     throw new Error(res.message)
                 }
             },

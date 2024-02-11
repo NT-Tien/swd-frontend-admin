@@ -1,7 +1,6 @@
 import { queryProduct_GetOne } from '@/api/product/Product_GetOne'
 import { DashboardLayoutRoute } from '@/layouts/DashboardLayout'
 import { ProductListRoute } from '@/routes/Products/ProductList'
-import { ProductUpdateRoute } from '@/routes/Products/ProductUpdate'
 import AboutProduct from '@/routes/Products/ProductView/components/AboutProduct'
 import ProductSettings from '@/routes/Products/ProductView/components/ProductSettings'
 import ProductStats from '@/routes/Products/ProductView/components/ProductStats'

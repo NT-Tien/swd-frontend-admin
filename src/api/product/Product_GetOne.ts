@@ -18,7 +18,7 @@ export async function Product_GetOne({ id }: Product_GetOne_Req) {
                 if ('data' in res) {
                     return ResponseToProduct(res.data)
                 } else {
-                    console.error('Error while getting product', res.message, ' (', res.statusCode, ')')
+                    devLog('Error while getting product', res.message, ' (', res.statusCode, ')')
                     throw new Error(res.message)
                 }
             },

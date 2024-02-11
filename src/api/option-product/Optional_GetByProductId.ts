@@ -17,7 +17,7 @@ export function Optional_GetByProductId({ productId }: Optional_GetByProductId_R
                 if ('data' in res) {
                     return ResponseToProductOptionalList(res.data)
                 } else {
-                    console.error('Error while getting optionals', res.message, ' (', res.statusCode, ')')
+                    devLog('Error while getting optionals', res.message, ' (', res.statusCode, ')')
                     throw new Error(res.message)
                 }
             },
