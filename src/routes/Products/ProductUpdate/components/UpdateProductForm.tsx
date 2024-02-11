@@ -3,6 +3,7 @@ import { Product_GetByName } from '@/api/product/Product_GetByName'
 import { queryProduct_GetOne } from '@/api/product/Product_GetOne'
 import ModalWrapper from '@/lib/util/ModalWrapper'
 import { urlToFile } from '@/lib/util/urlToFile'
+import { queryClient } from '@/router'
 import { GetImages } from '@/routes/Products/common/util/GetImages'
 import { UpdateProduct } from '@/routes/Products/common/util/UpdateProduct'
 import { ExpandAltOutlined } from '@ant-design/icons'
@@ -74,6 +75,9 @@ export default function UpdateProductForm({ productId }: UpdateProductFormProps)
         mutationFn: UpdateProduct,
         onSuccess: () => {
             messageApi.success('Product updated successfully')
+            queryClient.invalidateQueries({
+                queryKey: queryProduct_GetOne({ id: productId }).queryKey,
+            })
         },
         onError: () => {
             messageApi.error('Error while updating product')
@@ -82,14 +86,13 @@ export default function UpdateProductForm({ productId }: UpdateProductFormProps)
 
     const [form] = Form.useForm<FieldType>()
     async function handleFinish() {
-        console.log(form.getFieldsValue())
         await updateProductMutation.mutateAsync({
             product: {
                 id: productId,
                 payload: {
                     name: form.getFieldValue('name'),
                     description: form.getFieldValue('description'),
-                    category: form.getFieldsValue().categoryId,
+                    category_id: form.getFieldsValue().categoryId,
                     images: [],
                 },
             },

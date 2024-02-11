@@ -7,7 +7,7 @@ export type Product_Update_Req = {
     payload: {
         name: string
         images: string[]
-        category: string
+        category_id: string
         description: string
     }
 }
