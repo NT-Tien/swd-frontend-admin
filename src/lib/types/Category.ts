@@ -18,8 +18,6 @@ export function ResponseToCategory(response: Record<string, any>): Category {
     } satisfies Category
 }
 
-export function ResponseToCategoryList(
-    response: Record<string, any>[],
-): Category[] {
+export function ResponseToCategoryList(response: Record<string, any>[]): (Category | null)[] {
     return response.map(item => ResponseToCategory(item))
 }
