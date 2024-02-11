@@ -17,6 +17,7 @@ export function Optional_Update(payload: Optional_Update_Req) {
         transformResponse: [
             ParseResponse,
             (res: ApiResponse<ProductOptional>) => {
+                console.log(res)
                 if ('data' in res) {
                     return ResponseToProductOptional(res.data)
                 } else {

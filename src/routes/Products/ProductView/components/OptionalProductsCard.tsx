@@ -45,6 +45,7 @@ export default function OptionalProductsCard({ productId }: OptionalProductsCard
             {isLoading && <Spin />}
             {isSuccess && (
                 <Table
+                    pagination={false}
                     dataSource={optionalProducts.map(op => ({
                         ...op,
                         key: op.id,

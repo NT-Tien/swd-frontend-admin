@@ -60,17 +60,8 @@ export default function AddCategoryModal({ children }: AddCategoryModalProps) {
                 onCancel={handleCancel}
                 confirmLoading
                 footer={[
-                    <Button key='cancel' onClick={handleCancel}>
-                        Cancel
-                    </Button>,
-                    <Button
-                        form='add-category-form'
-                        key='submit'
-                        htmlType='submit'
-                        color='primary'
-                        type='primary'
-                        loading={createCategory.isPending}
-                    >
+                    <Button onClick={handleCancel}>Cancel</Button>,
+                    <Button form='add-category-form' htmlType='submit' color='primary' type='primary' loading={createCategory.isPending}>
                         Submit
                     </Button>,
                 ]}

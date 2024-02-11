@@ -244,7 +244,7 @@ function DashboardLayout() {
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         width: '100%',
-                        paddingInline: '100px',
+                        paddingInline: '70px',
                     }}
                 >
                     <Flex gap='1rem'>
@@ -293,7 +293,7 @@ function DashboardLayout() {
                 <Content
                     style={{
                         backgroundColor: token['geekblue-1'],
-                        paddingInline: '100px',
+                        paddingInline: '70px',
                         paddingBlock: token.paddingLG,
                     }}
                 >

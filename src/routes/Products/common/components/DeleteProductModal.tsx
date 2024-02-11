@@ -64,10 +64,8 @@ export default function DeleteProductModal({ children, afterDelete }: DeleteProd
                 onOk={handleOk}
                 title='Delete Product'
                 footer={[
-                    <Button key='cancel' onClick={handleClose}>
-                        Cancel
-                    </Button>,
-                    <Button key='delete' type='primary' danger onClick={handleOk} disabled={!isSuccess} loading={deleteProduct.isPending}>
+                    <Button onClick={handleClose}>Cancel</Button>,
+                    <Button type='primary' danger onClick={handleOk} disabled={!isSuccess} loading={deleteProduct.isPending}>
                         Delete
                     </Button>,
                 ]}

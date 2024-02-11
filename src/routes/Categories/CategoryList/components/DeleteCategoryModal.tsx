@@ -70,10 +70,8 @@ export default function DeleteCategoryModal({ children, categories, afterDelete 
                 onOk={handleOk}
                 title='Delete Category'
                 footer={[
-                    <Button key='cancel' onClick={handleClose}>
-                        Cancel
-                    </Button>,
-                    <Button key='delete' type='primary' danger onClick={handleOk}>
+                    <Button onClick={handleClose}>Cancel</Button>,
+                    <Button type='primary' danger onClick={handleOk}>
                         Delete
                     </Button>,
                 ]}

@@ -101,6 +101,7 @@ const component = function ProductCreatePage() {
                         }}
                     >
                         <Flex gap={20}>
+                            {/* NAME INPUT */}
                             <FormItem<FieldType>
                                 label='Name'
                                 name='name'
@@ -127,6 +128,8 @@ const component = function ProductCreatePage() {
                             >
                                 <Input placeholder='Mobile Phone' />
                             </FormItem>
+
+                            {/* CATEGORY INPUT */}
                             <FormItem<FieldType>
                                 label='Category'
                                 name='categoryId'
@@ -142,30 +145,27 @@ const component = function ProductCreatePage() {
                                 <Suspense fallback={<Input disabled />}>
                                     <Await promise={categories}>
                                         {categories => (
-                                            <>
-                                                <Select
-                                                    showSearch
-                                                    placeholder='Select a Category'
-                                                    options={categories?.data?.data.map(cat => {
-                                                        return {
-                                                            value: cat?.id ?? '',
-                                                            label: cat?.name ?? '',
-                                                        }
-                                                    })}
-                                                    filterOption={(input, option) =>
-                                                        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                                                    }
-                                                    onChange={value => {
-                                                        form.setFieldValue('categoryId', value)
-                                                    }}
-                                                />
-                                            </>
+                                            <Select
+                                                showSearch
+                                                placeholder='Select a Category'
+                                                options={categories.data.data.map(cat => ({
+                                                    value: cat.id ?? '',
+                                                    label: cat.name ?? '',
+                                                }))}
+                                                filterOption={(input, option) =>
+                                                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                                }
+                                                onChange={value => {
+                                                    form.setFieldValue('categoryId', value)
+                                                }}
+                                            />
                                         )}
                                     </Await>
                                 </Suspense>
                             </FormItem>
                         </Flex>
 
+                        {/* IMAGES INPUT */}
                         <FormItem<FieldType>
                             name='images'
                             label='Images'
@@ -181,7 +181,6 @@ const component = function ProductCreatePage() {
                                 multiple
                                 maxCount={3}
                                 accept='image/*'
-                                defaultFileList={form.getFieldValue('images')}
                                 fileList={form.getFieldValue('images')}
                                 listType='picture'
                                 showUploadList

@@ -84,7 +84,6 @@ const component = function CategoryCreatePage() {
                         </FormItem>
                         <Button
                             form='add-category-form'
-                            key='submit'
                             htmlType='submit'
                             color='primary'
                             type='primary'

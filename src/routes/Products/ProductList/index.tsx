@@ -21,7 +21,7 @@ const component = function ProductListPage() {
         select: data => data.page,
     })
 
-    const { data: products, isLoading, isError } = useQuery(queryProduct_GetAll({ page, size: 5 }))
+    const { data: products, isLoading, isError } = useQuery(queryProduct_GetAll({ page: page ?? 1, size: 5 }))
 
     const searchColumnProps = GetColumnSearchProps<Product>()
 
@@ -185,7 +185,7 @@ const component = function ProductListPage() {
 }
 
 type ProductListSearch = {
-    page: number
+    page?: number
 }
 
 export const ProductListRoute = createRoute({
