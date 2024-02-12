@@ -1,7 +1,7 @@
 import { Optional_Create } from '@/api/option-product/Optional_Create'
 import { queryOptional_GetByProductId } from '@/api/option-product/Optional_GetByProductId'
 import { Optional_Update } from '@/api/option-product/Optional_Update'
-import { queryClient } from '@/router'
+import { queryClient } from '@/main'
 import { useMutation } from '@tanstack/react-query'
 import { Form, Input, Modal } from 'antd'
 import { MessageInstance } from 'antd/es/message/interface'

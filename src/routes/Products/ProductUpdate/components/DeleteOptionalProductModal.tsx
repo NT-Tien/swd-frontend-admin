@@ -1,8 +1,9 @@
 import { Optional_Delete } from '@/api/option-product/Optional_Delete'
 import { queryOptional_GetByProductId } from '@/api/option-product/Optional_GetByProductId'
-import { queryClient } from '@/router'
+import { useMessage } from '@/common/context/MessageContext/useMessage'
+import { queryClient } from '@/main'
 import { useMutation } from '@tanstack/react-query'
-import { Button, Modal, message } from 'antd'
+import { Button, Modal } from 'antd'
 import { ReactNode, useState } from 'react'
 
 type DeleteOptionalProductModal = {
@@ -11,7 +12,7 @@ type DeleteOptionalProductModal = {
 }
 
 export default function DeleteOptionalProductModal({ children, productId }: DeleteOptionalProductModal) {
-    const [messageApi, contextHolder] = message.useMessage()
+    const { messageApi } = useMessage()
     const [open, setOpen] = useState(false)
     const [id, setId] = useState<string>('')
 
@@ -44,7 +45,6 @@ export default function DeleteOptionalProductModal({ children, productId }: Dele
 
     return (
         <>
-            {contextHolder}
             {children({ handleOpen })}
             <Modal
                 open={open}

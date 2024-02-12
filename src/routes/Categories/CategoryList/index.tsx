@@ -1,8 +1,8 @@
 import { queryCategory_GetAll } from '@/api/category/Category_GetAll'
-import { DashboardLayoutRoute } from '@/layouts/DashboardLayout'
+import { AuthDashboardLayoutRoute } from '@/layouts/AuthenticatedLayout'
 import { Category } from '@/lib/types/Category'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
-import { queryClient } from '@/router'
+import { queryClient } from '@/main'
 import AddCategoryModal from '@/routes/Categories/CategoryList/components/AddCategoryModal'
 import DeleteCategoryModal from '@/routes/Categories/CategoryList/components/DeleteCategoryModal'
 import { ArrowsClockwise, Plus, Trash } from '@phosphor-icons/react'
@@ -167,6 +167,6 @@ const component = function CategoryListPage() {
 
 export const CategoryListRoute = createRoute({
     path: '/categories',
-    getParentRoute: () => DashboardLayoutRoute,
+    getParentRoute: () => AuthDashboardLayoutRoute,
     component,
 })

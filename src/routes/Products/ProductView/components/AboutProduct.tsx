@@ -1,5 +1,5 @@
 import { Product } from '@/lib/types/Product'
-import ModalWrapper from '@/lib/util/ModalWrapper'
+import ModalWrapper from '@/common/components/modal/ModalWrapper'
 import { ProductViewRoute } from '@/routes/Products/ProductView'
 import OptionalProductsCard from '@/routes/Products/ProductView/components/OptionalProductsCard'
 import ProductImagesView from '@/routes/Products/ProductView/components/ProductImagesView'

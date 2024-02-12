@@ -2,7 +2,8 @@ import NotificationsDropdown from '@/layouts/DashboardLayout/components/Notifica
 import ProfileDropdown from '@/layouts/DashboardLayout/components/ProfileDropdown'
 import { getGroup, getItem_1, getItem_2 } from '@/layouts/DashboardLayout/util'
 import { MenuItem } from '@/lib/types/MenuItem'
-import { rootRoute } from '@/router'
+import { rootRoute } from '@/routeTree'
+import { AccountListRoute } from '@/routes/Accounts/AccountList'
 import { CategoryCreateRoute } from '@/routes/Categories/CategoryCreate'
 import { CategoryListRoute } from '@/routes/Categories/CategoryList'
 import { DashboardRoute } from '@/routes/Dashboard'
@@ -26,7 +27,7 @@ import {
     UserCircle,
     Wallet,
 } from '@phosphor-icons/react'
-import { Outlet, Route, useNavigate } from '@tanstack/react-router'
+import { Outlet, createRoute, useNavigate } from '@tanstack/react-router'
 import Avatar from 'antd/es/avatar/avatar'
 import Button from 'antd/es/button'
 import Flex from 'antd/es/flex'
@@ -41,7 +42,7 @@ const { useToken } = theme
 const { Sider, Header, Content } = Layout
 const { useBreakpoint } = Grid
 
-export const DashboardLayoutRoute = new Route({
+export const DashboardLayoutRoute = createRoute({
     component: DashboardLayout,
     id: 'dashboard-layout',
     getParentRoute: () => rootRoute,
@@ -156,10 +157,16 @@ function DashboardLayout() {
                     onClick: () => {},
                 }),
                 getItem_1({
-                    key: 'customers',
-                    label: 'Customers',
+                    key: 'accounts',
+                    label: 'Accounts',
                     icon: <UserCircle />,
-                    onClick: () => {},
+                    children: [
+                        getItem_2({
+                            key: 'account-list',
+                            label: 'Account List',
+                            onClick: () => navigate({ to: AccountListRoute.to }),
+                        }),
+                    ],
                 }),
             ],
         }),

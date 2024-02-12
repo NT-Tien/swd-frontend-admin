@@ -1,5 +1,5 @@
 import { queryProduct_GetOne } from '@/api/product/Product_GetOne'
-import { DashboardLayoutRoute } from '@/layouts/DashboardLayout'
+import { AuthDashboardLayoutRoute } from '@/layouts/AuthenticatedLayout'
 import { ProductListRoute } from '@/routes/Products/ProductList'
 import AboutProduct from '@/routes/Products/ProductView/components/AboutProduct'
 import ProductSettings from '@/routes/Products/ProductView/components/ProductSettings'
@@ -98,6 +98,6 @@ export const ProductViewRoute = createRoute({
     validateSearch: (search: Record<string, unknown>): ProductViewSearch => ({
         editing: search.editing ? Boolean(search.editing) : false,
     }),
-    getParentRoute: () => DashboardLayoutRoute,
+    getParentRoute: () => AuthDashboardLayoutRoute,
     component,
 })

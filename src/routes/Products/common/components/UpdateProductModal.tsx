@@ -1,4 +1,4 @@
-import UpdateOptionalProductForm from '@/routes/Products/ProductUpdate/components/UpdateOptionalProductForm'
+import UpdateOptionalProductForm from '../../ProductUpdate/components/UpdateOptionalProductForm.1'
 import UpdateProductForm from '@/routes/Products/ProductUpdate/components/UpdateProductForm'
 import { Modal, Tabs } from 'antd'
 import { ReactNode, useState } from 'react'

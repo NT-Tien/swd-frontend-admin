@@ -1,8 +1,12 @@
+import Cookies from 'js-cookie'
+import { LoginRoute } from '@/routes/Login'
 import { Gear, ShoppingBag, User } from '@phosphor-icons/react'
+import { useNavigate } from '@tanstack/react-router'
 import Dropdown from 'antd/es/dropdown'
 import { MenuProps } from 'antd/es/menu'
 import theme from 'antd/es/theme'
 import { ReactNode } from 'react'
+import { useMessage } from '@/common/context/MessageContext/useMessage'
 
 const { useToken } = theme
 
@@ -11,6 +15,8 @@ type ProfileDropdownProps = {
 }
 
 export default function ProfileDropdown({ children }: ProfileDropdownProps) {
+    const navigate = useNavigate()
+    const { messageApi } = useMessage()
     const { token } = useToken()
     const items: MenuProps['items'] = [
         {
@@ -72,12 +78,18 @@ export default function ProfileDropdown({ children }: ProfileDropdownProps) {
         {
             key: '5',
             label: 'Logout',
+            danger: true,
             style: {
-                backgroundColor: token.colorErrorBg,
-                color: token.colorError,
                 fontWeight: 600,
             },
-            onClick: () => {},
+            onClick: () => {
+                Cookies.set('token', '')
+                Cookies.remove('token')
+                messageApi.success('Logged out successfully')
+                navigate({
+                    to: LoginRoute.to,
+                })
+            },
         },
     ]
 

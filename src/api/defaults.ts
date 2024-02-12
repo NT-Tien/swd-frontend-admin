@@ -6,8 +6,10 @@ export function configAxios() {
 
     axios.interceptors.request.use(
         config => {
-            devLog(`Sending request to ${config.url} (${config.auth ? 'auth' : 'no auth'}). Request Body:`)
-            devLog(config.data)
+            devLog(
+                `Sending request to ${config.url} (${config.auth ? 'auth' : 'no auth'}). ${config.data ? 'Request Body:' : ''}`,
+                config.data ? config.data : '',
+            )
 
             return config
         },
@@ -19,8 +21,10 @@ export function configAxios() {
 
     axios.interceptors.response.use(
         response => {
-            devLog(`Received response from ${response.config.url}. Response body:`)
-            devLog(response.data)
+            devLog(
+                `Received response from ${response.config.url}. ${response.data ? 'Response body:' : ''}`,
+                response.data ? response.data : '',
+            )
 
             return response
         },

@@ -1,7 +1,8 @@
 import { Category_DeleteMany } from '@/api/category/Category_DeleteMany'
+import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { Category } from '@/lib/types/Category'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Button, Modal, Table, message } from 'antd'
+import { Button, Modal, Table } from 'antd'
 import { ReactNode, useMemo, useState } from 'react'
 
 type DeleteCategoryModalProps = {
@@ -11,12 +12,11 @@ type DeleteCategoryModalProps = {
 }
 
 export default function DeleteCategoryModal({ children, categories, afterDelete }: DeleteCategoryModalProps) {
-    const [messageApi, contextHolder] = message.useMessage()
+    const { messageApi } = useMessage()
     const [open, setOpen] = useState(false)
     const [selectedCategories, setSelectedCategories] = useState<string[]>([])
     const queryClient = useQueryClient()
 
-    // TODO Implement delete multiple
     const deleteCategories = useMutation({
         mutationFn: Category_DeleteMany,
         onSuccess: async () => {
@@ -62,7 +62,6 @@ export default function DeleteCategoryModal({ children, categories, afterDelete 
 
     return (
         <>
-            {contextHolder}
             {children({ handleOpen })}
             <Modal
                 open={open}
