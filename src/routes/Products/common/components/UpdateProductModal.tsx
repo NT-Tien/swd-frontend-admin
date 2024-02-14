@@ -3,13 +3,25 @@ import UpdateProductForm from '@/routes/Products/ProductUpdate/components/Update
 import { Modal, Tabs } from 'antd'
 import { ReactNode, useState } from 'react'
 
-type UpdateProductModalProps = {
+type UpdateProductModalPropsBase = {
     children: ({ handleOpen }: { handleOpen: (id: string) => void }) => ReactNode
 }
 
-export default function UpdateProductModal({ children }: UpdateProductModalProps) {
-    const [productId, setProductId] = useState<string | null>(null)
-    const [open, setOpen] = useState(false)
+type UpdateProductModalPropsWithDefaultOpen = UpdateProductModalPropsBase & {
+    isDefaultOpen: boolean
+    defaultId: string
+}
+
+type UpdateProductModalPropsWithoutDefaultOpen = UpdateProductModalPropsBase & {
+    isDefaultOpen?: never
+    defaultId?: never
+}
+
+type UpdateProductModalProps = UpdateProductModalPropsWithDefaultOpen | UpdateProductModalPropsWithoutDefaultOpen
+
+export default function UpdateProductModal({ children, isDefaultOpen, defaultId }: UpdateProductModalProps) {
+    const [productId, setProductId] = useState<string | null>(defaultId ?? null)
+    const [open, setOpen] = useState(isDefaultOpen !== undefined ? isDefaultOpen : false)
 
     function handleOpen(id: string) {
         setProductId(id)

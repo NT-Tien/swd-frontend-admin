@@ -8,7 +8,7 @@ export async function Auth_VerifyTokenAdmin() {
     const currentToken = Cookies.get('token')
 
     return await axios
-        .post<Auth_VerifyTokenAdmin_Res>('/auth/verify-token', undefined, {
+        .post<Auth_VerifyTokenAdmin_Res>('/auth/verify-token-admin', undefined, {
             headers: {
                 Authorization: `Bearer ${currentToken}`,
             },

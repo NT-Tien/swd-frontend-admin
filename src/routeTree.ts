@@ -12,12 +12,14 @@ import { ProductUpdateRoute } from '@/routes/Products/ProductUpdate'
 import { ProductViewRoute } from '@/routes/Products/ProductView'
 import { TestRoute } from '@/routes/Test'
 import { QueryClient } from '@tanstack/react-query'
-import { rootRouteWithContext } from '@tanstack/react-router'
+import { createRootRouteWithContext } from '@tanstack/react-router'
 import { LoginRoute } from './routes/Login'
 
-export const rootRoute = rootRouteWithContext<{
+export type RouterContext = {
     queryClient: QueryClient
-}>()({
+}
+
+export const rootRoute = createRootRouteWithContext<RouterContext>()({
     component: RootLayout,
 })
 

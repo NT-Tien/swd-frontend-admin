@@ -5,13 +5,12 @@ import { Product } from '@/lib/types/Product'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
 import { queryClient } from '@/main'
 import { ProductCreateRoute } from '@/routes/Products/ProductCreate'
-import { ProductUpdateRoute } from '@/routes/Products/ProductUpdate'
 import { ProductViewRoute } from '@/routes/Products/ProductView'
 import DeleteProductModal from '@/routes/Products/common/components/DeleteProductModal'
-import { ArrowsClockwise, Funnel, Pencil, Plus, Trash } from '@phosphor-icons/react'
+import { ArrowsClockwise, Pencil, Plus, Trash } from '@phosphor-icons/react'
 import { useQuery } from '@tanstack/react-query'
 import { createRoute, useNavigate } from '@tanstack/react-router'
-import { Button, Dropdown, Flex, Input, Table, Typography } from 'antd'
+import { Button, Dropdown, Flex, Table, Typography } from 'antd'
 import format from 'date-fns/format'
 
 type ProductListSearch = {
@@ -69,17 +68,7 @@ function ProductListPage() {
                             }}
                         ></Button>
                     </Typography.Title>
-                    <Flex justify='space-between'>
-                        <Flex gap={5}>
-                            <Input.Search
-                                style={{
-                                    maxWidth: '300px',
-                                }}
-                            />
-                            <Button>
-                                <Funnel size={16} weight='fill' />
-                            </Button>
-                        </Flex>
+                    <Flex justify='right'>
                         <Flex gap={5}>
                             <Button
                                 type='primary'
@@ -165,7 +154,12 @@ function ProductListPage() {
                                                     style: {
                                                         marginBottom: '5px',
                                                     },
-                                                    onClick: () => navigate({ to: ProductUpdateRoute.to, params: { id: record.id } }),
+                                                    onClick: () =>
+                                                        navigate({
+                                                            to: ProductViewRoute.to,
+                                                            params: { id: record.id },
+                                                            search: { editing: true },
+                                                        }),
                                                 },
                                                 {
                                                     label: 'Delete',
@@ -181,6 +175,9 @@ function ProductListPage() {
                                                 to: ProductViewRoute.to,
                                                 params: {
                                                     id: record.id,
+                                                },
+                                                search: {
+                                                    editing: false,
                                                 },
                                             })
                                         }}

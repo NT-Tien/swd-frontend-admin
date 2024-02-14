@@ -14,6 +14,9 @@ const component = function ProductViewPage() {
     const id = ProductViewRoute.useParams({
         select: data => data.id,
     })
+    const isEditing = ProductViewRoute.useSearch({
+        select: data => data.editing,
+    })
     const { data: product, isLoading, isError, isSuccess } = useQuery(queryProduct_GetOne({ id }))
     const navigate = useNavigate()
 
@@ -32,9 +35,9 @@ const component = function ProductViewPage() {
     return (
         <>
             <Flex justify='space-between' align='center'>
-                <Typography.Title level={1}>{product.name} </Typography.Title>
+                <Typography.Title level={1}>{product.name}</Typography.Title>
                 <Flex gap={10}>
-                    <UpdateProductModal>
+                    <UpdateProductModal isDefaultOpen={isEditing} defaultId={id}>
                         {({ handleOpen }) => (
                             <Button type='primary' onClick={() => handleOpen(id)}>
                                 Edit
@@ -95,9 +98,11 @@ export const ProductViewRoute = createRoute({
             id: id ? String(id) : '',
         }
     },
-    validateSearch: (search: Record<string, unknown>): ProductViewSearch => ({
-        editing: search.editing ? Boolean(search.editing) : false,
-    }),
+    validateSearch: (search: ProductViewSearch) => {
+        return {
+            editing: search.editing ? Boolean(search.editing) : false,
+        }
+    },
     getParentRoute: () => AuthDashboardLayoutRoute,
     component,
 })

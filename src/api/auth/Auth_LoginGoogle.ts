@@ -13,6 +13,7 @@ export async function Auth_LoginGoogle(requestData: Auth_LoginGoogle_Req) {
         transformResponse: [
             ParseResponse,
             (res: ApiResponse<AuthResponse>) => {
+                console.log(res)
                 if ('data' in res) {
                     return ResponseToAuthResponse(res.data)
                 } else {

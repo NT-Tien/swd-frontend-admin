@@ -7,6 +7,7 @@ import { Auth_LoginGoogle } from '@/api/auth/Auth_LoginGoogle'
 import { Auth_VerifyTokenAdmin } from '@/api/auth/Auth_VerifyTokenAdmin'
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { auth } from '@/firebase'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { rootRoute } from '@/routeTree'
 import { DashboardRoute } from '@/routes/Dashboard'
 import { GoogleLogo } from '@phosphor-icons/react'
@@ -17,7 +18,6 @@ import Row from 'antd/es/row'
 import theme from 'antd/es/theme'
 import Typography from 'antd/es/typography'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
-import Cookies from 'js-cookie'
 import { useEffect } from 'react'
 
 const { useToken } = theme
@@ -32,13 +32,11 @@ const component = function LoginPage() {
 
     const signInMutation = useMutation({
         mutationFn: Auth_LoginGoogle,
-        onSuccess: data => {
-            Cookies.set('token', data.data.token, {
-                expires: new Date(new Date().getTime() + 2 * 60 * 60 * 1000), // 2 hours
-            })
+        onSuccess: res => {
+            AuthenticationHandler.login(res.data)
         },
         onError: () => {
-            Cookies.remove('token')
+            AuthenticationHandler.logout()
             messageApi.error('Error while logging in. Please try again.')
         },
     })
@@ -53,12 +51,12 @@ const component = function LoginPage() {
                     to: DashboardRoute.to,
                 })
             } else {
-                Cookies.remove('token')
+                AuthenticationHandler.logout()
                 messageApi.error('You are not allowed to access this page.')
             }
         },
         onError: () => {
-            Cookies.remove('token')
+            AuthenticationHandler.logout()
             messageApi.error('You are not allowed to access this page.')
         },
     })
@@ -78,6 +76,10 @@ const component = function LoginPage() {
     useEffect(() => {
         if (error) {
             messageApi.error(error)
+        }
+
+        return () => {
+            messageApi.destroy()
         }
     }, [error, messageApi])
 

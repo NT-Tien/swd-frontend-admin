@@ -9,7 +9,6 @@ import { CategoryListRoute } from '@/routes/Categories/CategoryList'
 import { DashboardRoute } from '@/routes/Dashboard'
 import { ProductCreateRoute } from '@/routes/Products/ProductCreate'
 import { ProductListRoute } from '@/routes/Products/ProductList'
-import { ProductReviewRoute } from '@/routes/Products/ProductReview'
 import {
     Basket,
     Bell,
@@ -22,10 +21,8 @@ import {
     LockKey,
     MagnifyingGlass,
     Money,
-    Tag,
     User,
     UserCircle,
-    Wallet,
 } from '@phosphor-icons/react'
 import { Outlet, createRoute, useNavigate } from '@tanstack/react-router'
 import Avatar from 'antd/es/avatar/avatar'
@@ -80,14 +77,6 @@ function DashboardLayout() {
                             label: 'Create Product',
                             onClick: () => navigate({ to: ProductCreateRoute.to }),
                         }),
-                        getItem_2({
-                            key: 'product-review',
-                            label: 'Product Reviews',
-                            onClick: () =>
-                                navigate({
-                                    to: ProductReviewRoute.to,
-                                }),
-                        }),
                     ],
                 }),
                 getItem_1({
@@ -128,32 +117,9 @@ function DashboardLayout() {
                     ],
                 }),
                 getItem_1({
-                    key: 'vouchers',
-                    label: 'Vouchers',
-                    icon: <Tag />,
-                    children: [
-                        getItem_2({
-                            key: 'voucher-list',
-                            label: 'Voucher List',
-                            onClick: () => {},
-                        }),
-                        getItem_2({
-                            key: 'voucher-create',
-                            label: 'Create Voucher',
-                            onClick: () => {},
-                        }),
-                    ],
-                }),
-                getItem_1({
                     key: 'transactions',
                     label: 'Transactions',
                     icon: <Money />,
-                    onClick: () => {},
-                }),
-                getItem_1({
-                    key: 'wallet',
-                    label: 'Wallet',
-                    icon: <Wallet />,
                     onClick: () => {},
                 }),
                 getItem_1({
@@ -164,7 +130,12 @@ function DashboardLayout() {
                         getItem_2({
                             key: 'account-list',
                             label: 'Account List',
-                            onClick: () => navigate({ to: AccountListRoute.to }),
+                            onClick: () => navigate({ to: AccountListRoute.to, search: { page: 1 } }),
+                        }),
+                        getItem_2({
+                            key: 'account-create',
+                            label: 'Create Account',
+                            onClick: () => navigate({ to: AccountListRoute.to, search: { page: 1 } }),
                         }),
                     ],
                 }),

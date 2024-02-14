@@ -23,7 +23,7 @@ export function ResponseToAccount(response: Record<string, any>): Account {
         deletedAt: response.deletedAt ? new Date(response.deletedAt) : null,
         email: response.email,
         password: response.password,
-        role: response.role,
+        role: response.role as Role,
     } satisfies Account
 }
 

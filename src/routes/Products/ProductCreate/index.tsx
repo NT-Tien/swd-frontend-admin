@@ -50,6 +50,9 @@ const component = function ProductCreatePage() {
                 params: {
                     id: data.product.data.id,
                 },
+                search: {
+                    editing: false,
+                },
             })
         },
         onError(error) {

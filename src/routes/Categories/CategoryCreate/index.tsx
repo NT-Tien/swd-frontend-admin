@@ -2,6 +2,7 @@ import { Category_Create } from '@/api/category/Category_Create'
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { AuthDashboardLayoutRoute } from '@/layouts/AuthenticatedLayout'
 import { queryClient } from '@/main'
+import ImportCategoriesModal from '@/routes/Categories/CategoryCreate/components/ImportCategoriesModal'
 import { CategoryListRoute } from '@/routes/Categories/CategoryList'
 import { UploadSimple } from '@phosphor-icons/react'
 import { useMutation } from '@tanstack/react-query'
@@ -46,16 +47,13 @@ const component = function CategoryCreatePage() {
         <Flex vertical gap={20}>
             <Flex justify='space-between'>
                 <Typography.Title level={2}>Create a new Product</Typography.Title>
-                <Button
-                    type='primary'
-                    icon={<UploadSimple size={14} />}
-                    onClick={() => {
-                        //TODO
-                        alert('Not implemented yet')
-                    }}
-                >
-                    Import from JSON
-                </Button>
+                <ImportCategoriesModal>
+                    {({ handleOpen }) => (
+                        <Button type='primary' icon={<UploadSimple size={14} />} onClick={handleOpen}>
+                            Import from JSON
+                        </Button>
+                    )}
+                </ImportCategoriesModal>
             </Flex>
             <Card size='default' title='Category Details'>
                 <Form

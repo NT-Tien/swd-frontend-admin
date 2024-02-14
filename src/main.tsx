@@ -34,8 +34,6 @@ export const router = createRouter({
     defaultPreloadStaleTime: 0,
 })
 
-console.log(queryClient)
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <QueryClientProvider client={queryClient}>
