@@ -1,4 +1,9 @@
+import { useMessage } from '@/common/context/MessageContext/useMessage'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
+import { LoginRoute } from '@/routes/Login'
 import { Gear, ShoppingBag, User } from '@phosphor-icons/react'
+import { useNavigate } from '@tanstack/react-router'
+import { Typography } from 'antd'
 import Dropdown from 'antd/es/dropdown'
 import { MenuProps } from 'antd/es/menu'
 import theme from 'antd/es/theme'
@@ -11,29 +16,41 @@ type ProfileDropdownProps = {
 }
 
 export default function ProfileDropdown({ children }: ProfileDropdownProps) {
+    const navigate = useNavigate()
+    const { messageApi } = useMessage()
     const { token } = useToken()
+    const email = AuthenticationHandler.getEmail()
     const items: MenuProps['items'] = [
         {
             key: '-1',
             type: 'group',
             label: (
                 <div>
-                    <h2
+                    <Typography.Title
+                        level={4}
+                        ellipsis={{
+                            tooltip: email,
+                        }}
                         style={{
                             fontSize: token.fontSizeHeading4,
                             color: token.colorTextBase,
+                            fontWeight: '600',
+                            marginBottom: 0,
+                            minWidth: '150px',
                         }}
                     >
-                        Sang Dang
-                    </h2>
-                    <p
+                        {email.split('@')[0]}
+                    </Typography.Title>
+                    <Typography.Paragraph
+                        ellipsis={true}
                         style={{
                             fontSize: token.fontSizeSM,
                             color: token.colorTextLabel,
+                            marginBottom: 0,
                         }}
                     >
-                        Admin
-                    </p>
+                        @{email.split('@')[1]}
+                    </Typography.Paragraph>
                 </div>
             ),
         },
@@ -72,12 +89,17 @@ export default function ProfileDropdown({ children }: ProfileDropdownProps) {
         {
             key: '5',
             label: 'Logout',
+            danger: true,
             style: {
-                backgroundColor: token.colorErrorBg,
-                color: token.colorError,
                 fontWeight: 600,
             },
-            onClick: () => {},
+            onClick: () => {
+                AuthenticationHandler.logout()
+                messageApi.success('Logged out successfully')
+                navigate({
+                    to: LoginRoute.to,
+                })
+            },
         },
     ]
 

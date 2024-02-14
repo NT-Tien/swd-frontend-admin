@@ -1,9 +1,10 @@
 import { queryCategory_GetAll } from '@/api/category/Category_GetAll'
 import { Product_GetByName } from '@/api/product/Product_GetByName'
 import { queryProduct_GetOne } from '@/api/product/Product_GetOne'
-import ModalWrapper from '@/lib/util/ModalWrapper'
+import ModalWrapper from '@/common/components/modal/ModalWrapper'
+import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { urlToFile } from '@/lib/util/urlToFile'
-import { queryClient } from '@/router'
+import { queryClient } from '@/main'
 import { GetImages } from '@/routes/Products/common/util/GetImages'
 import { UpdateProduct } from '@/routes/Products/common/util/UpdateProduct'
 import { ExpandAltOutlined } from '@ant-design/icons'
@@ -24,8 +25,7 @@ type FieldType = {
 }
 
 export default function UpdateProductForm({ productId }: UpdateProductFormProps) {
-    const [messageApi, contextHolder] = message.useMessage()
-
+    const { messageApi } = useMessage()
     const {
         categories: { data: categories, isError: isError_Categories, isLoading: isLoading_Categories, isSuccess: isSuccess_Categories },
         product: { data: product, isError, isLoading, isSuccess, error },
@@ -120,202 +120,199 @@ export default function UpdateProductForm({ productId }: UpdateProductFormProps)
     if (!isSuccess) return // product WILL exist after this line
 
     return (
-        <>
-            {contextHolder}
-            <Form<FieldType>
-                form={form}
-                name='create-product-form'
-                initialValues={{
-                    name: product.name,
-                    description: product.description,
-                    images: images,
-                    optional: [],
-                }}
-                onFinish={handleFinish}
-                onFinishFailed={handleFinishFailed}
-                size='large'
-                layout='vertical'
-                requiredMark={false}
-                colon={false}
-            >
-                <Flex gap={20}>
-                    {/* NAME INPUT */}
-                    <FormItem<FieldType>
-                        label='Name'
-                        name='name'
-                        hasFeedback
-                        rules={[
-                            { required: true },
-                            { min: 2 },
-                            { max: 200 },
-                            {
-                                async validator(_, value) {
-                                    if (value === product.name) return Promise.resolve()
-                                    const alreadyExists = await Product_GetByName({ name: value })
-                                    if (alreadyExists.data !== null) {
-                                        return Promise.reject('Product with this name already exists.')
-                                    } else {
-                                        return Promise.resolve()
-                                    }
-                                },
+        <Form<FieldType>
+            form={form}
+            name='create-product-form'
+            initialValues={{
+                name: product.name,
+                description: product.description,
+                images: images,
+                optional: [],
+            }}
+            onFinish={handleFinish}
+            onFinishFailed={handleFinishFailed}
+            size='large'
+            layout='vertical'
+            requiredMark={false}
+            colon={false}
+        >
+            <Flex gap={20}>
+                {/* NAME INPUT */}
+                <FormItem<FieldType>
+                    label='Name'
+                    name='name'
+                    hasFeedback
+                    rules={[
+                        { required: true },
+                        { min: 2 },
+                        { max: 200 },
+                        {
+                            async validator(_, value) {
+                                if (value === product.name) return Promise.resolve()
+                                const alreadyExists = await Product_GetByName({ name: value })
+                                if (alreadyExists.data !== null) {
+                                    return Promise.reject('Product with this name already exists.')
+                                } else {
+                                    return Promise.resolve()
+                                }
                             },
-                        ]}
+                        },
+                    ]}
+                    style={{
+                        width: '50%',
+                    }}
+                    validateDebounce={2000}
+                >
+                    <Input placeholder='Mobile Phone' />
+                </FormItem>
+
+                {/* CATEGORY INPUT */}
+                {isLoading_Categories && <Input disabled />}
+                {isError_Categories && <Input disabled />}
+                {isSuccess_Categories && (
+                    <FormItem<FieldType>
+                        label='Category'
+                        name='categoryId'
                         style={{
                             width: '50%',
                         }}
-                        validateDebounce={2000}
+                        rules={[
+                            {
+                                required: true,
+                            },
+                        ]}
+                        initialValue={product.category_id.id}
                     >
-                        <Input placeholder='Mobile Phone' />
+                        <Select
+                            showSearch
+                            placeholder='Select a Category'
+                            options={categories.data.map(cat => ({
+                                value: cat.id ?? '',
+                                label: cat.name ?? '',
+                            }))}
+                            filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+                            onChange={value => {
+                                form.setFieldValue('categoryId', value)
+                            }}
+                        />
                     </FormItem>
+                )}
+            </Flex>
 
-                    {/* CATEGORY INPUT */}
-                    {isLoading_Categories && <Input disabled />}
-                    {isError_Categories && <Input disabled />}
-                    {isSuccess_Categories && (
-                        <FormItem<FieldType>
-                            label='Category'
-                            name='categoryId'
-                            style={{
-                                width: '50%',
-                            }}
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                            initialValue={product.category_id.id}
-                        >
-                            <Select
-                                showSearch
-                                placeholder='Select a Category'
-                                options={categories.data.map(cat => ({
-                                    value: cat.id ?? '',
-                                    label: cat.name ?? '',
-                                }))}
-                                filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
-                                onChange={value => {
-                                    form.setFieldValue('categoryId', value)
-                                }}
-                            />
-                        </FormItem>
-                    )}
-                </Flex>
-
-                {/* IMAGES INPUT */}
-                <FormItem<FieldType>
-                    name='images'
-                    label='Images'
-                    valuePropName='fileList'
-                    rules={[{ required: true }]}
-                    getValueFromEvent={e => {
-                        if (Array.isArray(e)) {
-                            return e
-                        }
-                        return e && e.fileList
-                    }}
-                >
-                    {isSuccess_Images && (
-                        <Upload.Dragger
-                            name='files'
-                            multiple
-                            listType='picture'
-                            accept='image/*'
-                            showUploadList
-                            beforeUpload={() => false}
-                            onChange={info => {
-                                const isImage = info.file.type?.startsWith('image/') || info.file.type?.startsWith('blob')
-                                if (!isImage) {
-                                    message.error('You can only upload image files!')
-                                    info.fileList = info.fileList.filter(file => file.type?.startsWith('image/'))
-                                }
-
-                                if (info.file.size && info.file.size > 5 * 1024 * 1024) {
-                                    message.error('You can only upload images smaller than 5MB!')
-                                    info.fileList = info.fileList.filter(file => file.size && file.size <= 5 * 1024 * 1024)
-                                }
-
-                                if (form.getFieldsValue().images.length > 3) {
-                                    message.error('You can only upload 3 images!')
-                                    info.fileList = info.fileList.filter((_, index) => index < 3)
-                                }
-
-                                if (info.fileList.length > 3) {
-                                    info.fileList = info.fileList.filter((_, index) => index < 3)
-                                }
-
-                                form.setFieldsValue({ images: info.fileList })
-                            }}
-                        >
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    rowGap: 8,
-                                }}
-                            >
-                                <p
-                                    style={{
-                                        fontSize: '1.2rem',
-                                        fontWeight: 500,
-                                    }}
-                                >
-                                    Drag & drop product image here
-                                </p>
-                                <Divider>OR</Divider>
-                                <Button>Select Files</Button>
-                            </div>
-                        </Upload.Dragger>
-                    )}
-                </FormItem>
-
-                {/* DESCRIPTION INPUT */}
-                <ModalWrapper
-                    modalProps={{
-                        title: 'Description',
-                        width: '50%',
-                    }}
-                    modalComponent={() => (
-                        <FormItem<FieldType> name='description' rules={[{ required: true }]}>
-                            <Input.TextArea rows={20} />
-                        </FormItem>
-                    )}
-                >
-                    {({ handleOpen }) => (
-                        <FormItem<FieldType>
-                            label={
-                                <>
-                                    <div>Description</div>
-                                    <Button
-                                        onClick={handleOpen}
-                                        size='small'
-                                        style={{
-                                            marginLeft: '10px',
-                                        }}
-                                        icon={<ExpandAltOutlined />}
-                                    />
-                                </>
+            {/* IMAGES INPUT */}
+            <FormItem<FieldType>
+                name='images'
+                label='Images'
+                valuePropName='fileList'
+                rules={[{ required: true }]}
+                getValueFromEvent={e => {
+                    if (Array.isArray(e)) {
+                        return e
+                    }
+                    return e && e.fileList
+                }}
+            >
+                {isSuccess_Images && (
+                    <Upload.Dragger
+                        name='files'
+                        multiple
+                        listType='picture'
+                        accept='image/*'
+                        showUploadList
+                        beforeUpload={() => false}
+                        onChange={info => {
+                            const isImage = info.file.type?.startsWith('image/') || info.file.type?.startsWith('blob')
+                            if (!isImage) {
+                                message.error('You can only upload image files!')
+                                info.fileList = info.fileList.filter(file => file.type?.startsWith('image/'))
                             }
-                            name='description'
-                            rules={[{ required: true }]}
-                        >
-                            <Input.TextArea rows={5} />
-                        </FormItem>
-                    )}
-                </ModalWrapper>
 
-                <Flex justify='end'>
-                    <Button
-                        htmlType='submit'
-                        type='primary'
-                        style={{
-                            marginTop: 20,
+                            if (info.file.size && info.file.size > 5 * 1024 * 1024) {
+                                message.error('You can only upload images smaller than 5MB!')
+                                info.fileList = info.fileList.filter(file => file.size && file.size <= 5 * 1024 * 1024)
+                            }
+
+                            if (form.getFieldsValue().images.length > 3) {
+                                message.error('You can only upload 3 images!')
+                                info.fileList = info.fileList.filter((_, index) => index < 3)
+                            }
+
+                            if (info.fileList.length > 3) {
+                                info.fileList = info.fileList.filter((_, index) => index < 3)
+                            }
+
+                            form.setFieldsValue({ images: info.fileList })
                         }}
                     >
-                        Update
-                    </Button>
-                </Flex>
-            </Form>
-        </>
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                rowGap: 8,
+                            }}
+                        >
+                            <p
+                                style={{
+                                    fontSize: '1.2rem',
+                                    fontWeight: 500,
+                                }}
+                            >
+                                Drag & drop product image here
+                            </p>
+                            <Divider>OR</Divider>
+                            <Button>Select Files</Button>
+                        </div>
+                    </Upload.Dragger>
+                )}
+            </FormItem>
+
+            {/* DESCRIPTION INPUT */}
+            <ModalWrapper
+                modalProps={{
+                    title: 'Description',
+                    width: '50%',
+                }}
+                modalComponent={() => (
+                    <FormItem<FieldType> name='description' rules={[{ required: true }]}>
+                        <Input.TextArea rows={20} />
+                    </FormItem>
+                )}
+            >
+                {({ handleOpen }) => (
+                    <FormItem<FieldType>
+                        label={
+                            <>
+                                <div>Description</div>
+                                <Button
+                                    onClick={handleOpen}
+                                    size='small'
+                                    style={{
+                                        marginLeft: '10px',
+                                    }}
+                                    icon={<ExpandAltOutlined />}
+                                />
+                            </>
+                        }
+                        name='description'
+                        rules={[{ required: true }]}
+                    >
+                        <Input.TextArea rows={5} />
+                    </FormItem>
+                )}
+            </ModalWrapper>
+
+            <Flex justify='end'>
+                <Button
+                    htmlType='submit'
+                    type='primary'
+                    style={{
+                        marginTop: 20,
+                    }}
+                >
+                    Update
+                </Button>
+            </Flex>
+        </Form>
     )
 }

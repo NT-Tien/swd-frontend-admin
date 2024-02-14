@@ -2,13 +2,13 @@ import NotificationsDropdown from '@/layouts/DashboardLayout/components/Notifica
 import ProfileDropdown from '@/layouts/DashboardLayout/components/ProfileDropdown'
 import { getGroup, getItem_1, getItem_2 } from '@/layouts/DashboardLayout/util'
 import { MenuItem } from '@/lib/types/MenuItem'
-import { rootRoute } from '@/router'
+import { rootRoute } from '@/routeTree'
+import { AccountListRoute } from '@/routes/Accounts/AccountList'
 import { CategoryCreateRoute } from '@/routes/Categories/CategoryCreate'
 import { CategoryListRoute } from '@/routes/Categories/CategoryList'
 import { DashboardRoute } from '@/routes/Dashboard'
 import { ProductCreateRoute } from '@/routes/Products/ProductCreate'
 import { ProductListRoute } from '@/routes/Products/ProductList'
-import { ProductReviewRoute } from '@/routes/Products/ProductReview'
 import {
     Basket,
     Bell,
@@ -21,12 +21,10 @@ import {
     LockKey,
     MagnifyingGlass,
     Money,
-    Tag,
     User,
     UserCircle,
-    Wallet,
 } from '@phosphor-icons/react'
-import { Outlet, Route, useNavigate } from '@tanstack/react-router'
+import { Outlet, createRoute, useNavigate } from '@tanstack/react-router'
 import Avatar from 'antd/es/avatar/avatar'
 import Button from 'antd/es/button'
 import Flex from 'antd/es/flex'
@@ -41,7 +39,7 @@ const { useToken } = theme
 const { Sider, Header, Content } = Layout
 const { useBreakpoint } = Grid
 
-export const DashboardLayoutRoute = new Route({
+export const DashboardLayoutRoute = createRoute({
     component: DashboardLayout,
     id: 'dashboard-layout',
     getParentRoute: () => rootRoute,
@@ -78,14 +76,6 @@ function DashboardLayout() {
                             key: 'product-create',
                             label: 'Create Product',
                             onClick: () => navigate({ to: ProductCreateRoute.to }),
-                        }),
-                        getItem_2({
-                            key: 'product-review',
-                            label: 'Product Reviews',
-                            onClick: () =>
-                                navigate({
-                                    to: ProductReviewRoute.to,
-                                }),
                         }),
                     ],
                 }),
@@ -127,39 +117,27 @@ function DashboardLayout() {
                     ],
                 }),
                 getItem_1({
-                    key: 'vouchers',
-                    label: 'Vouchers',
-                    icon: <Tag />,
-                    children: [
-                        getItem_2({
-                            key: 'voucher-list',
-                            label: 'Voucher List',
-                            onClick: () => {},
-                        }),
-                        getItem_2({
-                            key: 'voucher-create',
-                            label: 'Create Voucher',
-                            onClick: () => {},
-                        }),
-                    ],
-                }),
-                getItem_1({
                     key: 'transactions',
                     label: 'Transactions',
                     icon: <Money />,
                     onClick: () => {},
                 }),
                 getItem_1({
-                    key: 'wallet',
-                    label: 'Wallet',
-                    icon: <Wallet />,
-                    onClick: () => {},
-                }),
-                getItem_1({
-                    key: 'customers',
-                    label: 'Customers',
+                    key: 'accounts',
+                    label: 'Accounts',
                     icon: <UserCircle />,
-                    onClick: () => {},
+                    children: [
+                        getItem_2({
+                            key: 'account-list',
+                            label: 'Account List',
+                            onClick: () => navigate({ to: AccountListRoute.to, search: { page: 1 } }),
+                        }),
+                        getItem_2({
+                            key: 'account-create',
+                            label: 'Create Account',
+                            onClick: () => navigate({ to: AccountListRoute.to, search: { page: 1 } }),
+                        }),
+                    ],
                 }),
             ],
         }),

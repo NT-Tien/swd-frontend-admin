@@ -1,9 +1,9 @@
 import { queryCategory_GetAll } from '@/api/category/Category_GetAll'
-import { DashboardLayoutRoute } from '@/layouts/DashboardLayout'
-import UpdateOptionalProductForm from '@/routes/Products/ProductUpdate/components/UpdateOptionalProductForm'
+import { AuthDashboardLayoutRoute } from '@/layouts/AuthenticatedLayout'
 import UpdateProductForm from '@/routes/Products/ProductUpdate/components/UpdateProductForm'
 import { createRoute, defer } from '@tanstack/react-router'
 import { Tabs } from 'antd'
+import UpdateOptionalProductForm from './components/UpdateOptionalProductForm.1'
 
 const component = function ProductUpdatePage() {
     const id = ProductUpdateRoute.useParams({
@@ -32,7 +32,7 @@ const component = function ProductUpdatePage() {
 
 export const ProductUpdateRoute = createRoute({
     path: '/products/$id/update',
-    getParentRoute: () => DashboardLayoutRoute,
+    getParentRoute: () => AuthDashboardLayoutRoute,
     parseParams: ({ id }) => {
         return {
             id: id ? String(id) : '',

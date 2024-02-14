@@ -1,8 +1,9 @@
 import { queryOptional_GetByProductId } from '@/api/option-product/Optional_GetByProductId'
-import { queryClient } from '@/router'
+import { useMessage } from '@/common/context/MessageContext/useMessage'
+import { queryClient } from '@/main'
 import { DeleteProductFull } from '@/routes/Products/common/util/DeleteProductFull'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { Button, Modal, Spin, message } from 'antd'
+import { Button, Modal, Spin } from 'antd'
 import { ReactNode, useState } from 'react'
 
 type DeleteProductModal = {
@@ -11,7 +12,7 @@ type DeleteProductModal = {
 }
 
 export default function DeleteProductModal({ children, afterDelete }: DeleteProductModal) {
-    const [messageApi, contextHolder] = message.useMessage()
+    const { messageApi } = useMessage()
     const [open, setOpen] = useState(false)
     const [currentProductId, setCurrentProductId] = useState<string>('')
     const {
@@ -56,7 +57,6 @@ export default function DeleteProductModal({ children, afterDelete }: DeleteProd
 
     return (
         <>
-            {contextHolder}
             {children({ handleOpen })}
             <Modal
                 open={open}

@@ -1,9 +1,9 @@
+import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { DashboardRoute } from '@/routes/Dashboard'
 import { useNavigate } from '@tanstack/react-router'
 import Button from 'antd/es/button'
 import Form, { FormProps } from 'antd/es/form'
 import Input from 'antd/es/input'
-import message from 'antd/es/message'
 import theme from 'antd/es/theme'
 
 const { useToken } = theme
@@ -20,14 +20,11 @@ export default function CredentialsLoginForm({ ...props }: LoginFormProps) {
     const [form] = Form.useForm<FormFields>()
     const { token } = useToken()
     const navigate = useNavigate()
-    const [messageApi, contextHolder] = message.useMessage()
+    const { messageApi } = useMessage()
 
     function handleFinish() {
         // TODO modify this to use login API
-        if (
-            form.getFieldsValue().username === 'admin' &&
-            form.getFieldsValue().password === '123'
-        ) {
+        if (form.getFieldsValue().username === 'admin' && form.getFieldsValue().password === '123') {
             navigate({
                 to: DashboardRoute.to,
             })
@@ -80,70 +77,63 @@ export default function CredentialsLoginForm({ ...props }: LoginFormProps) {
     }
 
     return (
-        <>
-            <Form
-                form={form}
-                name='admin-login'
-                labelCol={{
-                    span: 6,
+        <Form
+            form={form}
+            name='admin-login'
+            labelCol={{
+                span: 6,
+            }}
+            autoComplete='off'
+            onFinish={handleFinish}
+            onFinishFailed={handleFinishFailed}
+            {...props}
+        >
+            <Item<FormFields>
+                label='Username'
+                name='username'
+                labelAlign='left'
+                rules={[
+                    {
+                        required: true,
+                        message: 'This field is required.',
+                    },
+                ]}
+                style={{
+                    marginBottom: token.marginMD,
                 }}
-                autoComplete='off'
-                onFinish={handleFinish}
-                onFinishFailed={handleFinishFailed}
-                {...props}
             >
-                <Item<FormFields>
-                    label='Username'
-                    name='username'
-                    labelAlign='left'
-                    rules={[
-                        {
-                            required: true,
-                            message: 'This field is required.',
-                        },
-                    ]}
+                <Input size='large' placeholder='user' allowClear />
+            </Item>
+            <Item<FormFields>
+                label='Password'
+                name='password'
+                labelAlign='left'
+                rules={[
+                    {
+                        required: true,
+                        message: 'This field is required.',
+                    },
+                ]}
+                style={{
+                    marginBottom: token.marginMD,
+                }}
+            >
+                <Input.Password size='large' placeholder='*****' allowClear />
+            </Item>
+            <Item>
+                <Button
+                    type='primary'
+                    htmlType='submit'
                     style={{
-                        marginBottom: token.marginMD,
+                        width: '100%',
+                        height: '35px',
+                        marginTop: token.marginSM,
                     }}
+                    disabled={form.isFieldsValidating()}
                 >
-                    <Input size='large' placeholder='user' allowClear />
-                </Item>
-                <Item<FormFields>
-                    label='Password'
-                    name='password'
-                    labelAlign='left'
-                    rules={[
-                        {
-                            required: true,
-                            message: 'This field is required.',
-                        },
-                    ]}
-                    style={{
-                        marginBottom: token.marginMD,
-                    }}
-                >
-                    <Input.Password
-                        size='large'
-                        placeholder='*****'
-                        allowClear
-                    />
-                </Item>
-                <Item>
-                    <Button
-                        type='primary'
-                        htmlType='submit'
-                        style={{
-                            width: '100%',
-                            height: '35px',
-                            marginTop: token.marginSM,
-                        }}
-                        disabled={form.isFieldsValidating()}
-                    >
-                        Login
-                    </Button>
-                </Item>
-            </Form>
-            {contextHolder}
-        </>
+                    Login
+                </Button>
+            </Item>
+        </Form>
     )
 }

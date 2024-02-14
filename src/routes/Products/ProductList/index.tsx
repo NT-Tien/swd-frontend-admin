@@ -1,27 +1,43 @@
 import { queryProduct_GetAll } from '@/api/product/Product_GetAll'
-import { DashboardLayoutRoute } from '@/layouts/DashboardLayout'
+import { AuthDashboardLayoutRoute } from '@/layouts/AuthenticatedLayout'
 import { Category } from '@/lib/types/Category'
 import { Product } from '@/lib/types/Product'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
-import { queryClient } from '@/router'
+import { queryClient } from '@/main'
 import { ProductCreateRoute } from '@/routes/Products/ProductCreate'
-import { ProductUpdateRoute } from '@/routes/Products/ProductUpdate'
 import { ProductViewRoute } from '@/routes/Products/ProductView'
 import DeleteProductModal from '@/routes/Products/common/components/DeleteProductModal'
-import { ArrowsClockwise, Funnel, Pencil, Plus, Trash } from '@phosphor-icons/react'
+import { ArrowsClockwise, Pencil, Plus, Trash } from '@phosphor-icons/react'
 import { useQuery } from '@tanstack/react-query'
 import { createRoute, useNavigate } from '@tanstack/react-router'
-import { Button, Dropdown, Flex, Input, Table, Typography } from 'antd'
+import { Button, Dropdown, Flex, Table, Typography } from 'antd'
 import format from 'date-fns/format'
 
-const component = function ProductListPage() {
+type ProductListSearch = {
+    page?: number
+}
+
+export const ProductListRoute = createRoute({
+    path: '/products',
+    component: ProductListPage,
+    validateSearch: (search: ProductListSearch) => {
+        return {
+            page: search.page ? Number(search.page) : 1,
+        }
+    },
+    getParentRoute: () => AuthDashboardLayoutRoute,
+})
+
+const size = 5
+
+function ProductListPage() {
     const navigate = useNavigate()
 
     const page = ProductListRoute.useSearch({
         select: data => data.page,
     })
 
-    const { data: products, isLoading, isError } = useQuery(queryProduct_GetAll({ page: page ?? 1, size: 5 }))
+    const { data: products, isLoading, isError } = useQuery(queryProduct_GetAll({ page, size }))
 
     const searchColumnProps = GetColumnSearchProps<Product>()
 
@@ -47,22 +63,12 @@ const component = function ProductListPage() {
                             icon={<ArrowsClockwise size={12} weight='fill' />}
                             onClick={() => {
                                 queryClient.invalidateQueries({
-                                    queryKey: ['products'],
+                                    queryKey: ['products', page, size],
                                 })
                             }}
                         ></Button>
                     </Typography.Title>
-                    <Flex justify='space-between'>
-                        <Flex gap={5}>
-                            <Input.Search
-                                style={{
-                                    maxWidth: '300px',
-                                }}
-                            />
-                            <Button>
-                                <Funnel size={16} weight='fill' />
-                            </Button>
-                        </Flex>
+                    <Flex justify='right'>
                         <Flex gap={5}>
                             <Button
                                 type='primary'
@@ -82,7 +88,7 @@ const component = function ProductListPage() {
                         columns={[
                             {
                                 title: 'No.',
-                                render: (_, __, index) => index + 1,
+                                render: (_, __, index) => index + 1 + (page - 1) * size,
                                 width: 70,
                             },
                             {
@@ -148,7 +154,12 @@ const component = function ProductListPage() {
                                                     style: {
                                                         marginBottom: '5px',
                                                     },
-                                                    onClick: () => navigate({ to: ProductUpdateRoute.to, params: { id: record.id } }),
+                                                    onClick: () =>
+                                                        navigate({
+                                                            to: ProductViewRoute.to,
+                                                            params: { id: record.id },
+                                                            search: { editing: true },
+                                                        }),
                                                 },
                                                 {
                                                     label: 'Delete',
@@ -164,6 +175,9 @@ const component = function ProductListPage() {
                                                 to: ProductViewRoute.to,
                                                 params: {
                                                     id: record.id,
+                                                },
+                                                search: {
+                                                    editing: false,
                                                 },
                                             })
                                         }}
@@ -183,18 +197,3 @@ const component = function ProductListPage() {
         </DeleteProductModal>
     )
 }
-
-type ProductListSearch = {
-    page?: number
-}
-
-export const ProductListRoute = createRoute({
-    path: '/products',
-    component,
-    validateSearch: (search: Record<string, unknown>): ProductListSearch => {
-        return {
-            page: search.page ? Number(search.page) : 1,
-        }
-    },
-    getParentRoute: () => DashboardLayoutRoute,
-})

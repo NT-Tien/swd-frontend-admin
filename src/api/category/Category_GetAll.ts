@@ -3,13 +3,15 @@ import { Category, ResponseToCategoryList } from '@/lib/types/Category'
 import { queryOptions } from '@tanstack/react-query'
 import axios from 'axios'
 
+export type Category_GetAll_Res = GetResponse<Category>
+
 /**
  * Retrieves all categories from the server.
  * @returns A promise that resolves to an object containing the category data and total count.
  * @throws NoDataError if no data is received from the server.
  */
 export async function Category_GetAll() {
-    return await axios.get<GetResponse<Category>>('/category/get-all', {
+    return await axios.get<Category_GetAll_Res>('/category/get-all', {
         transformResponse: [
             ParseResponse,
             (res: ApiResponse<string[]>) => {

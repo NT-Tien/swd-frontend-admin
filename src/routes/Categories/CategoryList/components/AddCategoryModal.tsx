@@ -1,6 +1,7 @@
 import { Category_Create } from '@/api/category/Category_Create'
+import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Button, Form, Input, Modal, message } from 'antd'
+import { Button, Form, Input, Modal } from 'antd'
 import { ReactNode, useState } from 'react'
 
 const { Item: FormItem } = Form
@@ -15,7 +16,7 @@ type FieldType = {
 
 export default function AddCategoryModal({ children }: AddCategoryModalProps) {
     const [form] = Form.useForm<FieldType>()
-    const [messageApi, contextHolder] = message.useMessage()
+    const { messageApi } = useMessage()
     const [open, setOpen] = useState(false)
     const queryClient = useQueryClient()
     const createCategory = useMutation({
@@ -52,7 +53,6 @@ export default function AddCategoryModal({ children }: AddCategoryModalProps) {
     return (
         <>
             {children({ handleOpen })}
-            {contextHolder}
             <Modal
                 title='Add Category'
                 open={open}

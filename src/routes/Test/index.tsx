@@ -1,5 +1,5 @@
 import { Product_GetOne } from '@/api/product/Product_GetOne'
-import { rootRoute } from '@/router'
+import { rootRoute } from '@/routeTree'
 import { createRoute } from '@tanstack/react-router'
 
 const component = function TestPage() {

@@ -1,5 +1,5 @@
 import { query_File_Show } from '@/api/file/File_Show'
-import { queryClient } from '@/router'
+import { queryClient } from '@/main'
 
 export async function GetImages(imageLinks: string[]): Promise<string[]> {
     const promises = imageLinks.map(async img => {

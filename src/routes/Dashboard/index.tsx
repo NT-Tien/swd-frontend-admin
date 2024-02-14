@@ -1,4 +1,4 @@
-import { DashboardLayoutRoute } from '@/layouts/DashboardLayout'
+import { AuthDashboardLayoutRoute } from '@/layouts/AuthenticatedLayout'
 import { createRoute } from '@tanstack/react-router'
 
 const component = function DashboardPage() {
@@ -7,6 +7,6 @@ const component = function DashboardPage() {
 
 export const DashboardRoute = createRoute({
     component,
-    getParentRoute: () => DashboardLayoutRoute,
+    getParentRoute: () => AuthDashboardLayoutRoute,
     path: '/dashboard',
 })
