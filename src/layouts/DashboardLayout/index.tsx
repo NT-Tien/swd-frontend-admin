@@ -13,6 +13,7 @@ import {
     Basket,
     Bell,
     Book,
+    BookOpen,
     Browser,
     Gear,
     House,
@@ -34,6 +35,7 @@ import Layout from 'antd/es/layout'
 import Menu from 'antd/es/menu'
 import theme from 'antd/es/theme'
 import { useState } from 'react'
+import { BookingsRoute } from '../../routes/Bookings'
 
 const { useToken } = theme
 const { Sider, Header, Content } = Layout
@@ -138,6 +140,12 @@ function DashboardLayout() {
                             onClick: () => navigate({ to: AccountListRoute.to, search: { page: 1 } }),
                         }),
                     ],
+                }),
+                getItem_1({
+                    key: 'bookings',
+                    label: 'Bookings',
+                    icon: <BookOpen />,
+                    onClick: () => navigate({ to: BookingsRoute.to, search: { page: 1 } }),
                 }),
             ],
         }),

@@ -124,8 +124,8 @@ export default function UpdateProductForm({ productId }: UpdateProductFormProps)
             form={form}
             name='create-product-form'
             initialValues={{
-                name: product.name,
-                description: product.description,
+                name: product!.name,
+                description: product!.description,
                 images: images,
                 optional: [],
             }}
@@ -148,7 +148,7 @@ export default function UpdateProductForm({ productId }: UpdateProductFormProps)
                         { max: 200 },
                         {
                             async validator(_, value) {
-                                if (value === product.name) return Promise.resolve()
+                                if (value === product!.name) return Promise.resolve()
                                 const alreadyExists = await Product_GetByName({ name: value })
                                 if (alreadyExists.data !== null) {
                                     return Promise.reject('Product with this name already exists.')
@@ -181,12 +181,12 @@ export default function UpdateProductForm({ productId }: UpdateProductFormProps)
                                 required: true,
                             },
                         ]}
-                        initialValue={product.category_id.id}
+                        initialValue={product?.category_id.id}
                     >
                         <Select
                             showSearch
                             placeholder='Select a Category'
-                            options={categories.data.map(cat => ({
+                            options={categories?.data.map(cat => ({
                                 value: cat.id ?? '',
                                 label: cat.name ?? '',
                             }))}

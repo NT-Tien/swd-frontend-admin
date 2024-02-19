@@ -32,8 +32,9 @@ const component = function LoginPage() {
 
     const signInMutation = useMutation({
         mutationFn: Auth_LoginGoogle,
-        onSuccess: res => {
+        onSuccess: async res => {
             AuthenticationHandler.login(res.data)
+            await verifyTokenMutation.mutateAsync()
         },
         onError: () => {
             AuthenticationHandler.logout()
@@ -69,8 +70,6 @@ const component = function LoginPage() {
         const result = await signInWithPopup(auth, new GoogleAuthProvider())
         const token = await result.user.getIdToken()
         await signInMutation.mutateAsync({ token })
-
-        await verifyTokenMutation.mutateAsync()
     }
 
     useEffect(() => {

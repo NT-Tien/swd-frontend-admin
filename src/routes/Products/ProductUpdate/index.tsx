@@ -1,9 +1,9 @@
 import { queryCategory_GetAll } from '@/api/category/Category_GetAll'
 import { AuthDashboardLayoutRoute } from '@/layouts/AuthenticatedLayout'
+import UpdateOptionalProductForm from '@/routes/Products/ProductUpdate/components/UpdateOptionalProductForm'
 import UpdateProductForm from '@/routes/Products/ProductUpdate/components/UpdateProductForm'
 import { createRoute, defer } from '@tanstack/react-router'
 import { Tabs } from 'antd'
-import UpdateOptionalProductForm from './components/UpdateOptionalProductForm.1'
 
 const component = function ProductUpdatePage() {
     const id = ProductUpdateRoute.useParams({

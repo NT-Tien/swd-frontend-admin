@@ -7,7 +7,6 @@ type ImportCategoriesModalProps = {
 
 export default function ImportCategoriesModal({ children }: ImportCategoriesModalProps) {
     const [open, setOpen] = useState(false)
-    const [step, setStep] = useState(1)
 
     function handleOpen() {
         setOpen(true)
