@@ -6,7 +6,7 @@ import ProductImagesView from '@/routes/Products/ProductView/components/ProductI
 import { EditOutlined } from '@ant-design/icons'
 import { Info } from '@phosphor-icons/react'
 import { Button, Card, Col, Flex, Row, Tooltip, Typography } from 'antd'
-import format from 'date-fns/format'
+import { format } from 'date-fns'
 
 const DEFAULT_GUTTER_SIZE = 10
 

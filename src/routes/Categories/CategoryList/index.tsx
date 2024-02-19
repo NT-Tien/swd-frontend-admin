@@ -9,8 +9,8 @@ import { ArrowsClockwise, Plus, Trash } from '@phosphor-icons/react'
 import { useQuery } from '@tanstack/react-query'
 import { createRoute } from '@tanstack/react-router'
 import { Button, Dropdown, Flex, Table, Typography } from 'antd'
-import format from 'date-fns/format'
 import { Key, useState } from 'react'
+import { format } from 'date-fns'
 
 const component = function CategoryListPage() {
     const { data: categories, isLoading, isError } = useQuery(queryCategory_GetAll())

@@ -3,7 +3,7 @@ import { Button, Form, Modal, Typography, Upload, UploadFile } from 'antd'
 import { ReactNode, useState } from 'react'
 
 type FieldType = {
-    file: UploadFile<any>[]
+    file: UploadFile<any>
 }
 
 type ImportCategoriesModalProps = {
@@ -12,6 +12,7 @@ type ImportCategoriesModalProps = {
 
 export default function ImportCategoriesModal({ children }: ImportCategoriesModalProps) {
     const [open, setOpen] = useState(false)
+    const [form] = Form.useForm<FieldType>()
     // const [data, setData] = useState('')
 
     function handleOpen() {
@@ -20,10 +21,11 @@ export default function ImportCategoriesModal({ children }: ImportCategoriesModa
 
     function handleClose() {
         setOpen(false)
+        form.resetFields()
     }
 
     function handleFinish() {
-        console.log('FINISHING')
+        console.log(form.getFieldsValue())
     }
 
     return (
@@ -43,9 +45,17 @@ export default function ImportCategoriesModal({ children }: ImportCategoriesModa
 ]`}
                     </pre>
                 </Typography.Paragraph>
-                <Form onFinish={handleFinish}>
-                    <Form.Item<FieldType> name='file' label='File' getValueFromEvent={e => e && e.fileList}>
-                        <Upload.Dragger multiple={false} accept='.json' beforeUpload={() => false} maxCount={1}>
+                <Form form={form} onFinish={handleFinish}>
+                    <Form.Item<FieldType> name='file' label='File' getValueFromEvent={e => e}>
+                        <Upload.Dragger
+                            multiple={false}
+                            accept='.json'
+                            beforeUpload={() => false}
+                            maxCount={1}
+                            onChange={info => {
+                                form.setFieldValue('file', info.file)
+                            }}
+                        >
                             <p className='ant-upload-drag-icon'>
                                 <InboxOutlined />
                             </p>

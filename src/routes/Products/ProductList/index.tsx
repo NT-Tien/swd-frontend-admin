@@ -11,7 +11,7 @@ import { ArrowsClockwise, Pencil, Plus, Trash } from '@phosphor-icons/react'
 import { useQuery } from '@tanstack/react-query'
 import { createRoute, useNavigate } from '@tanstack/react-router'
 import { Button, Dropdown, Flex, Table, Typography } from 'antd'
-import format from 'date-fns/format'
+import { format } from 'date-fns'
 
 type ProductListSearch = {
     page?: number

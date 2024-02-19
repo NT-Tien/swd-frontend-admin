@@ -9,6 +9,7 @@ import { Await, createRoute, defer, useNavigate } from '@tanstack/react-router'
 import { Button, Card, Divider, Flex, Form, Input, Select, Tooltip, Typography, Upload, UploadFile } from 'antd'
 import { Suspense } from 'react'
 import { Product_GetByName } from '../../../api/product/Product_GetByName'
+import { Category } from '@/lib/types/Category'
 
 const { Item: FormItem, List: FormList } = Form
 
@@ -150,12 +151,12 @@ const component = function ProductCreatePage() {
                                         <Select
                                             showSearch
                                             placeholder='Select a Category'
-                                            options={categories.data.data.map(cat => ({
+                                            options={categories.data.data.map((cat: Category) => ({
                                                 value: cat.id ?? '',
                                                 label: cat.name ?? '',
                                             }))}
                                             filterOption={(input, option) =>
-                                                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                                ((option?.label as string) ?? '').toLowerCase().includes(input.toLowerCase())
                                             }
                                             onChange={value => {
                                                 form.setFieldValue('categoryId', value)
