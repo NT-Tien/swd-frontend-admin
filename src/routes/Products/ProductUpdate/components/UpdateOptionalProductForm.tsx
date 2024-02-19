@@ -29,11 +29,7 @@ export default function UpdateOptionalProductForm({ productId }: UpdateOptionalP
                                     There {optionalProducts?.length === 1 ? 'is' : 'are'} {optionalProducts.length} Optional Product
                                     {optionalProducts.length !== 1 && 's'}
                                 </Typography.Title>
-                                <Button
-                                    onClick={() => handleOpen({ productId })}
-                                    type='primary'
-                                    disabled={optionalProducts?.length === 5 ?? true}
-                                >
+                                <Button onClick={() => handleOpen({ productId })} type='primary' disabled={optionalProducts?.length === 5}>
                                     Add Optional Product
                                 </Button>
                             </Flex>
