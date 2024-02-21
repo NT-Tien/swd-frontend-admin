@@ -1,9 +1,6 @@
-import { AccountListBreadcrumb } from '@/routes/Accounts/AccountList/breadcrumb'
 import { AccountViewRoute } from '@/routes/Accounts/AccountView'
-import { AccountViewBreadcrumb } from '@/routes/Accounts/AccountView/breadcrumb'
-import { DashboardBreadcrumb } from '@/routes/Dashboard/breadcrumb'
 import { Await } from '@tanstack/react-router'
-import { Breadcrumb, Card, Descriptions, Row } from 'antd'
+import { Card, Descriptions, Row } from 'antd'
 import dayjs from 'dayjs'
 import { Suspense } from 'react'
 
@@ -11,13 +8,9 @@ export default function AccountView() {
     const account = AccountViewRoute.useLoaderData({
         select: data => data.account,
     })
-    const id = AccountViewRoute.useParams({
-        select: data => data.id,
-    })
 
     return (
         <div>
-            <Breadcrumb items={[DashboardBreadcrumb, AccountListBreadcrumb, AccountViewBreadcrumb(id)]} />
             <Row gutter={10}>
                 <Card>
                     <Suspense fallback={<div>Loading...</div>}>

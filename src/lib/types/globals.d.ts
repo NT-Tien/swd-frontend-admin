@@ -1,5 +1,3 @@
-import { BreadcrumbProps } from 'antd'
-
 declare type GetResponse<T> = {
     data: T[]
     total: number
@@ -23,5 +21,3 @@ declare type ErrorResponse = {
 }
 
 declare type ApiResponse<T> = SuccessResponse<T> | ErrorResponse
-
-export type Breadcrumb = NonNullable<BreadcrumbProps['items']>[number]

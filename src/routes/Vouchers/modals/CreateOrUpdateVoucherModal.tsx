@@ -208,7 +208,7 @@ export default function CreateOrUpdateVoucherModal({ children }: CreateVoucherMo
                                     message: 'Expired date is required',
                                 },
                                 {
-                                    validator: (rule, value) => {
+                                    validator: (_, value) => {
                                         if (currentVoucher) return Promise.resolve()
                                         if (value < Date.now()) {
                                             return Promise.reject('Expired date must be in the future.')
