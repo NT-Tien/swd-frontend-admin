@@ -108,9 +108,7 @@ export default function AboutProduct({ product }: AboutProductProps) {
                         modalProps={{
                             footer: null,
                         }}
-                        modalComponent={() => (
-                            <Typography.Paragraph>{product.description}</Typography.Paragraph>
-                        )}
+                        modalComponent={() => <Typography.Paragraph>{product.description}</Typography.Paragraph>}
                     >
                         {({ handleOpen }) => (
                             <Card
@@ -144,7 +142,7 @@ export default function AboutProduct({ product }: AboutProductProps) {
                 </Col>
             </Row>
             <Row gutter={[DEFAULT_GUTTER_SIZE, DEFAULT_GUTTER_SIZE]}>
-                <OptionalProductsCard productId={product.id} />
+                <OptionalProductsCard optionalProducts={product.optionProducts} />
             </Row>
         </Flex>
     )

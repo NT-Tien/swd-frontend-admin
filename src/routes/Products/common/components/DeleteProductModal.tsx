@@ -3,7 +3,7 @@ import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { queryClient } from '@/main'
 import { DeleteProductFull } from '@/routes/Products/common/util/DeleteProductFull'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { Button, Modal, Spin } from 'antd'
+import { Button, Modal, Popconfirm, Spin } from 'antd'
 import { ReactNode, useState } from 'react'
 
 type DeleteProductModal = {
@@ -31,16 +31,26 @@ export default function DeleteProductModal({ children, afterDelete }: DeleteProd
                 optionalProducts?.map(op => op.id) ?? [], // I've disabled the button when optionalProducts is undefined
             ),
         onSuccess: () => {
-            handleClose()
-            messageApi.success('Product deleted successfully')
+            setTimeout(() => messageApi.success('Product deleted successfully'), 250)
             queryClient.invalidateQueries({
                 queryKey: ['products'],
             })
+            handleClose()
             afterDelete && afterDelete()
         },
         onError: error => {
-            messageApi.error('Error deleting product')
+            setTimeout(() => messageApi.error('Error deleting product'), 250)
             devLog('Error deleting product: ', error.message)
+        },
+        onMutate: () => {
+            messageApi.open({
+                type: 'loading',
+                content: 'Deleting Product',
+                key: 'deleting-product',
+            })
+        },
+        onSettled: () => {
+            messageApi.destroy('deleting-product')
         },
     })
 
@@ -65,9 +75,15 @@ export default function DeleteProductModal({ children, afterDelete }: DeleteProd
                 title='Delete Product'
                 footer={[
                     <Button onClick={handleClose}>Cancel</Button>,
-                    <Button type='primary' danger onClick={handleOk} disabled={!isSuccess} loading={deleteProduct.isPending}>
-                        Delete
-                    </Button>,
+                    <Popconfirm
+                        title='Please confirm action'
+                        description='You are about to delete a product. This action is NOT reversible!'
+                        onConfirm={handleOk}
+                    >
+                        <Button type='primary' danger disabled={!isSuccess} loading={deleteProduct.isPending}>
+                            Delete
+                        </Button>
+                    </Popconfirm>,
                 ]}
             >
                 {isLoading && <Spin />}

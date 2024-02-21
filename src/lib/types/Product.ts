@@ -1,4 +1,5 @@
 import { Category } from '@/lib/types/Category'
+import { ProductOptional } from '@/lib/types/ProductOptional'
 
 export type Product = {
     id: string
@@ -10,6 +11,7 @@ export type Product = {
     images: string[]
     description: string
     category_id: Category
+    optionProducts: ProductOptional[]
 }
 
 export function ResponseToProduct(response: Record<string, any>): Product {
@@ -23,6 +25,7 @@ export function ResponseToProduct(response: Record<string, any>): Product {
         images: response.images,
         description: response.description,
         category_id: response.category_id,
+        optionProducts: response.optionProducts ?? [],
     } satisfies Product
 }
 

@@ -24,7 +24,7 @@ function AuthenticatedLayout() {
     })
 
     return (
-        <Suspense>
+        <Suspense fallback={'Loading...'}>
             <Await promise={isAuthenticated}>
                 {res => {
                     if (res.data === true) {

@@ -6,6 +6,7 @@ import path from 'path'
 export default defineConfig({
     plugins: [react()],
     envPrefix: 'SWD_',
+    mode: 'production',
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './src'),

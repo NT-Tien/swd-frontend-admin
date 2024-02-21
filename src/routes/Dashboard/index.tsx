@@ -1,12 +1,8 @@
 import { AuthDashboardLayoutRoute } from '@/layouts/AuthenticatedLayout'
-import { createRoute } from '@tanstack/react-router'
-
-const component = function DashboardPage() {
-    return <div>Hello world</div>
-}
+import { createRoute, lazyRouteComponent } from '@tanstack/react-router'
 
 export const DashboardRoute = createRoute({
-    component,
+    component: lazyRouteComponent(() => import('./page')),
     getParentRoute: () => AuthDashboardLayoutRoute,
     path: '/dashboard',
 })
