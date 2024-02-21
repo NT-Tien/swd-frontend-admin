@@ -3,6 +3,8 @@ import Cookies from 'js-cookie'
 import { jwtDecode } from 'jwt-decode'
 
 export default class AuthenticationHandler {
+    private static memoryToken: string | undefined
+
     static login(data: AuthResponse) {
         const expiryDate = new Date(new Date().getTime() + 2 * 60 * 60 * 1000) // 2 hours
 
@@ -12,6 +14,7 @@ export default class AuthenticationHandler {
         Cookies.set('token_email', data.account.email, {
             expires: expiryDate,
         })
+        this.memoryToken = data.token
     }
 
     static logout() {
@@ -19,6 +22,7 @@ export default class AuthenticationHandler {
         Cookies.set('token_email', '')
         Cookies.remove('token')
         Cookies.remove('token_email')
+        this.memoryToken = undefined
     }
 
     static getToken() {
@@ -29,6 +33,25 @@ export default class AuthenticationHandler {
         }
 
         return currentToken
+    }
+
+    static getMemoryToken() {
+        return this.memoryToken
+    }
+
+    static quickTokenValidate() {
+        if (this.getToken() !== this.getMemoryToken()) {
+            return false
+        }
+
+        const payload = jwtDecode(this.getToken()) as {
+            exp: number
+        }
+        if (payload.exp * 1000 < new Date().getTime()) {
+            return false
+        }
+
+        return true
     }
 
     static getEmail() {

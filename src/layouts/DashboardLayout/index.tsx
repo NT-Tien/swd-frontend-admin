@@ -22,6 +22,7 @@ import theme from 'antd/es/theme'
 import { BookingsRoute } from '../../routes/Bookings'
 import { MoneyCollectFilled } from '@ant-design/icons'
 import { VouchersRoute } from '@/routes/Vouchers'
+import { AccountCreateRoute } from '@/routes/Accounts/AccountCreate'
 
 const { useToken } = theme
 const { Sider, Header, Content } = Layout
@@ -120,7 +121,7 @@ function DashboardLayout() {
                         getItem_2({
                             key: 'account-create',
                             label: 'Create Account',
-                            onClick: () => navigate({ to: AccountListRoute.to, search: { page: 1 } }),
+                            onClick: () => navigate({ to: AccountCreateRoute.to }),
                         }),
                     ],
                 }),
@@ -133,10 +134,9 @@ function DashboardLayout() {
                 getItem_1({
                     key: 'vouchers',
                     label: 'Vouchers',
-                    icon: <MoneyCollectFilled/>,
-                    onClick: () => navigate({ to: VouchersRoute.to }),
-
-                })
+                    icon: <MoneyCollectFilled />,
+                    onClick: () => navigate({ to: VouchersRoute.to, search: { tab: 'all' } }),
+                }),
             ],
         }),
         getGroup({
@@ -165,19 +165,7 @@ function DashboardLayout() {
                 minHeight: '100vh',
             }}
         >
-            <Sider
-                collapsible
-                breakpoint='md'
-                collapsedWidth={80}
-                style={{
-                    position: 'relative',
-                    height: 'auto',
-                    zIndex: '100',
-                }}
-                zeroWidthTriggerStyle={{
-                    display: 'none',
-                }}
-            >
+            <Sider collapsible breakpoint='md' collapsedWidth={80} style={{}}>
                 <Flex
                     justify='space-between'
                     style={{

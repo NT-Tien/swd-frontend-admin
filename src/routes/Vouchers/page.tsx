@@ -1,5 +1,6 @@
 import RefreshButton from '@/common/components/RefreshButton'
 import { VouchersRoute } from '@/routes/Vouchers'
+import CreateOrUpdateVoucherModal from '@/routes/Vouchers/modals/CreateOrUpdateVoucherModal'
 import { tabItems, tabKeys } from '@/routes/Vouchers/util/tabItems'
 import { Plus } from '@phosphor-icons/react'
 import { Button, Flex, Tabs, Typography } from 'antd'
@@ -22,7 +23,7 @@ export default function VouchersPage() {
                 }}
             >
                 Vouchers List
-                <RefreshButton isLoading={false} queryKey={currentTab === 'all' ? ['vouchers'] : ['vouchers-deleted']} />
+                <RefreshButton isLoading={false} queryKey={currentTab === 'all' ? ['vouchers'] : ['vouchers-disabled']} />
             </Typography.Title>
             <Tabs
                 defaultActiveKey={currentTab}
@@ -32,9 +33,13 @@ export default function VouchersPage() {
                     setCurrentTab(tab as tabKeys)
                 }}
                 tabBarExtraContent={
-                    <Button type='primary' icon={<Plus />} onClick={() => alert('Not implemented')}>
-                        Add Voucher
-                    </Button>
+                    <CreateOrUpdateVoucherModal>
+                        {({ handleOpen }) => (
+                            <Button type='primary' icon={<Plus />} onClick={() => handleOpen()}>
+                                Add Voucher
+                            </Button>
+                        )}
+                    </CreateOrUpdateVoucherModal>
                 }
             />
         </Flex>

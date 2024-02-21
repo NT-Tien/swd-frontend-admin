@@ -11,7 +11,7 @@ export type Voucher_Delete_Res = {
 }
 
 export function Voucher_Delete({ id }: Voucher_Delete_Req) {
-    return axios.delete<Voucher_Delete_Res>('voucher/delete/' + encodeURIComponent(id), {
+    return axios.put<Voucher_Delete_Res>('voucher/delete/' + encodeURIComponent(id), {
         headers: {
             Authorization: `Bearer ${AuthenticationHandler.getToken()}`,
         },

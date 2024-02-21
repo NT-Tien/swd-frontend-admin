@@ -23,16 +23,19 @@ export default function CategoryCreatePage() {
         onSuccess: async () => {
             setTimeout(
                 () =>
-                    messageApi.success({
-                        content: (
-                            <Flex gap={10}>
-                                <span>Successfully created category</span>
-                                <Button onClick={() => navigate({ to: CategoryListRoute.to })} type='dashed'>
-                                    View
-                                </Button>
-                            </Flex>
-                        ),
-                    }),
+                    messageApi.success(
+                        <span>
+                            Category created successfully.
+                            <Button
+                                onClick={() => navigate({ to: CategoryListRoute.to, search: { tab: 'all' } })}
+                                style={{
+                                    marginLeft: '10px',
+                                }}
+                            >
+                                View
+                            </Button>
+                        </span>,
+                    ),
                 250,
             )
             await queryClient.invalidateQueries({
@@ -56,19 +59,10 @@ export default function CategoryCreatePage() {
         },
     })
 
-    async function handleFinish() {
-        await createCategory.mutateAsync({
-            name: form.getFieldValue('name'),
-        })
-        navigate({
-            to: CategoryListRoute.to,
-        })
-    }
-
     return (
         <Flex vertical gap={20}>
             <Flex justify='space-between'>
-                <Typography.Title level={2}>Create a new Product</Typography.Title>
+                <Typography.Title level={2}>Create a new Category</Typography.Title>
                 <ImportCategoriesModal>
                     {({ handleOpen }) => (
                         <Button type='primary' icon={<UploadSimple size={14} />} onClick={handleOpen}>
@@ -78,14 +72,18 @@ export default function CategoryCreatePage() {
                 </ImportCategoriesModal>
             </Flex>
             <Card size='default' title='Category Details'>
-                <Form
+                <Form<FieldType>
                     form={form}
                     name='add-category-form'
                     initialValues={{
                         name: '',
                     }}
                     autoComplete='off'
-                    onFinish={handleFinish}
+                    onFinish={values => {
+                        createCategory.mutate({
+                            name: values.name,
+                        })
+                    }}
                 >
                     <FormItem<FieldType>
                         name='name'

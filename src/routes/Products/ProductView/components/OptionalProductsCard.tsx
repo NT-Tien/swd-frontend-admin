@@ -1,7 +1,7 @@
 import { ProductOptional } from '@/lib/types/ProductOptional'
 import getColumnSearchProps from '@/lib/util/getColumnSearchProps'
 import { Card, Flex, Table, theme } from 'antd'
-import { format } from 'date-fns'
+import dayjs from 'dayjs'
 
 const { useToken } = theme
 
@@ -83,14 +83,14 @@ export default function OptionalProductsCard({ optionalProducts }: OptionalProdu
                         title: 'Created',
                         dataIndex: 'createdAt',
                         key: 'createdAt',
-                        render: value => <div>{format(value, 'dd/MM/yyyy')}</div>,
+                        render: value => <div>{dayjs(value).format('DD-MM-YYYY')}</div>,
                         sorter: (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
                     },
                     {
                         title: 'Updated',
                         dataIndex: 'updatedAt',
                         key: 'updatedAt',
-                        render: value => <div>{format(value, 'dd/MM/yyyy')}</div>,
+                        render: value => <div>{dayjs(value).format('DD-MM-YYYY')}</div>,
                         sorter: (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime(),
                     },
                 ]}

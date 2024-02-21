@@ -1,21 +1,26 @@
+import { Account_Delete } from '@/api/account/Account_Delete'
 import { queryAccount_GetAll } from '@/api/account/Account_GetAll'
+import DeleteModal from '@/common/components/modal/DeleteModal'
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { Account, Role } from '@/lib/types/Account'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
+import { queryClient } from '@/main'
 import { AccountListRoute } from '@/routes/Accounts/AccountList'
-import DeleteAccountModal from '@/routes/Accounts/AccountList/modals/DeleteAccountModal'
 import UpdatePasswordmodal from '@/routes/Accounts/AccountList/modals/UpdatePasswordModal'
 import UpdateRoleModal from '@/routes/Accounts/AccountList/modals/UpdateRoleModal'
 import { IdentificationCard, Password, ShieldStar, Trash } from '@phosphor-icons/react'
 import { useQuery } from '@tanstack/react-query'
 import { Dropdown, Table } from 'antd'
-import { format } from 'date-fns'
 import '../style.css'
+import { useNavigate } from '@tanstack/react-router'
+import { AccountViewRoute } from '@/routes/Accounts/AccountView'
+import dayjs from 'dayjs'
 
 const size = 5
 
 export default function AllAccountsList() {
+    const navigate = useNavigate()
     const page = AccountListRoute.useSearch({
         select: data => data.page,
     })
@@ -28,7 +33,15 @@ export default function AllAccountsList() {
     }
 
     return (
-        <DeleteAccountModal>
+        <DeleteModal
+            mutationFn={Account_Delete}
+            title='account'
+            afterSuccess={() => {
+                queryClient.invalidateQueries({
+                    queryKey: ['accounts'],
+                })
+            }}
+        >
             {({ handleOpen: handleOpenDeleteAccount }) => (
                 <UpdateRoleModal>
                     {({ handleOpen: handleOpenUpdateRole }) => (
@@ -62,7 +75,7 @@ export default function AllAccountsList() {
                                             title: 'Created At',
                                             dataIndex: 'createdAt',
                                             key: 'createdAt',
-                                            render: value => format(new Date(value), 'dd/MM/yyyy'),
+                                            render: value => dayjs(value).format('DD-MM-YYYY'),
                                             sorter: (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
                                             sortDirections: ['ascend', 'descend'],
                                             defaultSortOrder: 'descend',
@@ -71,7 +84,7 @@ export default function AllAccountsList() {
                                             title: 'Updated At',
                                             dataIndex: 'updatedAt',
                                             key: 'updatedAt',
-                                            render: value => format(new Date(value), 'dd/MM/yyyy'),
+                                            render: value => dayjs(value).format('DD-MM-YYYY'),
                                             sorter: (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime(),
                                             sortDirections: ['ascend', 'descend'],
                                         },
@@ -142,9 +155,14 @@ export default function AllAccountsList() {
                                                             },
                                                         ],
                                                     }}
-                                                    onClick={() => {
-                                                        alert(`Viewing account ${record.id} with email: ${record.email}`)
-                                                    }}
+                                                    onClick={() =>
+                                                        navigate({
+                                                            to: AccountViewRoute.to,
+                                                            params: {
+                                                                id: record.id,
+                                                            },
+                                                        })
+                                                    }
                                                 >
                                                     View
                                                 </Dropdown.Button>
@@ -161,6 +179,6 @@ export default function AllAccountsList() {
                     )}
                 </UpdateRoleModal>
             )}
-        </DeleteAccountModal>
+        </DeleteModal>
     )
 }

@@ -1,16 +1,29 @@
 import { Auth_VerifyTokenAdmin } from '@/api/auth/Auth_VerifyTokenAdmin'
 import { DashboardLayoutRoute } from '@/layouts/DashboardLayout'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { LoginRoute } from '@/routes/Login'
 import { Await, Navigate, Outlet, createRoute, defer } from '@tanstack/react-router'
+import { AxiosResponse } from 'axios'
 import { Suspense } from 'react'
-import Cookies from 'js-cookie'
 
 export const AuthDashboardLayoutRoute = createRoute({
     component: AuthenticatedLayout,
     getParentRoute: () => DashboardLayoutRoute,
     id: 'authenticated-layout',
     loader: () => {
-        const isAuthenticated = Auth_VerifyTokenAdmin()
+        let isAuthenticated
+
+        if (AuthenticationHandler.quickTokenValidate()) {
+            isAuthenticated = new Promise(resolve =>
+                resolve({
+                    data: true,
+                    status: 200,
+                    statusText: 'OK',
+                } as AxiosResponse<boolean, any>),
+            )
+        } else {
+            isAuthenticated = Auth_VerifyTokenAdmin()
+        }
 
         return {
             isAuthenticated: defer(isAuthenticated),
@@ -26,11 +39,11 @@ function AuthenticatedLayout() {
     return (
         <Suspense fallback={'Loading...'}>
             <Await promise={isAuthenticated}>
-                {res => {
+                {(res: any) => {
                     if (res.data === true) {
                         return <Outlet key={'OUTLET_MAIN'} />
                     } else {
-                        Cookies.remove('token')
+                        AuthenticationHandler.logout()
                         return (
                             <Navigate
                                 to={LoginRoute.to}

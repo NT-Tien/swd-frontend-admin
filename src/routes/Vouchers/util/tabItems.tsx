@@ -13,6 +13,6 @@ export const tabItems: (Tab & { key: tabKeys })[] = [
     {
         key: 'disabled',
         label: 'Disabled',
-        children: 'FDI',
+        children: <AllVouchersList disabled />,
     },
 ]

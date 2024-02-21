@@ -7,7 +7,7 @@ export type Voucher_Update_Req = {
     id: string
     payload: {
         code: string
-        expired_date: number
+        expired_date: string // utc string date (date.toISOString())
         amount: number
         limit_total_max: number
         limit_total_min: number

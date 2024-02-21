@@ -10,7 +10,7 @@ import { FileX, Pencil, Trash } from '@phosphor-icons/react'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { Dropdown, Table } from 'antd'
-import { format } from 'date-fns'
+import dayjs from 'dayjs'
 
 const size = 5
 
@@ -51,7 +51,7 @@ export default function DisabledProductsList() {
                                     title: 'Disabled Date',
                                     dataIndex: 'deletedAt',
                                     key: 'deletedAt',
-                                    render: value => format(new Date(value), 'dd/MM/yyyy'),
+                                    render: value => dayjs(value).format('DD-MM-YYYY'),
                                     sorter: (a, b) => a.deletedAt!.getTime() - b.deletedAt!.getTime(),
                                     sortDirections: ['ascend', 'descend'],
                                     defaultSortOrder: 'descend',
@@ -61,7 +61,7 @@ export default function DisabledProductsList() {
                                     title: 'Updated At',
                                     dataIndex: 'updatedAt',
                                     key: 'updatedAt',
-                                    render: value => format(new Date(value), 'dd/MM/yyyy'),
+                                    render: value => dayjs(value).format('DD-MM-YYYY'),
                                     sorter: (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime(),
                                     sortDirections: ['ascend', 'descend'],
                                     width: 150,

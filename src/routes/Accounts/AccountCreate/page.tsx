@@ -3,9 +3,11 @@ import { Account_GetOneWithEmail } from '@/api/account/Account_GetOneWithEmail'
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { Role } from '@/lib/types/Account'
 import { queryClient } from '@/main'
+import { AccountListRoute } from '@/routes/Accounts/AccountList'
+import { UploadSimple } from '@phosphor-icons/react'
 import { useMutation } from '@tanstack/react-query'
-import { Button, Card, Form, Input, Modal, Select } from 'antd'
-import { ReactNode, useState } from 'react'
+import { useNavigate } from '@tanstack/react-router'
+import { Button, Card, Flex, Form, Input, Select, Typography } from 'antd'
 
 type FieldType = {
     email: string
@@ -14,15 +16,10 @@ type FieldType = {
     role: string
 }
 
-type CreateAccountModalProps = {
-    children: ({ handleOpen }: { handleOpen: () => void }) => ReactNode
-}
-
-export default function CreateAccountModal({ children }: CreateAccountModalProps) {
-    const [open, setOpen] = useState(false)
-    const [form] = Form.useForm<FieldType>()
+export default function AccountCreatePage() {
+    const [form] = Form.useForm()
     const { messageApi } = useMessage()
-
+    const navigate = useNavigate()
     const createAccountMutation = useMutation({
         mutationFn: Account_Create,
         onMutate: () => {
@@ -36,9 +33,21 @@ export default function CreateAccountModal({ children }: CreateAccountModalProps
             messageApi.destroy('creating-account')
         },
         onSuccess: () => {
-            handleClose()
+            form.resetFields()
             setTimeout(() => {
-                messageApi.success('Account created successfully.')
+                messageApi.success(
+                    <span>
+                        Account created successfully.
+                        <Button
+                            onClick={() => navigate({ to: AccountListRoute.to, search: { page: 1 } })}
+                            style={{
+                                marginLeft: '10px',
+                            }}
+                        >
+                            View
+                        </Button>
+                    </span>,
+                )
             }, 250)
             queryClient.invalidateQueries({
                 queryKey: ['accounts'],
@@ -52,43 +61,15 @@ export default function CreateAccountModal({ children }: CreateAccountModalProps
         },
     })
 
-    function handleOpen() {
-        setOpen(true)
-    }
-
-    function handleClose() {
-        setOpen(false)
-        form.resetFields()
-    }
-
-    function handleOk() {
-        form.submit()
-    }
-
     return (
-        <>
-            {children({ handleOpen })}
-            <Modal
-                open={open}
-                onCancel={handleClose}
-                title='Create Account'
-                footer={[
-                    <Button type='default' onClick={handleClose}>
-                        Close
-                    </Button>,
-                    <Button type='primary' loading={createAccountMutation.isPending} onClick={handleOk}>
-                        Create Account
-                    </Button>,
-                ]}
-            >
-                <Card
-                    style={{
-                        marginBlock: '10px',
-                    }}
-                >
-                    <strong>Create a new Account</strong> with entered Role. The user will receive <strong>an email</strong> containing a
-                    link to login and their password.
-                </Card>
+        <Flex vertical gap={20}>
+            <Flex justify='space-between'>
+                <Typography.Title level={2}>Create a new Account</Typography.Title>
+                <Button type='primary' icon={<UploadSimple size={14} />}>
+                    Import from JSON
+                </Button>
+            </Flex>
+            <Card size='default' title='Account Details'>
                 <Form
                     name='create-account-modal-form'
                     form={form}
@@ -121,11 +102,15 @@ export default function CreateAccountModal({ children }: CreateAccountModalProps
                             },
                             {
                                 validator: async (_, value) => {
-                                    const exists = await Account_GetOneWithEmail({ email: value })
-                                    if (exists.data === null) {
+                                    try {
+                                        const exists = await Account_GetOneWithEmail({ email: value })
+                                        if (exists.data === null) {
+                                            return Promise.resolve()
+                                        } else {
+                                            return Promise.reject('Email already exists')
+                                        }
+                                    } catch {
                                         return Promise.resolve()
-                                    } else {
-                                        return Promise.reject('Email already exists')
                                     }
                                 },
                             },
@@ -190,8 +175,13 @@ export default function CreateAccountModal({ children }: CreateAccountModalProps
                             }))}
                         />
                     </Form.Item>
+                    <Form.Item>
+                        <Button type='primary' htmlType='submit' loading={createAccountMutation.isPending}>
+                            Create Account
+                        </Button>
+                    </Form.Item>
                 </Form>
-            </Modal>
-        </>
+            </Card>
+        </Flex>
     )
 }

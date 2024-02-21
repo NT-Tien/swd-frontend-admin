@@ -1,4 +1,5 @@
 import { Auth_LoginGoogle } from '@/api/auth/Auth_LoginGoogle'
+import { Auth_VerifyTokenAdmin } from '@/api/auth/Auth_VerifyTokenAdmin'
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { auth } from '@/firebase'
 import AuthenticationHandler from '@/lib/AuthenticationHandler'
@@ -28,9 +29,7 @@ export default function LoginPage() {
         mutationFn: Auth_LoginGoogle,
         onSuccess: async res => {
             AuthenticationHandler.login(res.data)
-            navigate({
-                to: DashboardRoute.to,
-            })
+            await verifyAdminMutation.mutateAsync()
         },
         onError: () => {
             AuthenticationHandler.logout()
@@ -44,9 +43,36 @@ export default function LoginPage() {
                 duration: 0,
             })
         },
-        onSettled: () => {
-            messageApi.destroy('logging-in')
+    })
+
+    const verifyAdminMutation = useMutation({
+        mutationFn: Auth_VerifyTokenAdmin,
+        onSuccess: res => {
+            if (res.data) {
+                navigate({
+                    to: DashboardRoute.to,
+                })
+            } else {
+                AuthenticationHandler.logout()
+                navigate({
+                    to: LoginRoute.to,
+                    search: {
+                        error: 'You do not have permission to view this page',
+                    },
+                })
+            }
         },
+        onError: () => {
+            AuthenticationHandler.logout()
+            navigate({
+                to: LoginRoute.to,
+                search: {
+                    error: 'You do not have permission to view this page',
+                },
+            })
+            setTimeout(() => messageApi.error('Error while logging in. Please try again.'), 250)
+        },
+        onSettled: () => messageApi.destroy('logging-in'),
     })
 
     async function loginGoogle() {
