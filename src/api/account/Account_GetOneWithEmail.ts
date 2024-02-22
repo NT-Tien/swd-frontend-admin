@@ -16,7 +16,7 @@ export type Account_GetOneWithEmail_Res = {
 export async function Account_GetOneWithEmail({ email }: Account_GetOneWithEmail_Req) {
     return await axios.get<Account_GetOneWithEmail_Res>(`/account/get-one-with-email/${encodeURIComponent(email)}`, {
         headers: {
-            Authorization: `Bearer ${AuthenticationHandler.getToken()}`,
+            Authorization: `Bearer ${AuthenticationHandler.getCookieToken()}`,
         },
         transformResponse: [
             ParseResponse,

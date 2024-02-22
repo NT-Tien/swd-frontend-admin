@@ -13,7 +13,7 @@ export type Product_Create_Req = {
 export type Product_Create_Res = Product
 
 export async function Product_Create(product: Product_Create_Req) {
-    const token = AuthenticationHandler.getToken()
+    const token = AuthenticationHandler.getCookieToken()
 
     return await axios.post<Product_Create_Res>('product/create', product, {
         headers: {

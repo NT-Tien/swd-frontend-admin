@@ -12,7 +12,7 @@ export type BookingVisit_GetAll_Req = {
 export type BookingVisit_GetAll_Res = GetResponse<BookingVisit>
 
 export async function BookingVisit_GetAll({ page, limit }: BookingVisit_GetAll_Req) {
-    const token = AuthenticationHandler.getToken()
+    const token = AuthenticationHandler.getCookieToken()
 
     return await axios.get<BookingVisit_GetAll_Res>(`/booking-visit/get-all/${encodeURIComponent(limit)}/${encodeURIComponent(page)}`, {
         headers: {

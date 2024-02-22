@@ -1,14 +1,17 @@
 import { ParseResponse } from '@/api/defaults'
-import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import axios, { AxiosError, AxiosResponse } from 'axios'
+
+export type Auth_VerifyTokenAdmin_Req = {
+    token: string
+}
 
 export type Auth_VerifyTokenAdmin_Res = boolean
 
-export async function Auth_VerifyTokenAdmin() {
+export async function Auth_VerifyTokenAdmin({ token }: Auth_VerifyTokenAdmin_Req) {
     return await axios
         .post<Auth_VerifyTokenAdmin_Res>('/auth/verify-token-admin', undefined, {
             headers: {
-                Authorization: `Bearer ${AuthenticationHandler.getToken()}`,
+                Authorization: `Bearer ${token}`,
             },
             transformResponse: [
                 ParseResponse,

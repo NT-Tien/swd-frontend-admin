@@ -5,8 +5,10 @@ import DeleteModal from '@/common/components/modal/DeleteModal'
 import { Category } from '@/lib/types/Category'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
 import { queryClient } from '@/main'
+import { CategoryViewRoute } from '@/routes/Categories/CategoryView'
 import { Trash } from '@phosphor-icons/react'
 import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
 import { Dropdown, Table } from 'antd'
 import dayjs from 'dayjs'
 
@@ -15,6 +17,7 @@ type AllCategoriesListProps = {
 }
 
 export default function AllCategoriesList({ disabled = false }: AllCategoriesListProps) {
+    const navigate = useNavigate()
     const { data: categories, isLoading, isError } = useQuery(disabled ? queryCategory_GetAll_Deleted() : queryCategory_GetAll())
 
     const searchColumnProps = GetColumnSearchProps<Category>()
@@ -89,7 +92,12 @@ export default function AllCategoriesList({ disabled = false }: AllCategoriesLis
                                         ],
                                     }}
                                     onClick={() => {
-                                        alert(`Viewing products of category ${record.id} with name: ${record.name}`)
+                                        navigate({
+                                            to: CategoryViewRoute.to,
+                                            params: {
+                                                id: record.id,
+                                            },
+                                        })
                                     }}
                                 >
                                     View

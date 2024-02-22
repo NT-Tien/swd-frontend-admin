@@ -1,8 +1,9 @@
+import { AuthLayoutRoute } from '@/layouts/AuthenticatedLayout'
 import NotificationsDropdown from '@/layouts/DashboardLayout/components/NotificationsDropdown'
 import ProfileDropdown from '@/layouts/DashboardLayout/components/ProfileDropdown'
 import { getGroup, getItem_1, getItem_2 } from '@/layouts/DashboardLayout/util'
 import { MenuItem } from '@/lib/types/MenuItem'
-import { rootRoute } from '@/routeTree'
+import { AccountCreateRoute } from '@/routes/Accounts/AccountCreate'
 import { AccountListRoute } from '@/routes/Accounts/AccountList'
 import { CategoryCreateRoute } from '@/routes/Categories/CategoryCreate'
 import { CategoryListRoute } from '@/routes/Categories/CategoryList'
@@ -10,6 +11,8 @@ import { DashboardRoute } from '@/routes/Dashboard'
 import { ProductCreateRoute } from '@/routes/Products/ProductCreate'
 import { ProductListRoute } from '@/routes/Products/ProductList'
 import { SiteSettingsRoute } from '@/routes/SiteSettings'
+import { VouchersRoute } from '@/routes/Vouchers'
+import { MoneyCollectFilled } from '@ant-design/icons'
 import { Bell, Book, BookOpen, Browser, Gear, House, List, LockKey, User, UserCircle } from '@phosphor-icons/react'
 import { Outlet, createRoute, useNavigate } from '@tanstack/react-router'
 import Avatar from 'antd/es/avatar/avatar'
@@ -20,9 +23,6 @@ import Layout from 'antd/es/layout'
 import Menu from 'antd/es/menu'
 import theme from 'antd/es/theme'
 import { BookingsRoute } from '../../routes/Bookings'
-import { MoneyCollectFilled } from '@ant-design/icons'
-import { VouchersRoute } from '@/routes/Vouchers'
-import { AccountCreateRoute } from '@/routes/Accounts/AccountCreate'
 
 const { useToken } = theme
 const { Sider, Header, Content } = Layout
@@ -30,7 +30,7 @@ const { Sider, Header, Content } = Layout
 export const DashboardLayoutRoute = createRoute({
     component: DashboardLayout,
     id: 'dashboard-layout',
-    getParentRoute: () => rootRoute,
+    getParentRoute: () => AuthLayoutRoute,
 })
 
 function DashboardLayout() {

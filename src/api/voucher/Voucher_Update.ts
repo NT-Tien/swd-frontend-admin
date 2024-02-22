@@ -20,7 +20,7 @@ export type Voucher_Update_Res = Voucher
 export function Voucher_Update(payload: Voucher_Update_Req) {
     return axios.put<Voucher_Update_Res>('voucher/update/' + encodeURIComponent(payload.id), payload.payload, {
         headers: {
-            Authorization: `Bearer ${AuthenticationHandler.getToken()}`,
+            Authorization: `Bearer ${AuthenticationHandler.getCookieToken()}`,
         },
         responseType: 'json',
         transformResponse: [

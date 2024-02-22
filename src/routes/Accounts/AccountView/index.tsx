@@ -1,10 +1,10 @@
 import { queryAccount_GetById } from '@/api/account/Account_GetById'
-import { AuthDashboardLayoutRoute } from '@/layouts/AuthenticatedLayout'
+import { DashboardLayoutRoute } from '@/layouts/DashboardLayout'
 import { createRoute, defer, lazyRouteComponent } from '@tanstack/react-router'
 
 export const AccountViewRoute = createRoute({
     path: '/accounts/$id',
-    getParentRoute: () => AuthDashboardLayoutRoute,
+    getParentRoute: () => DashboardLayoutRoute,
     component: lazyRouteComponent(() => import('./page')),
     parseParams: ({ id }) => {
         return {

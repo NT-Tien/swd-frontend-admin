@@ -1,4 +1,4 @@
-import { AuthDashboardLayoutRoute } from '@/layouts/AuthenticatedLayout'
+import { DashboardLayoutRoute } from '@/layouts/DashboardLayout'
 import { tabKeys } from '@/routes/Products/ProductList/util/tabItems'
 import { createRoute, lazyRouteComponent } from '@tanstack/react-router'
 
@@ -16,5 +16,5 @@ export const ProductListRoute = createRoute({
             tab: search.tab ? search.tab : 'all',
         }
     },
-    getParentRoute: () => AuthDashboardLayoutRoute,
+    getParentRoute: () => DashboardLayoutRoute,
 })

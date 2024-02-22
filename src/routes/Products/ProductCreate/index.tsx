@@ -1,10 +1,10 @@
 import { queryCategory_GetAll } from '@/api/category/Category_GetAll'
-import { AuthDashboardLayoutRoute } from '@/layouts/AuthenticatedLayout'
+import { DashboardLayoutRoute } from '@/layouts/DashboardLayout'
 import { createRoute, defer, lazyRouteComponent } from '@tanstack/react-router'
 
 export const ProductCreateRoute = createRoute({
     path: '/products/create',
-    getParentRoute: () => AuthDashboardLayoutRoute,
+    getParentRoute: () => DashboardLayoutRoute,
     loader: ({ context: { queryClient } }) => {
         const categories = queryClient.ensureQueryData(queryCategory_GetAll())
 

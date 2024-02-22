@@ -1,46 +1,45 @@
-import { Auth_VerifyTokenAdmin } from '@/api/auth/Auth_VerifyTokenAdmin'
-import { DashboardLayoutRoute } from '@/layouts/DashboardLayout'
 import AuthenticationHandler from '@/lib/AuthenticationHandler'
+import { rootRoute } from '@/routeTree'
 import { LoginRoute } from '@/routes/Login'
 import { Await, Navigate, Outlet, createRoute, defer } from '@tanstack/react-router'
-import { AxiosResponse } from 'axios'
 import { Suspense } from 'react'
 
-export const AuthDashboardLayoutRoute = createRoute({
+export const AuthLayoutRoute = createRoute({
     component: AuthenticatedLayout,
-    getParentRoute: () => DashboardLayoutRoute,
+    getParentRoute: () => rootRoute,
     id: 'authenticated-layout',
     loader: () => {
-        let isAuthenticated
+        const quickValidated = AuthenticationHandler.clientVerifyToken()
 
-        if (AuthenticationHandler.quickTokenValidate()) {
-            isAuthenticated = new Promise(resolve =>
-                resolve({
-                    data: true,
-                    status: 200,
-                    statusText: 'OK',
-                } as AxiosResponse<boolean, any>),
-            )
+        /**
+         * quickValidated will be false upon first login.
+         * This is to force the client to server-check if the token is from an authorized user.
+         * After the server-check, quickValidated will be true unless:
+         * 1) The token is expired
+         * 2) Someone changed the token cookie
+         */
+        if (quickValidated) {
+            return {
+                isAuthenticated: defer(new Promise<boolean>(resolve => resolve(true))),
+            }
         } else {
-            isAuthenticated = Auth_VerifyTokenAdmin()
-        }
-
-        return {
-            isAuthenticated: defer(isAuthenticated),
+            return {
+                isAuthenticated: defer(AuthenticationHandler.serverVerifyToken()),
+            }
         }
     },
 })
 
 function AuthenticatedLayout() {
-    const isAuthenticated = AuthDashboardLayoutRoute.useLoaderData({
+    const isAuthenticated = AuthLayoutRoute.useLoaderData({
         select: res => res.isAuthenticated,
     })
 
     return (
         <Suspense fallback={'Loading...'}>
             <Await promise={isAuthenticated}>
-                {(res: any) => {
-                    if (res.data === true) {
+                {(res: boolean) => {
+                    if (res === true) {
                         return <Outlet key={'OUTLET_MAIN'} />
                     } else {
                         AuthenticationHandler.logout()

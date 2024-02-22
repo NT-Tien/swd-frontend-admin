@@ -1,4 +1,4 @@
-import { AuthDashboardLayoutRoute } from '@/layouts/AuthenticatedLayout'
+import { DashboardLayoutRoute } from '@/layouts/DashboardLayout'
 import { tabKeys } from '@/routes/Categories/CategoryList/util/tabItems'
 import { createRoute, lazyRouteComponent } from '@tanstack/react-router'
 
@@ -8,7 +8,7 @@ type CategoryListSearch = {
 
 export const CategoryListRoute = createRoute({
     path: '/categories',
-    getParentRoute: () => AuthDashboardLayoutRoute,
+    getParentRoute: () => DashboardLayoutRoute,
     component: lazyRouteComponent(() => import('./page')),
     validateSearch: (search: Partial<CategoryListSearch>): CategoryListSearch => {
         return {

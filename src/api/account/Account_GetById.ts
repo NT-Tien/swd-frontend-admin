@@ -13,7 +13,7 @@ export type Account_GetById_Res = Account
 export async function Account_GetById({ id }: Account_GetById_Req) {
     return await axios.get<Account_GetById_Res>(`/account/${encodeURIComponent(id)}`, {
         headers: {
-            Authorization: `Bearer ${AuthenticationHandler.getToken()}`,
+            Authorization: `Bearer ${AuthenticationHandler.getCookieToken()}`,
         },
         transformResponse: [
             ParseResponse,

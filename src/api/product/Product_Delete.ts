@@ -13,7 +13,7 @@ export type Product_Delete_Res = {
 export function Product_Delete({ id }: Product_Delete_Req) {
     return axios.delete<Product_Delete_Res>('product/delete/' + encodeURIComponent(id), {
         headers: {
-            Authorization: `Bearer ${AuthenticationHandler.getToken()}`,
+            Authorization: `Bearer ${AuthenticationHandler.getCookieToken()}`,
         },
         transformResponse: [
             ParseResponse,

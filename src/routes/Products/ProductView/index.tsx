@@ -1,4 +1,4 @@
-import { AuthDashboardLayoutRoute } from '@/layouts/AuthenticatedLayout'
+import { DashboardLayoutRoute } from '@/layouts/DashboardLayout'
 import { createRoute, lazyRouteComponent } from '@tanstack/react-router'
 
 type ProductViewSearch = {
@@ -17,6 +17,6 @@ export const ProductViewRoute = createRoute({
             editing: search.editing ? Boolean(search.editing) : false,
         }
     },
-    getParentRoute: () => AuthDashboardLayoutRoute,
+    getParentRoute: () => DashboardLayoutRoute,
     component: lazyRouteComponent(() => import('./page')),
 })
