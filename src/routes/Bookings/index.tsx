@@ -1,4 +1,4 @@
-import { AuthDashboardLayoutRoute } from '@/layouts/AuthenticatedLayout'
+import { DashboardLayoutRoute } from '@/layouts/DashboardLayout'
 import { createRoute, lazyRouteComponent } from '@tanstack/react-router'
 
 type BookingsRouteSearch = {
@@ -6,7 +6,7 @@ type BookingsRouteSearch = {
 }
 
 export const BookingsRoute = createRoute({
-    getParentRoute: () => AuthDashboardLayoutRoute,
+    getParentRoute: () => DashboardLayoutRoute,
     path: 'bookings',
     component: lazyRouteComponent(() => import('./page')),
     validateSearch: (data: BookingsRouteSearch) => {

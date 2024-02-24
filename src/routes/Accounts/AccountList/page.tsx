@@ -1,10 +1,10 @@
 import RefreshButton from '@/common/components/RefreshButton'
+import AccountStats from '@/routes/Accounts/AccountList/components/AccountStats'
 import AllAccountsList from '@/routes/Accounts/AccountList/components/AllAccountsList'
 import CreateAccountModal from '@/routes/Accounts/AccountList/modals/CreateAccountModal'
 import { Plus } from '@phosphor-icons/react'
 import { Button, Flex, Tabs, Typography } from 'antd'
 import './style.css'
-import AccountStats from '@/routes/Accounts/AccountList/components/AccountStats'
 
 export default function AccountListPage() {
     return (

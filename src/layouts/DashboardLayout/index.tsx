@@ -1,8 +1,9 @@
+import { AuthLayoutRoute } from '@/layouts/AuthenticatedLayout'
 import NotificationsDropdown from '@/layouts/DashboardLayout/components/NotificationsDropdown'
 import ProfileDropdown from '@/layouts/DashboardLayout/components/ProfileDropdown'
 import { getGroup, getItem_1, getItem_2 } from '@/layouts/DashboardLayout/util'
 import { MenuItem } from '@/lib/types/MenuItem'
-import { rootRoute } from '@/routeTree'
+import { AccountCreateRoute } from '@/routes/Accounts/AccountCreate'
 import { AccountListRoute } from '@/routes/Accounts/AccountList'
 import { CategoryCreateRoute } from '@/routes/Categories/CategoryCreate'
 import { CategoryListRoute } from '@/routes/Categories/CategoryList'
@@ -10,7 +11,9 @@ import { DashboardRoute } from '@/routes/Dashboard'
 import { ProductCreateRoute } from '@/routes/Products/ProductCreate'
 import { ProductListRoute } from '@/routes/Products/ProductList'
 import { SiteSettingsRoute } from '@/routes/SiteSettings'
-import { Bell, Book, BookOpen, Browser, Gear, House, List, LockKey, User, UserCircle } from '@phosphor-icons/react'
+import { VouchersRoute } from '@/routes/Vouchers'
+import { MoneyCollectFilled } from '@ant-design/icons'
+import { Basket, Bell, Book, BookOpen, Browser, Gear, House, List, LockKey, User, UserCircle } from '@phosphor-icons/react'
 import { Outlet, createRoute, useNavigate } from '@tanstack/react-router'
 import Avatar from 'antd/es/avatar/avatar'
 import Button from 'antd/es/button'
@@ -20,8 +23,7 @@ import Layout from 'antd/es/layout'
 import Menu from 'antd/es/menu'
 import theme from 'antd/es/theme'
 import { BookingsRoute } from '../../routes/Bookings'
-import { MoneyCollectFilled } from '@ant-design/icons'
-import { VouchersRoute } from '@/routes/Vouchers'
+import { OrdersListRoute } from '@/routes/Orders/OrdersList'
 
 const { useToken } = theme
 const { Sider, Header, Content } = Layout
@@ -29,7 +31,7 @@ const { Sider, Header, Content } = Layout
 export const DashboardLayoutRoute = createRoute({
     component: DashboardLayout,
     id: 'dashboard-layout',
-    getParentRoute: () => rootRoute,
+    getParentRoute: () => AuthLayoutRoute,
 })
 
 function DashboardLayout() {
@@ -84,23 +86,24 @@ function DashboardLayout() {
                         }),
                     ],
                 }),
-                // getItem_1({
-                //     key: 'orders',
-                //     label: 'Orders',
-                //     icon: <Basket />,
-                //     children: [
-                //         getItem_2({
-                //             key: 'order-list',
-                //             label: 'Order List',
-                //             onClick: () => {},
-                //         }),
-                //         getItem_2({
-                //             key: 'order-details',
-                //             label: 'Order Details',
-                //             onClick: () => {},
-                //         }),
-                //     ],
-                // }),
+                getItem_1({
+                    key: 'orders',
+                    label: 'Orders',
+                    icon: <Basket />,
+                    children: [
+                        getItem_2({
+                            key: 'order-list',
+                            label: 'Order List',
+                            onClick: () =>
+                                navigate({
+                                    to: OrdersListRoute.to,
+                                    search: {
+                                        tab: 'all',
+                                    },
+                                }),
+                        }),
+                    ],
+                }),
                 // getItem_1({
                 //     key: 'transactions',
                 //     label: 'Transactions',
@@ -120,7 +123,7 @@ function DashboardLayout() {
                         getItem_2({
                             key: 'account-create',
                             label: 'Create Account',
-                            onClick: () => navigate({ to: AccountListRoute.to, search: { page: 1 } }),
+                            onClick: () => navigate({ to: AccountCreateRoute.to }),
                         }),
                     ],
                 }),
@@ -133,10 +136,9 @@ function DashboardLayout() {
                 getItem_1({
                     key: 'vouchers',
                     label: 'Vouchers',
-                    icon: <MoneyCollectFilled/>,
-                    onClick: () => navigate({ to: VouchersRoute.to }),
-
-                })
+                    icon: <MoneyCollectFilled />,
+                    onClick: () => navigate({ to: VouchersRoute.to, search: { tab: 'all' } }),
+                }),
             ],
         }),
         getGroup({
@@ -165,19 +167,7 @@ function DashboardLayout() {
                 minHeight: '100vh',
             }}
         >
-            <Sider
-                collapsible
-                breakpoint='md'
-                collapsedWidth={80}
-                style={{
-                    position: 'relative',
-                    height: 'auto',
-                    zIndex: '100',
-                }}
-                zeroWidthTriggerStyle={{
-                    display: 'none',
-                }}
-            >
+            <Sider collapsible breakpoint='md' collapsedWidth={80} style={{}}>
                 <Flex
                     justify='space-between'
                     style={{

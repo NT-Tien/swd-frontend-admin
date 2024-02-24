@@ -1,16 +1,17 @@
 import { ParseResponse } from '@/api/defaults'
 import axios, { AxiosError, AxiosResponse } from 'axios'
-import Cookies from 'js-cookie'
+
+export type Auth_VerifyTokenAdmin_Req = {
+    token: string
+}
 
 export type Auth_VerifyTokenAdmin_Res = boolean
 
-export async function Auth_VerifyTokenAdmin() {
-    const currentToken = Cookies.get('token')
-
+export async function Auth_VerifyTokenAdmin({ token }: Auth_VerifyTokenAdmin_Req) {
     return await axios
         .post<Auth_VerifyTokenAdmin_Res>('/auth/verify-token-admin', undefined, {
             headers: {
-                Authorization: `Bearer ${currentToken}`,
+                Authorization: `Bearer ${token}`,
             },
             transformResponse: [
                 ParseResponse,

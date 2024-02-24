@@ -33,9 +33,11 @@ export default function LoginPage() {
             })
         },
         onError: () => {
+            // There should be no case where this is called, since login with google is both login and register.
             AuthenticationHandler.logout()
             setTimeout(() => messageApi.error('Error while logging in. Please try again.'), 250)
         },
+        onSettled: () => messageApi.destroy('logging-in'),
         onMutate: () => {
             messageApi.open({
                 type: 'loading',
@@ -43,9 +45,6 @@ export default function LoginPage() {
                 key: 'logging-in',
                 duration: 0,
             })
-        },
-        onSettled: () => {
-            messageApi.destroy('logging-in')
         },
     })
 

@@ -9,7 +9,14 @@ import { ParseResponse } from '@/api/defaults'
 import { ResponseToVoucher, Voucher } from '@/lib/types/Voucher'
 import axios from 'axios'
 
-export type Voucher_Create_Req = Omit<Voucher, 'createdAt' | 'id' | 'updatedAt' | 'deletedAt'>
+export type Voucher_Create_Req = {
+    code: string
+    expired_date: string
+    amount: number
+    limit_total_max: number
+    limit_total_min: number
+    discount_percent: number
+}
 export type Voucher_Create_Res = Voucher
 
 export async function Voucher_Create(payload: Voucher_Create_Req) {

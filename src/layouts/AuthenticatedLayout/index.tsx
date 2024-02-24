@@ -1,36 +1,48 @@
-import { Auth_VerifyTokenAdmin } from '@/api/auth/Auth_VerifyTokenAdmin'
-import { DashboardLayoutRoute } from '@/layouts/DashboardLayout'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
+import { rootRoute } from '@/routeTree'
 import { LoginRoute } from '@/routes/Login'
 import { Await, Navigate, Outlet, createRoute, defer } from '@tanstack/react-router'
 import { Suspense } from 'react'
-import Cookies from 'js-cookie'
 
-export const AuthDashboardLayoutRoute = createRoute({
+export const AuthLayoutRoute = createRoute({
     component: AuthenticatedLayout,
-    getParentRoute: () => DashboardLayoutRoute,
+    getParentRoute: () => rootRoute,
     id: 'authenticated-layout',
     loader: () => {
-        const isAuthenticated = Auth_VerifyTokenAdmin()
+        const quickValidated = AuthenticationHandler.clientVerifyToken()
 
-        return {
-            isAuthenticated: defer(isAuthenticated),
+        /**
+         * quickValidated will be false upon first login.
+         * This is to force the client to server-check if the token is from an authorized user.
+         * After the server-check, quickValidated will be true unless:
+         * 1) The token is expired
+         * 2) Someone changed the token cookie
+         */
+        if (quickValidated) {
+            return {
+                isAuthenticated: defer(new Promise<boolean>(resolve => resolve(true))),
+            }
+        } else {
+            return {
+                isAuthenticated: defer(AuthenticationHandler.serverVerifyToken()),
+            }
         }
     },
 })
 
 function AuthenticatedLayout() {
-    const isAuthenticated = AuthDashboardLayoutRoute.useLoaderData({
+    const isAuthenticated = AuthLayoutRoute.useLoaderData({
         select: res => res.isAuthenticated,
     })
 
     return (
         <Suspense fallback={'Loading...'}>
             <Await promise={isAuthenticated}>
-                {res => {
-                    if (res.data === true) {
+                {(res: boolean) => {
+                    if (res === true) {
                         return <Outlet key={'OUTLET_MAIN'} />
                     } else {
-                        Cookies.remove('token')
+                        AuthenticationHandler.logout()
                         return (
                             <Navigate
                                 to={LoginRoute.to}

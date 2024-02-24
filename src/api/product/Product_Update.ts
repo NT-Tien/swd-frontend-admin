@@ -18,7 +18,7 @@ export type Product_Update_Res = Product
 export function Product_Update(payload: Product_Update_Req) {
     return axios.put<Product_Update_Res>('product/update/' + encodeURIComponent(payload.id), payload.payload, {
         headers: {
-            Authorization: `Bearer ${AuthenticationHandler.getToken()}`,
+            Authorization: `Bearer ${AuthenticationHandler.getCookieToken()}`,
         },
         responseType: 'json',
         transformResponse: [

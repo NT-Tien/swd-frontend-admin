@@ -1,5 +1,5 @@
 import { Account_Create } from '@/api/account/Account_Create'
-import { Acocunt_GetOneWithEmail } from '@/api/account/Account_GetOneWithEmail'
+import { Account_GetOneWithEmail } from '@/api/account/Account_GetOneWithEmail'
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { Role } from '@/lib/types/Account'
 import { queryClient } from '@/main'
@@ -121,7 +121,7 @@ export default function CreateAccountModal({ children }: CreateAccountModalProps
                             },
                             {
                                 validator: async (_, value) => {
-                                    const exists = await Acocunt_GetOneWithEmail({ email: value })
+                                    const exists = await Account_GetOneWithEmail({ email: value })
                                     if (exists.data === null) {
                                         return Promise.resolve()
                                     } else {

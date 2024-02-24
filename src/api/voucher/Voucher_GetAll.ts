@@ -31,5 +31,12 @@ export const queryVoucher_GetAll = () =>
     queryOptions({
         queryKey: ['vouchers'],
         queryFn: () => Voucher_GetAll(),
-        select: data => data.data,
+        select: res => res.data.filter(voucher => voucher.deletedAt === null),
+    })
+
+export const queryVoucher_GetAllDisabled = () =>
+    queryOptions({
+        queryKey: ['vouchers-disabled'],
+        queryFn: () => Voucher_GetAll(),
+        select: res => res.data.filter(voucher => voucher.deletedAt !== null),
     })

@@ -20,7 +20,7 @@ declare global {
 
 const _global = (window /* browser */ || global) /* node */ as any
 _global.devLog = function (...msg: any[]) {
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.MODE === 'development') {
         console.log('🧑‍💻 DEV MODE: ', ...msg)
     }
 }

@@ -4,7 +4,7 @@ import CreateBookingModal from '@/routes/Bookings/components/CreateBookingModal'
 import { Plus, Trash } from '@phosphor-icons/react'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Dropdown, Flex, Table, Typography } from 'antd'
-import { format } from 'date-fns'
+import dayjs from 'dayjs'
 import { queryBookingVisit_GetAll } from '../../api/booking-visit/Booking-Visit_GetAll'
 import { BookingVisit } from '../../lib/types/BookingVisit'
 import GetColumnSearchProps from '../../lib/util/getColumnSearchProps'
@@ -63,11 +63,7 @@ export default function BookingsPage() {
                         title: 'Visit Date',
                         dataIndex: 'visit_date',
                         render: (value: Date) => {
-                            if (!isNaN(value.getTime())) {
-                                return format(value, 'dd/MM/yyyy')
-                            } else {
-                                return 'Invalid Date'
-                            }
+                            return dayjs(value).format('DD-MM-YYYY')
                         },
                         sorter: (a, b) => a.visit_date.getTime() - b.visit_date.getTime(),
                         sortDirections: ['ascend', 'descend'],

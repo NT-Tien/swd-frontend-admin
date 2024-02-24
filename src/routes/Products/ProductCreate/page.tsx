@@ -10,6 +10,7 @@ import { Suspense } from 'react'
 import { ProductCreateRoute } from '@/routes/Products/ProductCreate'
 import { Product_GetByName } from '@/api/product/Product_GetByName'
 import { queryClient } from '@/main'
+import { Optional_Create_Req } from '@/api/option-product/Optional_Create'
 
 const { Item: FormItem, List: FormList } = Form
 
@@ -18,12 +19,7 @@ type FieldType = {
     description: string
     categoryId: string
     images: UploadFile<any>[]
-    optional: {
-        name: string
-        material: string
-        price: number
-        quantity: number
-    }[]
+    optional: Optional_Create_Req[]
 }
 
 export default function ProductCreatePage() {
@@ -34,15 +30,7 @@ export default function ProductCreatePage() {
         select: data => data.categories,
     })
     const createProductMutation = useMutation({
-        mutationFn: () => {
-            return createProductWrapper({
-                name: form.getFieldValue('name'),
-                description: form.getFieldValue('description'),
-                category_id: form.getFieldValue('categoryId'),
-                images: form.getFieldValue('images'),
-                optionals: form.getFieldValue('optional'),
-            })
-        },
+        mutationFn: createProductWrapper,
         onSuccess(data) {
             form.resetFields()
             setTimeout(() => messageApi.success('Product created successfully.'), 250)
@@ -75,12 +63,6 @@ export default function ProductCreatePage() {
         },
     })
 
-    async function handleFinish() {
-        await createProductMutation.mutateAsync()
-    }
-
-    function handleFinishFailed() {}
-
     return (
         <Flex vertical gap={20}>
             <Flex justify='space-between'>
@@ -96,15 +78,22 @@ export default function ProductCreatePage() {
                     Import from JSON
                 </Button>
             </Flex>
-            <Form
+            <Form<FieldType>
                 form={form}
                 name='create-product-form'
                 initialValues={{
                     images: [],
                     optional: [{}],
                 }}
-                onFinish={handleFinish}
-                onFinishFailed={handleFinishFailed}
+                onFinish={values => {
+                    createProductMutation.mutate({
+                        name: values.name,
+                        description: values.description,
+                        category_id: values.categoryId,
+                        images: values.images,
+                        optionals: values.optional,
+                    })
+                }}
                 size='large'
                 layout='vertical'
                 requiredMark={false}

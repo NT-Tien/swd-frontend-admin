@@ -1,8 +1,8 @@
-import { AuthDashboardLayoutRoute } from '@/layouts/AuthenticatedLayout'
+import { DashboardLayoutRoute } from '@/layouts/DashboardLayout'
 import { createRoute, lazyRouteComponent } from '@tanstack/react-router'
 
 export const DashboardRoute = createRoute({
     component: lazyRouteComponent(() => import('./page')),
-    getParentRoute: () => AuthDashboardLayoutRoute,
+    getParentRoute: () => DashboardLayoutRoute,
     path: '/dashboard',
 })

@@ -13,7 +13,7 @@ export type Product_SoftDelete_Res = {
 export async function Product_SoftDelete({ id }: Product_SoftDelete_Req) {
     return await axios.delete<Product_SoftDelete_Res>('product/soft-delete/' + encodeURIComponent(id), {
         headers: {
-            Authorization: `Bearer ${AuthenticationHandler.getToken()}`,
+            Authorization: `Bearer ${AuthenticationHandler.getCookieToken()}`,
         },
         responseType: 'json',
         transformResponse: [
