@@ -9,13 +9,13 @@ import { queryBookingVisit_GetAll } from '../../api/booking-visit/Booking-Visit_
 import { BookingVisit } from '../../lib/types/BookingVisit'
 import GetColumnSearchProps from '../../lib/util/getColumnSearchProps'
 
-const limit = 5
+const size = 5
 
 export default function BookingsPage() {
     const page = BookingsRoute.useSearch({
         select: data => data.page,
     })
-    const { data: bookings, isLoading, isError } = useQuery(queryBookingVisit_GetAll({ page, limit }))
+    const { data: bookings, isLoading, isError } = useQuery(queryBookingVisit_GetAll({ page, limit: size }))
     const searchColumnProps = GetColumnSearchProps<BookingVisit>()
 
     if (isError) return <div>Error</div>
@@ -97,7 +97,7 @@ export default function BookingsPage() {
                     },
                 ]}
                 pagination={{
-                    pageSize: 8,
+                    pageSize: size,
                 }}
                 loading={isLoading}
             />

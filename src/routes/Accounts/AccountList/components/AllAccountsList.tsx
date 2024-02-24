@@ -170,7 +170,16 @@ export default function AllAccountsList() {
                                         },
                                     ]}
                                     pagination={{
-                                        pageSize: 8,
+                                        pageSize: size,
+                                        total: accounts?.total ?? 0,
+                                        onChange(page) {
+                                            navigate({
+                                                to: AccountListRoute.to,
+                                                search: {
+                                                    page,
+                                                },
+                                            })
+                                        },
                                     }}
                                     loading={isLoading}
                                 />

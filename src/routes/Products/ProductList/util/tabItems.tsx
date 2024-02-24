@@ -1,5 +1,4 @@
 import AllProductsList from '@/routes/Products/ProductList/components/AllProductsList'
-import DisabledProductsList from '@/routes/Products/ProductList/components/DisabledProductsList'
 import { TabsProps } from 'antd'
 
 export type tabKeys = 'all' | 'disabled'
@@ -14,6 +13,6 @@ export const tabItems: (Tab & { key: tabKeys })[] = [
     {
         key: 'disabled',
         label: 'Disabled',
-        children: <DisabledProductsList />,
+        children: <AllProductsList disabled />,
     },
 ]
