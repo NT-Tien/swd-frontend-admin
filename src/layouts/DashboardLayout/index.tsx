@@ -13,7 +13,7 @@ import { ProductListRoute } from '@/routes/Products/ProductList'
 import { SiteSettingsRoute } from '@/routes/SiteSettings'
 import { VouchersRoute } from '@/routes/Vouchers'
 import { MoneyCollectFilled } from '@ant-design/icons'
-import { Bell, Book, BookOpen, Browser, Gear, House, List, LockKey, User, UserCircle } from '@phosphor-icons/react'
+import { Basket, Bell, Book, BookOpen, Browser, Gear, House, List, LockKey, User, UserCircle } from '@phosphor-icons/react'
 import { Outlet, createRoute, useNavigate } from '@tanstack/react-router'
 import Avatar from 'antd/es/avatar/avatar'
 import Button from 'antd/es/button'
@@ -23,6 +23,7 @@ import Layout from 'antd/es/layout'
 import Menu from 'antd/es/menu'
 import theme from 'antd/es/theme'
 import { BookingsRoute } from '../../routes/Bookings'
+import { OrdersListRoute } from '@/routes/Orders/OrdersList'
 
 const { useToken } = theme
 const { Sider, Header, Content } = Layout
@@ -85,23 +86,24 @@ function DashboardLayout() {
                         }),
                     ],
                 }),
-                // getItem_1({
-                //     key: 'orders',
-                //     label: 'Orders',
-                //     icon: <Basket />,
-                //     children: [
-                //         getItem_2({
-                //             key: 'order-list',
-                //             label: 'Order List',
-                //             onClick: () => {},
-                //         }),
-                //         getItem_2({
-                //             key: 'order-details',
-                //             label: 'Order Details',
-                //             onClick: () => {},
-                //         }),
-                //     ],
-                // }),
+                getItem_1({
+                    key: 'orders',
+                    label: 'Orders',
+                    icon: <Basket />,
+                    children: [
+                        getItem_2({
+                            key: 'order-list',
+                            label: 'Order List',
+                            onClick: () =>
+                                navigate({
+                                    to: OrdersListRoute.to,
+                                    search: {
+                                        tab: 'all',
+                                    },
+                                }),
+                        }),
+                    ],
+                }),
                 // getItem_1({
                 //     key: 'transactions',
                 //     label: 'Transactions',

@@ -5,11 +5,16 @@ export default class env {
     public static FB_STORAGE_BUCKET: string
     public static FB_MESSAGING_SENDER_ID: string
     public static FB_APP_ID: string
+    public static FB_MEASUREMENT_ID: string
     public static BACKEND_URL: string
     public static APP_MODE: string
-    public static USE_MOCK: boolean
 
     public static load() {
+        if (import.meta.env.MODE === 'development') {
+            console.log('🪄 App is running in DEVELOPMENT MODE 🪄')
+        }
+
+        env.APP_MODE = import.meta.env.MODE
         env.BACKEND_URL = import.meta.env.SWD_BACKEND_URL
         env.FB_API_KEY = import.meta.env.SWD_FB_API_KEY
         env.FB_AUTH_DOMAIN = import.meta.env.SWD_FB_AUTH_DOMAIN
@@ -17,7 +22,6 @@ export default class env {
         env.FB_STORAGE_BUCKET = import.meta.env.SWD_FB_STORAGE_BUCKET
         env.FB_MESSAGING_SENDER_ID = import.meta.env.SWD_FB_MESSAGING_SENDER_ID
         env.FB_APP_ID = import.meta.env.SWD_FB_APP_ID
-        env.APP_MODE = import.meta.env.SWD_APP_MODE
-        env.USE_MOCK = import.meta.env.SWD_USE_MOCK === 'true'
+        env.FB_MEASUREMENT_ID = import.meta.env.SWD_FB_MEASUREMENT_ID
     }
 }

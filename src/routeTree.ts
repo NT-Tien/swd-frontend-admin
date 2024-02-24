@@ -18,6 +18,7 @@ import { VouchersRoute } from '@/routes/Vouchers'
 import { AccountCreateRoute } from '@/routes/Accounts/AccountCreate'
 import { AccountViewRoute } from '@/routes/Accounts/AccountView'
 import { CategoryViewRoute } from '@/routes/Categories/CategoryView'
+import { OrdersListRoute } from '@/routes/Orders/OrdersList'
 
 export type RouterContext = {
     queryClient: QueryClient
@@ -41,6 +42,7 @@ export const routeTree = rootRoute.addChildren([
             AccountListRoute,
             AccountCreateRoute,
             AccountViewRoute,
+            OrdersListRoute,
             BookingsRoute,
             SiteSettingsRoute,
             VouchersRoute,

@@ -19,7 +19,7 @@ export default class AuthenticationHandler {
         Cookies.set('token', data.token, {
             expires: expiryDate,
         })
-        Cookies.set('token_email', data.account.email, {
+        Cookies.set('token_email', data.profile.user.email, {
             expires: expiryDate,
         })
     }

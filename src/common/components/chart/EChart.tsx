@@ -75,7 +75,18 @@ function EChart() {
                             labels: {
                                 show: true,
                                 style: {
-                                    colors: ['#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff'],
+                                    colors: [
+                                        'rgb(243, 11, 11)',
+                                        'rgb(243, 11, 11)',
+                                        'rgb(243, 11, 11)',
+                                        'rgb(243, 11, 11)',
+                                        'rgb(243, 11, 11)',
+                                        'rgb(243, 11, 11)',
+                                        'rgb(243, 11, 11)',
+                                        'rgb(243, 11, 11)',
+                                        'rgb(243, 11, 11)',
+                                        'rgb(243, 11, 11)',
+                                    ],
                                 },
                             },
                         },
@@ -83,7 +94,18 @@ function EChart() {
                             labels: {
                                 show: true,
                                 style: {
-                                    colors: ['#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff'],
+                                    colors: [
+                                        'rgb(243, 11, 11)',
+                                        'rgb(243, 11, 11)',
+                                        'rgb(243, 11, 11)',
+                                        'rgb(243, 11, 11)',
+                                        'rgb(243, 11, 11)',
+                                        'rgb(243, 11, 11)',
+                                        'rgb(243, 11, 11)',
+                                        'rgb(243, 11, 11)',
+                                        'rgb(243, 11, 11)',
+                                        'rgb(243, 11, 11)',
+                                    ],
                                 },
                             },
                         },
@@ -100,7 +122,7 @@ function EChart() {
                         {
                             name: 'Sales',
                             data: [450, 200, 100, 220, 500, 100, 400, 230, 500],
-                            color: '#fff',
+                            color: 'rgb(243, 11, 11)',
                         },
                     ]}
                     type='bar'

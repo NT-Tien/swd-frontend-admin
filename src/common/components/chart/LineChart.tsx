@@ -86,6 +86,20 @@ function LineChart() {
                         },
                     },
                 }}
+                series={[
+                    {
+                        name: '123',
+                        data: [120],
+                    },
+                    {
+                        name: 'Mobile apps',
+                        data: [350, 40, 300, 220, 500, 250, 400, 230, 500],
+                    },
+                    {
+                        name: 'Websites',
+                        data: [30, 90, 40, 140, 290, 290, 340, 230, 400],
+                    },
+                ]}
                 type='area'
                 height={350}
                 width={'100%'}
@@ -95,18 +109,7 @@ function LineChart() {
 }
 
 /*
-[
-          {
-            name: 'Mobile apps',
-            data: [350, 40, 300, 220, 500, 250, 400, 230, 500],
-            offsetY: 0,
-          },
-          {
-            name: 'Websites',
-            data: [30, 90, 40, 140, 290, 290, 340, 230, 400],
-            offsetY: 0,
-          },
-        ]
+
 */
 
 export default LineChart
