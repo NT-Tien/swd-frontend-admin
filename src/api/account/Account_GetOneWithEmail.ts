@@ -24,11 +24,14 @@ export async function Account_GetOneWithEmail({ email }: Account_GetOneWithEmail
                 if ('data' in res) {
                     return res.data
                 } else {
+                    if (res.statusCode === 404) return null
+
                     devLog('Invalid response', res)
                     throw new Error('Invalid response')
                 }
             },
         ],
+        validateStatus: status => status === 200 || status === 404,
     })
 }
 

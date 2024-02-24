@@ -104,12 +104,14 @@ export default function AccountCreatePage() {
                                 validator: async (_, value) => {
                                     try {
                                         const exists = await Account_GetOneWithEmail({ email: value })
+                                        console.log('SUCCESS')
                                         if (exists.data === null) {
                                             return Promise.resolve()
                                         } else {
                                             return Promise.reject('Email already exists')
                                         }
-                                    } catch {
+                                    } catch(error) {
+                                        console.log('ERRORED')
                                         return Promise.resolve()
                                     }
                                 },
