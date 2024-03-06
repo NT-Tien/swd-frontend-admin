@@ -138,8 +138,8 @@ function EChart() {
                     We have created multiple options for you to put together and customise into pixel perfect pages.
                 </Paragraph>
                 <Row gutter={5}>
-                    {items.map((v, index) => (
-                        <Col xs={6} xl={6} sm={6} md={6} key={index}>
+                    {items.map(v => (
+                        <Col xs={6} xl={6} sm={6} md={6} key={v.Title}>
                             <div className='chart-visitor-count'>
                                 <Title level={4}>{v.Title}</Title>
                                 <span>{v.user}</span>

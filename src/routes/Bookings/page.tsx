@@ -33,7 +33,7 @@ export default function BookingsPage() {
                 Bookings List
                 <RefreshButton queryKey={['booking-visits']} isLoading={isLoading} />
             </Typography.Title>
-            <Flex justify='space-between'>
+            {/* <Flex justify='space-between'>
                 <CreateBookingModal>
                     {({ handleOpen }) => (
                         <Button type='primary' icon={<Plus />} onClick={handleOpen}>
@@ -41,7 +41,7 @@ export default function BookingsPage() {
                         </Button>
                     )}
                 </CreateBookingModal>
-            </Flex>
+            </Flex> */}
             <Table
                 dataSource={bookings?.data ?? []}
                 columns={[

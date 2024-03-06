@@ -1,4 +1,5 @@
 import { MessageContextProvider } from '@/common/context/MessageContext/MessageContext'
+import NotificationContextProvider from '@/common/context/NotificationContext/NotificationContext'
 import ThemeContextProvider from '@/common/context/ThemeContext/ThemeContext'
 import { Outlet } from '@tanstack/react-router'
 import App from 'antd/es/app'
@@ -9,9 +10,11 @@ export default function RootLayout() {
         <App>
             <ThemeContextProvider>
                 {/* <TanStackRouterDevtools /> */}
-                <MessageContextProvider>
-                    <Outlet />
-                </MessageContextProvider>
+                <NotificationContextProvider>
+                    <MessageContextProvider>
+                        <Outlet />
+                    </MessageContextProvider>
+                </NotificationContextProvider>
             </ThemeContextProvider>
         </App>
     )

@@ -1,4 +1,6 @@
+import { Payment } from '@/lib/types/Payment'
 import { ProductOptional } from '@/lib/types/ProductOptional'
+import { ResponseToPayment } from '@/lib/types/Payment'
 
 export enum DeliveryStatus {
     PENDING = 'PENDING',
@@ -19,7 +21,7 @@ export type Order = {
     address: string
     phone: string
     email: string
-    payment: string | null
+    payment: Payment
     wallet_payment: string | null
     status_delivery: DeliveryStatus
 }
@@ -37,7 +39,7 @@ export function ResponseToOrder(response: Record<string, any>): Order {
         address: response.address,
         phone: response.phone,
         email: response.email,
-        payment: response.payment,
+        payment: ResponseToPayment(response.payment),
         wallet_payment: response.wallet_payment,
         status_delivery: response.status_delivery,
     } satisfies Order

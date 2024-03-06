@@ -1,18 +1,17 @@
 import RefreshButton from '@/common/components/RefreshButton'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
+import { Role, isAuthorized } from '@/lib/types/Account'
 import { OrdersListRoute } from '@/routes/Orders/OrdersList'
 import { tabItems, tabKeys } from '@/routes/Orders/OrdersList/util/tabItems'
-import { ProductCreateRoute } from '@/routes/Products/ProductCreate'
-import { Plus } from '@phosphor-icons/react'
-import { useNavigate } from '@tanstack/react-router'
-import { Flex, Typography, Tabs, Button } from 'antd'
+import { Flex, Tabs, Typography } from 'antd'
 import { useState } from 'react'
 
 export default function OrdersListPage() {
-    const navigate = useNavigate()
     const tab = OrdersListRoute.useSearch({
         select: data => data.tab,
     })
     const [currentTab, setCurrentTab] = useState(tab)
+    console.log(isAuthorized(Role.STAFF, AuthenticationHandler.getCurrentRole()))
 
     return (
         <Flex vertical gap={0}>
@@ -25,28 +24,15 @@ export default function OrdersListPage() {
                 }}
             >
                 Order List
-                <RefreshButton isLoading={false} queryKey={currentTab === 'all' ? ['products'] : ['products-deleted']} />
+                <RefreshButton isLoading={false} queryKey={currentTab === 'all' ? ['orders'] : ['orders-deleted']} />
             </Typography.Title>
             <Tabs
                 defaultActiveKey={currentTab}
                 activeKey={currentTab}
-                items={tabItems}
+                items={tabItems(isAuthorized(Role.STAFF, AuthenticationHandler.getCurrentRole()) ? [] : ['all'])}
                 onTabClick={tab => {
                     setCurrentTab(tab as tabKeys)
                 }}
-                tabBarExtraContent={
-                    <Button
-                        type='primary'
-                        icon={<Plus />}
-                        onClick={() =>
-                            navigate({
-                                to: ProductCreateRoute.to,
-                            })
-                        }
-                    >
-                        Create Order
-                    </Button>
-                }
             />
         </Flex>
     )

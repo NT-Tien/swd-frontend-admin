@@ -2,8 +2,10 @@ import { Auth_LoginGoogle } from '@/api/auth/Auth_LoginGoogle'
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { auth } from '@/firebase'
 import AuthenticationHandler from '@/lib/AuthenticationHandler'
+import { Role } from '@/lib/types/Account'
 import { DashboardRoute } from '@/routes/Dashboard'
 import { LoginRoute } from '@/routes/Login'
+import { OrdersListRoute } from '@/routes/Orders/OrdersList'
 import { GoogleOutlined } from '@ant-design/icons'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
@@ -19,18 +21,47 @@ const { useToken } = theme
 export default function LoginPage() {
     const { token } = useToken()
     const { messageApi } = useMessage()
-    const error = LoginRoute.useSearch({
-        select: data => data.error,
-    })
+    const { error, pageAccessDenied } = LoginRoute.useSearch()
     const navigate = useNavigate()
 
     const signInMutation = useMutation({
         mutationFn: Auth_LoginGoogle,
         onSuccess: async res => {
             AuthenticationHandler.login(res.data)
-            navigate({
-                to: DashboardRoute.to,
-            })
+
+            switch (res.data.profile.user.role) {
+                case Role.ADMIN: {
+                    navigate({
+                        to: DashboardRoute.to,
+                    })
+                    break
+                }
+                case Role.STAFF: {
+                    navigate({
+                        to: OrdersListRoute.to,
+                        search: {
+                            tab: 'all',
+                        },
+                    })
+                    break
+                }
+                case Role.DSTAFF: {
+                    navigate({
+                        to: OrdersListRoute.to,
+                        search: {
+                            tab: 'orders-to-deliver',
+                        },
+                    })
+                    break
+                }
+                default: {
+                    devLog('Unrecognized Role. Logging out...')
+                    AuthenticationHandler.logout()
+                    navigate({
+                        to: LoginRoute.to,
+                    })
+                }
+            }
         },
         onError: () => {
             // There should be no case where this is called, since login with google is both login and register.
@@ -59,6 +90,10 @@ export default function LoginPage() {
     }
 
     useEffect(() => {
+        if (pageAccessDenied) {
+            messageApi.error('You do not have permission to access this page.')
+        }
+
         if (error) {
             messageApi.error(error)
         }
@@ -66,7 +101,7 @@ export default function LoginPage() {
         return () => {
             messageApi.destroy()
         }
-    }, [error, messageApi])
+    }, [error, messageApi, pageAccessDenied])
 
     return (
         <Row justify='center' align='middle' style={{ height: '100vh', backgroundColor: token.colorPrimaryBg }}>

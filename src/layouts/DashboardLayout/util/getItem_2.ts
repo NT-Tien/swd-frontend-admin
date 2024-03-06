@@ -7,15 +7,17 @@ type getItem_2Props = {
     label: string
     icon?: ReactElement
     onClick?: () => void
+    shown?: boolean
 }
 
-export function getItem_2(props: getItem_2Props): MenuItem {
+export function getItem_2({ shown = true, ...props }: getItem_2Props): MenuItem {
     if (!props.icon) {
         props.icon = createElement(DotOutline)
     }
 
     return {
         ...props,
+        onClick: shown ? props.onClick : undefined,
         icon: props.icon
             ? cloneElement(props.icon, {
                   weight: 'fill',
@@ -26,6 +28,7 @@ export function getItem_2(props: getItem_2Props): MenuItem {
             textTransform: 'capitalize',
             fontWeight: 'normal',
             userSelect: 'none',
+            display: shown ? '' : 'none',
         },
     } satisfies MenuItem
 }

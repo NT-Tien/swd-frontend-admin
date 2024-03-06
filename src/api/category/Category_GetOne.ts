@@ -7,7 +7,7 @@ export type Category_GetOne_Req = {
     id: string
 }
 
-export type Category_GetOne_Res = Category | null
+export type Category_GetOne_Res = Category
 
 /**
  * Retrieves a single category from the server based on the provided ID.

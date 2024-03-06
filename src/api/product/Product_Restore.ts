@@ -12,7 +12,7 @@ export type Product_Restore_Res = Product
 export default function Product_Restore({ id }: Product_Restore_Req) {
     return axios.put(`/product/restore/${encodeURIComponent(id)}`, null, {
         headers: {
-            Authorization: `Bearer ${AuthenticationHandler.getCookieToken()}`,
+            Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
         },
         transformResponse: [
             ParseResponse,

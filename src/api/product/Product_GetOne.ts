@@ -26,9 +26,10 @@ export async function Product_GetOne({ id }: Product_GetOne_Req) {
     })
 }
 
+export const queryKeyProduct_GetOne = ({ id }: Product_GetOne_Req) => ['product', id]
 export const queryProduct_GetOne = ({ id }: Product_GetOne_Req) =>
     queryOptions({
-        queryKey: ['product', id],
+        queryKey: queryKeyProduct_GetOne({ id }),
         queryFn: () => Product_GetOne({ id }),
         select: res => res.data,
     })

@@ -4,9 +4,10 @@ type getGroupProps = {
     key: string
     label: string
     children: MenuItem[]
+    shown?: boolean
 }
 
-export function getGroup(props: getGroupProps): MenuItem {
+export function getGroup({ shown = true, ...props }: getGroupProps): MenuItem {
     return {
         ...props,
         type: 'group',
@@ -14,6 +15,7 @@ export function getGroup(props: getGroupProps): MenuItem {
             textTransform: 'uppercase',
             fontWeight: 'bold',
             userSelect: 'none',
+            display: shown ? '' : 'none',
         },
     } satisfies MenuItem
 }

@@ -6,6 +6,7 @@
  * @throws {Error} If an error occurs while creating the category.
  */
 import { ParseResponse } from '@/api/defaults'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { ResponseToVoucher, Voucher } from '@/lib/types/Voucher'
 import axios from 'axios'
 
@@ -21,6 +22,9 @@ export type Voucher_Create_Res = Voucher
 
 export async function Voucher_Create(payload: Voucher_Create_Req) {
     return await axios.post<Voucher_Create_Res>('voucher/create', payload, {
+        headers: {
+            Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
+        },
         transformResponse: [
             ParseResponse,
             (data: ApiResponse<Voucher>) => {

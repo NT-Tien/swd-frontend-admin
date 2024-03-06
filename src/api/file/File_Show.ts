@@ -15,6 +15,7 @@ export function File_Show({ path }: File_Show_Req) {
     }
     return axios.get<File_Show_Res>(getUrl('file/show/' + encodeURIComponent(path)), {
         responseType: 'blob',
+        validateStatus: () => true,
     })
 }
 

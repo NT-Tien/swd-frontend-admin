@@ -9,6 +9,7 @@ import { createRoute } from '@tanstack/react-router'
 
 type LoginRouteSearch = {
     error?: string
+    pageAccessDenied?: boolean
 }
 
 export const LoginRoute = createRoute({
@@ -18,6 +19,7 @@ export const LoginRoute = createRoute({
     validateSearch: (search: LoginRouteSearch) => {
         return {
             error: search.error,
+            pageAccessDenied: search.pageAccessDenied ?? false,
         } as LoginRouteSearch
     },
 })

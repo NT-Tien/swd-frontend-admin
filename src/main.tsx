@@ -8,6 +8,7 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import React from 'react'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import ReactDOM from 'react-dom/client'
+import '@/socket'
 
 // load ENV file to memory
 env.load()
@@ -40,6 +41,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             <RouterProvider router={router} />
             <ReactQueryDevtools client={queryClient} />
         </QueryClientProvider>
+        ,
     </React.StrictMode>,
 )
 

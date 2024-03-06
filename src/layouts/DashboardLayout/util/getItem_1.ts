@@ -7,18 +7,19 @@ type getItem_1Props = {
     icon?: ReactElement
     children?: MenuItem[]
     onClick?: () => void
+    shown?: boolean
 }
 
-export function getItem_1(props: getItem_1Props): MenuItem {
+export function getItem_1({ shown = true, icon, onClick, ...props }: getItem_1Props): MenuItem {
     return {
         ...props,
-        icon: props.icon
-            ? cloneElement(props.icon, { weight: 'fill', size: 16 })
-            : undefined,
+        onClick: shown ? onClick : undefined,
+        icon: icon ? cloneElement(icon, { weight: 'fill', size: 16 }) : undefined,
         style: {
             textTransform: 'capitalize',
             fontWeight: 'normal',
             userSelect: 'none',
+            display: shown ? '' : 'none',
         },
     } satisfies MenuItem
 }

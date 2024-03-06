@@ -6,12 +6,22 @@ import axios from 'axios'
 export type Product_GetAll_Req = {
     page: number
     size: number
+    query?: string
+    categoryId?: string
+    sortBy?: string
+    direction?: string
 }
 
 export type Product_GetAll_Res = GetResponse<Product>
 
-export async function Product_GetAll({ page, size }: Product_GetAll_Req) {
-    return await axios.get<Product_GetAll_Res>('product/get-all/' + encodeURIComponent(size) + '/' + encodeURIComponent(page), {
+export async function Product_GetAll({ page, size, query, categoryId, sortBy, direction }: Product_GetAll_Req) {
+    return await axios.get<Product_GetAll_Res>(`product/get-all/${encodeURIComponent(size)}/${encodeURIComponent(page)}`, {
+        params: {
+            query,
+            categoryId,
+            sortBy,
+            direction,
+        },
         responseType: 'json',
         transformResponse: [
             ParseResponse,
@@ -32,9 +42,11 @@ export async function Product_GetAll({ page, size }: Product_GetAll_Req) {
     })
 }
 
+export const queryKeyProduct_GetAll = ({ page, size }: Partial<Product_GetAll_Req>) => ['products', page, size]
+
 export const queryProduct_GetAll = ({ page, size }: Product_GetAll_Req) =>
     queryOptions({
-        queryKey: ['products', page, size],
+        queryKey: queryKeyProduct_GetAll({ page, size }),
         queryFn: () => Product_GetAll({ page, size }),
         select: data => data.data,
     })
