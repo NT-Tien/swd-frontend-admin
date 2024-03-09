@@ -69,7 +69,7 @@ function DashboardLayout() {
             socket.off('message')
             socket.disconnect()
         }
-    })
+    }, [notiApi])
 
     const menuItems: MenuItem[] = useMemo(
         () => [
