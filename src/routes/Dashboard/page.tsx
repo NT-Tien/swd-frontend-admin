@@ -1,3 +1,4 @@
+import Head from '@/common/components/Head'
 import ActiveUsers from '@/routes/Dashboard/components/ActiveUsers'
 import LineChart from '@/routes/Dashboard/components/LineChart'
 import OrderHistory from '@/routes/Dashboard/components/OrderHistory'
@@ -7,6 +8,7 @@ import { Card, Col, Row } from 'antd'
 export default function DashboardPage() {
     return (
         <>
+            <Head title='Dashboard' />
             <QuickStats />
             <Row gutter={[24, 0]}>
                 <Col xs={24} sm={24} md={12} lg={12} xl={10} className='mb-24'>

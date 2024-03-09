@@ -1,3 +1,4 @@
+import Head from '@/common/components/Head'
 import RefreshButton from '@/common/components/RefreshButton'
 import { ProductCreateRoute } from '@/routes/Products/ProductCreate'
 import { ProductListRoute } from '@/routes/Products/ProductList'
@@ -15,39 +16,42 @@ export default function ProductListPage() {
     const [currentTab, setCurrentTab] = useState(tab)
 
     return (
-        <Flex vertical gap={0}>
-            <Typography.Title
-                level={2}
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px',
-                }}
-            >
-                Product List
-                <RefreshButton isLoading={false} queryKey={currentTab === 'all' ? ['products'] : ['products-deleted']} />
-            </Typography.Title>
-            <Tabs
-                defaultActiveKey={currentTab}
-                activeKey={currentTab}
-                items={tabItems}
-                onTabClick={tab => {
-                    setCurrentTab(tab as tabKeys)
-                }}
-                tabBarExtraContent={
-                    <Button
-                        type='primary'
-                        icon={<Plus />}
-                        onClick={() =>
-                            navigate({
-                                to: ProductCreateRoute.to,
-                            })
-                        }
-                    >
-                        Add Product
-                    </Button>
-                }
-            />
-        </Flex>
+        <>
+            <Head title='Products' />
+            <Flex vertical gap={0}>
+                <Typography.Title
+                    level={2}
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                    }}
+                >
+                    Product List
+                    <RefreshButton isLoading={false} queryKey={currentTab === 'all' ? ['products'] : ['products-deleted']} />
+                </Typography.Title>
+                <Tabs
+                    defaultActiveKey={currentTab}
+                    activeKey={currentTab}
+                    items={tabItems}
+                    onTabClick={tab => {
+                        setCurrentTab(tab as tabKeys)
+                    }}
+                    tabBarExtraContent={
+                        <Button
+                            type='primary'
+                            icon={<Plus />}
+                            onClick={() =>
+                                navigate({
+                                    to: ProductCreateRoute.to,
+                                })
+                            }
+                        >
+                            Add Product
+                        </Button>
+                    }
+                />
+            </Flex>
+        </>
     )
 }

@@ -1,4 +1,5 @@
 import { queryProduct_GetOne } from '@/api/product/Product_GetOne'
+import Head from '@/common/components/Head'
 import { ProductListRoute } from '@/routes/Products/ProductList'
 import { ProductViewRoute } from '@/routes/Products/ProductView'
 import AboutProduct from '@/routes/Products/ProductView/components/AboutProduct'
@@ -35,6 +36,7 @@ export default function ProductViewPage() {
 
     return (
         <>
+            <Head title={`${product.name}`} />
             <Flex justify='space-between' align='center'>
                 <Typography.Title level={1}>{product.name}</Typography.Title>
                 <Flex gap={10}>

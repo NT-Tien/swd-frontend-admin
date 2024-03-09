@@ -1,3 +1,4 @@
+import Head from '@/common/components/Head'
 import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { Role, isAuthorized } from '@/lib/types/Account'
 import { DeliveryStatus } from '@/lib/types/Order'
@@ -17,7 +18,8 @@ export default function OrdersViewPage() {
     const currentRole = AuthenticationHandler.getCurrentRole()
 
     return (
-        <div>
+        <>
+            <Head title='Order Details' />
             <Flex justify='space-between'>
                 <Typography.Title level={3}>Order Details</Typography.Title>
                 <Flex gap={3}>
@@ -150,6 +152,6 @@ export default function OrdersViewPage() {
                     marginTop: '10px',
                 }}
             />
-        </div>
+        </>
     )
 }

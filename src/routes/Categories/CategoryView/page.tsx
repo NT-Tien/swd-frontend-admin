@@ -1,3 +1,4 @@
+import Head from '@/common/components/Head'
 import { Product } from '@/lib/types/Product'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
 import { CategoryViewRoute } from '@/routes/Categories/CategoryView'
@@ -17,11 +18,13 @@ export default function CategoryViewPage() {
     const searchColumnProps = GetColumnSearchProps<Product>()
 
     return (
-        <div>
+        <>
+            <Head title={`Category`} />
             <Suspense fallback={<Card loading />}>
                 <Await promise={category}>
                     {({ data: category }) => (
                         <>
+                            <Head title={`${category.name}`} />
                             <Typography.Title level={2}>{category.name}</Typography.Title>
                             <Descriptions
                                 items={[
@@ -148,6 +151,6 @@ export default function CategoryViewPage() {
                     </Await>
                 </Suspense>
             </Card>
-        </div>
+        </>
     )
 }

@@ -1,5 +1,6 @@
 import { Account_Create } from '@/api/account/Account_Create'
 import { Account_GetOneWithEmail } from '@/api/account/Account_GetOneWithEmail'
+import Head from '@/common/components/Head'
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { Role } from '@/lib/types/Account'
 import { queryClient } from '@/main'
@@ -62,128 +63,131 @@ export default function AccountCreatePage() {
     })
 
     return (
-        <Flex vertical gap={20}>
-            <Flex justify='space-between'>
-                <Typography.Title level={2}>Create a new Account</Typography.Title>
-                <Button type='primary' icon={<UploadSimple size={14} />}>
-                    Import from JSON
-                </Button>
-            </Flex>
-            <Card size='default' title='Account Details'>
-                <Form
-                    name='create-account-modal-form'
-                    form={form}
-                    initialValues={{
-                        email: '',
-                        password: '',
-                        confirmPassword: '',
-                        role: Role.USER,
-                    }}
-                    disabled={createAccountMutation.isPending}
-                    layout='vertical'
-                    onFinish={values => {
-                        createAccountMutation.mutate({
-                            email: values.email,
-                            password: values.password,
-                            role: values.role,
-                        })
-                    }}
-                >
-                    <Form.Item<FieldType>
-                        name='email'
-                        label='Email'
-                        validateDebounce={500}
-                        hasFeedback
-                        validateFirst
-                        rules={[
-                            {
-                                required: true,
-                                type: 'email',
-                            },
-                            {
-                                validator: async (_, value) => {
-                                    try {
-                                        const exists = await Account_GetOneWithEmail({ email: value })
-                                        console.log('SUCCESS')
-                                        if (exists.data === null) {
+        <>
+            <Head title='Create Account' />
+            <Flex vertical gap={20}>
+                <Flex justify='space-between'>
+                    <Typography.Title level={2}>Create a new Account</Typography.Title>
+                    <Button type='primary' icon={<UploadSimple size={14} />}>
+                        Import from JSON
+                    </Button>
+                </Flex>
+                <Card size='default' title='Account Details'>
+                    <Form
+                        name='create-account-modal-form'
+                        form={form}
+                        initialValues={{
+                            email: '',
+                            password: '',
+                            confirmPassword: '',
+                            role: Role.USER,
+                        }}
+                        disabled={createAccountMutation.isPending}
+                        layout='vertical'
+                        onFinish={values => {
+                            createAccountMutation.mutate({
+                                email: values.email,
+                                password: values.password,
+                                role: values.role,
+                            })
+                        }}
+                    >
+                        <Form.Item<FieldType>
+                            name='email'
+                            label='Email'
+                            validateDebounce={500}
+                            hasFeedback
+                            validateFirst
+                            rules={[
+                                {
+                                    required: true,
+                                    type: 'email',
+                                },
+                                {
+                                    validator: async (_, value) => {
+                                        try {
+                                            const exists = await Account_GetOneWithEmail({ email: value })
+                                            console.log('SUCCESS')
+                                            if (exists.data === null) {
+                                                return Promise.resolve()
+                                            } else {
+                                                return Promise.reject('Email already exists')
+                                            }
+                                        } catch (error) {
+                                            console.log('ERRORED')
                                             return Promise.resolve()
-                                        } else {
-                                            return Promise.reject('Email already exists')
                                         }
-                                    } catch(error) {
-                                        console.log('ERRORED')
-                                        return Promise.resolve()
-                                    }
+                                    },
                                 },
-                            },
-                        ]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item<FieldType>
-                        name='password'
-                        label='Password'
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please input your password!',
-                            },
-                        ]}
-                    >
-                        <Input type='password' />
-                    </Form.Item>
-                    <Form.Item<FieldType>
-                        name='confirmPassword'
-                        label='Confirm Password'
-                        dependencies={['password']}
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please confirm your password!',
-                            },
-                            ({ getFieldValue }) => ({
-                                validator(_, value) {
-                                    if (!value || getFieldValue('password') === value) {
-                                        return Promise.resolve()
-                                    }
-                                    return Promise.reject(new Error('The two passwords that you entered do not match!'))
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item<FieldType>
+                            name='password'
+                            label='Password'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please input your password!',
                                 },
-                            }),
-                        ]}
-                    >
-                        <Input type='password' />
-                    </Form.Item>
-                    <Form.Item<FieldType>
-                        name='role'
-                        label='Role'
-                        rules={[
-                            {
-                                required: true,
-                            },
-                        ]}
-                    >
-                        <Select
-                            options={Object.values(Role).map(role => ({
-                                label: (
-                                    <span
-                                        style={{
-                                            textTransform: 'capitalize',
-                                        }}
-                                    >
-                                        {role}
-                                    </span>
-                                ),
-                                value: role,
-                            }))}
-                        />
-                    </Form.Item>
-                    <Form.Item>
-                        <Button type='primary' htmlType='submit' loading={createAccountMutation.isPending}>
-                            Create Account
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Card>
-        </Flex>
+                            ]}
+                        >
+                            <Input type='password' />
+                        </Form.Item>
+                        <Form.Item<FieldType>
+                            name='confirmPassword'
+                            label='Confirm Password'
+                            dependencies={['password']}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please confirm your password!',
+                                },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        if (!value || getFieldValue('password') === value) {
+                                            return Promise.resolve()
+                                        }
+                                        return Promise.reject(new Error('The two passwords that you entered do not match!'))
+                                    },
+                                }),
+                            ]}
+                        >
+                            <Input type='password' />
+                        </Form.Item>
+                        <Form.Item<FieldType>
+                            name='role'
+                            label='Role'
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Select
+                                options={Object.values(Role).map(role => ({
+                                    label: (
+                                        <span
+                                            style={{
+                                                textTransform: 'capitalize',
+                                            }}
+                                        >
+                                            {role}
+                                        </span>
+                                    ),
+                                    value: role,
+                                }))}
+                            />
+                        </Form.Item>
+                        <Form.Item>
+                            <Button type='primary' htmlType='submit' loading={createAccountMutation.isPending}>
+                                Create Account
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </Card>
+            </Flex>
+        </>
     )
 }

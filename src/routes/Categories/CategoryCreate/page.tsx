@@ -1,4 +1,5 @@
 import { Category_Create } from '@/api/category/Category_Create'
+import Head from '@/common/components/Head'
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { queryClient } from '@/main'
 import ImportCategoriesModal from '@/routes/Categories/CategoryCreate/components/ImportCategoriesModal'
@@ -60,50 +61,59 @@ export default function CategoryCreatePage() {
     })
 
     return (
-        <Flex vertical gap={20}>
-            <Flex justify='space-between'>
-                <Typography.Title level={2}>Create a new Category</Typography.Title>
-                <ImportCategoriesModal>
-                    {({ handleOpen }) => (
-                        <Button type='primary' icon={<UploadSimple size={14} />} onClick={handleOpen}>
-                            Import from JSON
-                        </Button>
-                    )}
-                </ImportCategoriesModal>
-            </Flex>
-            <Card size='default' title='Category Details'>
-                <Form<FieldType>
-                    form={form}
-                    name='add-category-form'
-                    initialValues={{
-                        name: '',
-                    }}
-                    autoComplete='off'
-                    onFinish={values => {
-                        createCategory.mutate({
-                            name: values.name,
-                        })
-                    }}
-                >
-                    <FormItem<FieldType>
-                        name='name'
-                        label='Name'
-                        rules={[
-                            {
-                                required: true,
-                                max: 200,
-                                min: 1,
-                            },
-                            // TODO Check if name already exists
-                        ]}
+        <>
+            <Head title='Create Category' />
+            <Flex vertical gap={20}>
+                <Flex justify='space-between'>
+                    <Typography.Title level={2}>Create a new Category</Typography.Title>
+                    <ImportCategoriesModal>
+                        {({ handleOpen }) => (
+                            <Button type='primary' icon={<UploadSimple size={14} />} onClick={handleOpen}>
+                                Import from JSON
+                            </Button>
+                        )}
+                    </ImportCategoriesModal>
+                </Flex>
+                <Card size='default' title='Category Details'>
+                    <Form<FieldType>
+                        form={form}
+                        name='add-category-form'
+                        initialValues={{
+                            name: '',
+                        }}
+                        autoComplete='off'
+                        onFinish={values => {
+                            createCategory.mutate({
+                                name: values.name,
+                            })
+                        }}
                     >
-                        <Input disabled={createCategory.isPending} />
-                    </FormItem>
-                    <Button form='add-category-form' htmlType='submit' color='primary' type='primary' loading={createCategory.isPending}>
-                        Submit
-                    </Button>
-                </Form>
-            </Card>
-        </Flex>
+                        <FormItem<FieldType>
+                            name='name'
+                            label='Name'
+                            rules={[
+                                {
+                                    required: true,
+                                    max: 200,
+                                    min: 1,
+                                },
+                                // TODO Check if name already exists
+                            ]}
+                        >
+                            <Input disabled={createCategory.isPending} />
+                        </FormItem>
+                        <Button
+                            form='add-category-form'
+                            htmlType='submit'
+                            color='primary'
+                            type='primary'
+                            loading={createCategory.isPending}
+                        >
+                            Submit
+                        </Button>
+                    </Form>
+                </Card>
+            </Flex>
+        </>
     )
 }

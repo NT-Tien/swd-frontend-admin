@@ -1,4 +1,5 @@
 import { Auth_LoginGoogle } from '@/api/auth/Auth_LoginGoogle'
+import Head from '@/common/components/Head'
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { auth } from '@/firebase'
 import AuthenticationHandler from '@/lib/AuthenticationHandler'
@@ -104,53 +105,56 @@ export default function LoginPage() {
     }, [error, messageApi, pageAccessDenied])
 
     return (
-        <Row justify='center' align='middle' style={{ height: '100vh', backgroundColor: token.colorPrimaryBg }}>
-            <div
-                style={{
-                    width: '100%',
-                    maxWidth: '400px',
-                    height: 'max-content',
-                    padding: token.paddingLG,
-                    backgroundColor: token.colorBgBase,
-                    boxShadow: token.boxShadow,
-                    borderRadius: token.borderRadius,
-                    color: token.colorTextBase,
-                }}
-            >
-                <header
+        <>
+            <Head title='Login' />
+            <Row justify='center' align='middle' style={{ height: '100vh', backgroundColor: token.colorPrimaryBg }}>
+                <div
                     style={{
-                        textAlign: 'center',
+                        width: '100%',
+                        maxWidth: '400px',
+                        height: 'max-content',
+                        padding: token.paddingLG,
+                        backgroundColor: token.colorBgBase,
+                        boxShadow: token.boxShadow,
+                        borderRadius: token.borderRadius,
+                        color: token.colorTextBase,
                     }}
                 >
-                    <Typography.Title
-                        level={1}
+                    <header
                         style={{
-                            marginBottom: token.marginXS,
+                            textAlign: 'center',
                         }}
                     >
-                        Admin Login
-                    </Typography.Title>
-                    <Typography.Paragraph>Login with your Admin Credentials.</Typography.Paragraph>
-                </header>
+                        <Typography.Title
+                            level={1}
+                            style={{
+                                marginBottom: token.marginXS,
+                            }}
+                        >
+                            Admin Login
+                        </Typography.Title>
+                        <Typography.Paragraph>Login with your Admin Credentials.</Typography.Paragraph>
+                    </header>
 
-                <main
-                    style={{
-                        marginTop: token.marginLG,
-                    }}
-                >
-                    <Button
-                        icon={<GoogleOutlined />}
-                        onClick={loginGoogle}
-                        size='large'
-                        type='primary'
+                    <main
                         style={{
-                            width: '100%',
+                            marginTop: token.marginLG,
                         }}
                     >
-                        Google
-                    </Button>
-                </main>
-            </div>
-        </Row>
+                        <Button
+                            icon={<GoogleOutlined />}
+                            onClick={loginGoogle}
+                            size='large'
+                            type='primary'
+                            style={{
+                                width: '100%',
+                            }}
+                        >
+                            Google
+                        </Button>
+                    </main>
+                </div>
+            </Row>
+        </>
     )
 }

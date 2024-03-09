@@ -1,3 +1,4 @@
+import Head from '@/common/components/Head'
 import { OrderDesignViewRoute } from '@/routes/Orders/OrderDesignView'
 import { Await } from '@tanstack/react-router'
 import { Button, Descriptions, Flex, Spin, Tooltip, Typography } from 'antd'
@@ -8,7 +9,8 @@ export default function OrderDesignViewPage() {
     const { orderDesign, account, currentFile } = OrderDesignViewRoute.useLoaderData()
 
     return (
-        <div>
+        <>
+            <Head title={`Order design details`} />
             <Flex justify='space-between'>
                 <Typography.Title level={2}>Order Design View</Typography.Title>
                 <Suspense fallback={<Spin size='small' />}>
@@ -76,6 +78,6 @@ export default function OrderDesignViewPage() {
                     },
                 ]}
             />
-        </div>
+        </>
     )
 }

@@ -1,14 +1,14 @@
 import { configAxios } from '@/api/defaults'
 import env from '@/env'
 import { routeTree } from '@/routeTree'
+import '@/socket'
 import '@/styles/index.css'
 import '@/styles/reset.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import React from 'react'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import ReactDOM from 'react-dom/client'
-import '@/socket'
 
 // load ENV file to memory
 env.load()
@@ -30,7 +30,9 @@ _global.devLog = function (...msg: any[]) {
 export const queryClient = new QueryClient()
 export const router = createRouter({
     routeTree,
-    context: { queryClient: queryClient },
+    context: {
+        queryClient: queryClient,
+    },
     defaultPreload: 'intent',
     defaultPreloadStaleTime: 0,
 })
