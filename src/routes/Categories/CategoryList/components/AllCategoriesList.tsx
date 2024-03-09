@@ -97,6 +97,9 @@ export default function AllCategoriesList({ disabled = false }: AllCategoriesLis
                                             params: {
                                                 id: record.id,
                                             },
+                                            search: {
+                                                page: 0,
+                                            },
                                         })
                                     }}
                                 >

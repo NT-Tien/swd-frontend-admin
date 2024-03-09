@@ -29,18 +29,13 @@ export const OrdersViewRoute = createRoute({
             id: raw.id as string,
         }
     },
-    loader: async ({ context: { queryClient }, params: { id }, navigate }) => {
+    loader: async ({ context: { queryClient }, params: { id } }) => {
         const orders = await queryClient.fetchQuery(queryOrder_GetAll())
         const result = orders.data.filter(order => order.id === id)
 
         if (!result || result.length === 0) {
             devLog(`Order ${id} cannot be found`)
-            navigate({
-                to: OrdersListRoute.to,
-                search: {
-                    tab: 'all',
-                },
-            })
+            throw new Error('Order not found')
         }
 
         const order = result[0]

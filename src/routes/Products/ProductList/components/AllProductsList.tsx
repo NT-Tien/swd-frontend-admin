@@ -1,5 +1,4 @@
 import { queryProduct_GetAll } from '@/api/product/Product_GetAll'
-import { queryProduct_GetAll_Deleted } from '@/api/product/Product_GetAll_Deleted'
 import { Category } from '@/lib/types/Category'
 import { Product } from '@/lib/types/Product'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
@@ -26,11 +25,7 @@ export default function AllProductsList({ disabled = false }: AllProductsListPro
     const page = ProductListRoute.useSearch({
         select: data => data.page,
     })
-    const {
-        data: products,
-        isLoading,
-        isError,
-    } = useQuery(disabled ? queryProduct_GetAll_Deleted({ page, size }) : queryProduct_GetAll({ page, size }))
+    const { data: products, isLoading, isError } = useQuery(queryProduct_GetAll({ page, size, deleted: disabled }))
     const searchColumnProps = GetColumnSearchProps<Product>()
 
     if (isError) {
