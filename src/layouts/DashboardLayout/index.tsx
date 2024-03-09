@@ -51,7 +51,14 @@ function DashboardLayout() {
     const { notiApi } = useNotification()
 
     useEffect(() => {
-        socket.on('message', data => {
+        socket.on('connect', () => {
+            notiApi.info({
+                type: 'info',
+                message: 'Connected to server',
+            })
+        })
+
+        socket.connect().on('message', data => {
             notiApi.info({
                 type: 'info',
                 message: data,
@@ -60,6 +67,7 @@ function DashboardLayout() {
 
         return () => {
             socket.off('message')
+            socket.disconnect()
         }
     })
 
