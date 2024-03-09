@@ -58,10 +58,10 @@ function DashboardLayout() {
             })
         })
 
-        socket.connect().on('message', data => {
+        socket.connect().on('message', () => {
             notiApi.info({
                 type: 'info',
-                message: data,
+                message: 'You have a new order!',
             })
         })
 
