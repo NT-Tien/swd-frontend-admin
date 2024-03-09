@@ -133,7 +133,7 @@ function DashboardLayout() {
                                     navigate({
                                         to: OrdersListRoute.to,
                                         search: {
-                                            tab: 'all',
+                                            tab: isAuthorized(Role.STAFF, currentRole) ? 'all' : 'orders-to-deliver',
                                         },
                                     }),
                             }),

@@ -21,7 +21,7 @@ export type Order = {
     address: string
     phone: string
     email: string
-    payment: Payment
+    payment: Payment | null
     wallet_payment: string | null
     status_delivery: DeliveryStatus
 }
@@ -39,7 +39,7 @@ export function ResponseToOrder(response: Record<string, any>): Order {
         address: response.address,
         phone: response.phone,
         email: response.email,
-        payment: ResponseToPayment(response.payment),
+        payment: response.payment ? ResponseToPayment(response.payment) : null,
         wallet_payment: response.wallet_payment,
         status_delivery: response.status_delivery,
     } satisfies Order

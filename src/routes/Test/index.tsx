@@ -1,38 +1,38 @@
 import { rootRoute } from '@/routeTree'
-import { socket } from '@/socket'
 import { createRoute } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
+const blockSize = 100
 const component = function TestPage() {
-    const [isConnected, setIsConnected] = useState(socket.connected)
-
-    useEffect(() => {
-        function onConnect() {
-            setIsConnected(true)
-        }
-
-        function onDisconnect() {
-            setIsConnected(false)
-        }
-
-        socket.on('connect', onConnect)
-        socket.on('disconnect', onDisconnect)
-        socket.on('message', data => {
-            alert('HELLOO')
-            console.log(data)
-        })
-
-        return () => {
-            socket.off('connect', onConnect)
-            socket.off('disconnect', onDisconnect)
-            socket.off('message')
-        }
-    }, [])
+    const [leftMargin, setLeftMargin] = useState(0)
+    const [topMargin, setTopMargin] = useState(0)
 
     return (
-        <div className='App'>
-            <ConnectionState isConnected={isConnected} />
-            <ConnectionManager />
+        <div
+            style={{
+                overflow: 'hidden',
+                height: '100vh',
+                backgroundSize: `${blockSize}px ${blockSize}px`,
+                backgroundImage:
+                    'linear-gradient(to right, grey 1px, transparent 1px), linear-gradient(to bottom, grey 1px, transparent 1px)',
+            }}
+        >
+            <span
+                style={{
+                    backgroundColor: 'red',
+                    width: blockSize * 3,
+                    height: blockSize * 3,
+                    display: 'inline-grid',
+                    placeItems: 'center',
+                    marginLeft: `${leftMargin}px`,
+                    marginTop: `${topMargin}px`,
+                    color: 'white',
+                    fontSize: '20px',
+                    fontWeight: 600,
+                }}
+            >
+                Hello
+            </span>
         </div>
     )
 }
@@ -42,34 +42,3 @@ export const TestRoute = createRoute({
     getParentRoute: () => rootRoute,
     component,
 })
-
-export function ConnectionState({ isConnected }: any) {
-    return <p>State: {'' + isConnected}</p>
-}
-
-export function Events({ events }: any) {
-    return (
-        <ul>
-            {events.map((event: any, index: any) => (
-                <li key={index}>{event}</li>
-            ))}
-        </ul>
-    )
-}
-
-export function ConnectionManager() {
-    function connect() {
-        socket.connect()
-    }
-
-    function disconnect() {
-        socket.disconnect()
-    }
-
-    return (
-        <>
-            <button onClick={connect}>Connect</button>
-            <button onClick={disconnect}>Disconnect</button>
-        </>
-    )
-}

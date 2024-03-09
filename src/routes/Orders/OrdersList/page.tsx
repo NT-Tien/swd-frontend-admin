@@ -11,7 +11,6 @@ export default function OrdersListPage() {
         select: data => data.tab,
     })
     const [currentTab, setCurrentTab] = useState(tab)
-    console.log(isAuthorized(Role.STAFF, AuthenticationHandler.getCurrentRole()))
 
     return (
         <Flex vertical gap={0}>
