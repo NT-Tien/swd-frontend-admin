@@ -7,6 +7,7 @@ import { Role } from '@/lib/types/Account'
 import { DashboardRoute } from '@/routes/Dashboard'
 import { LoginRoute } from '@/routes/Login'
 import { OrdersListRoute } from '@/routes/Orders/OrdersList'
+import { socket } from '@/socket'
 import { GoogleOutlined } from '@ant-design/icons'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
@@ -104,15 +105,26 @@ export default function LoginPage() {
         }
     }, [error, messageApi, pageAccessDenied])
 
+    useEffect(() => {
+        socket.disconnect()
+    }, [])
+
     return (
         <>
             <Head title='Login' />
-            <Row justify='center' align='middle' style={{ height: '100vh', backgroundColor: token.colorPrimaryBg }}>
+            <Row
+                justify='center'
+                align='middle'
+                style={{
+                    minHeight: '100vh',
+                    background: 'url("/images/login-background.png") center/cover no-repeat',
+                }}
+            >
                 <div
                     style={{
                         width: '100%',
                         maxWidth: '400px',
-                        height: 'max-content',
+                        height: '100%',
                         padding: token.paddingLG,
                         backgroundColor: token.colorBgBase,
                         boxShadow: token.boxShadow,

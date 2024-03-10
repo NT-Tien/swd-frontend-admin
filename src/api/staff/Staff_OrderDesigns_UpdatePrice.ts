@@ -2,30 +2,28 @@ import { ParseResponse } from '@/api/defaults'
 import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import axios from 'axios'
 
-export type Voucher_Delete_Req = {
+export type Staff_OrderDesigns_UpdatePrice_Req = {
     id: string
+    price: number
 }
 
-export type Voucher_Delete_Res = {
-    success: boolean
-}
+export type Staff_OrderDesigns_UpdatePrice_Res = { success: boolean }
 
-export function Voucher_Delete({ id }: Voucher_Delete_Req) {
-    return axios.put<Voucher_Delete_Res>('voucher/delete/' + encodeURIComponent(id), undefined, {
+export async function Staff_OrderDesigns_UpdatePrice({ id, price }: Staff_OrderDesigns_UpdatePrice_Req) {
+    return await axios.put<Staff_OrderDesigns_UpdatePrice_Res>(`/staff/update-price-order-design/${id}/${price}`, undefined, {
         headers: {
-            Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
+            Authorization: `Bearer ${AuthenticationHandler.getCookieToken()}`,
         },
+        responseType: 'json',
         transformResponse: [
             ParseResponse,
             (res: ApiResponse<DeleteResponse>) => {
                 if ('data' in res) {
-                    // success
                     return {
                         success: res.statusCode === 200 && res.data.affected > 0,
                     }
                 } else {
-                    // error
-                    devLog('Error while deleting voucher', res.message, ' (', res.statusCode, ')')
+                    devLog('Error while updating order design price', res.message, ' (', res.statusCode, ')')
                     throw new Error(res.message)
                 }
             },

@@ -5,6 +5,7 @@ import { createRoute, lazyRouteComponent, redirect } from '@tanstack/react-route
 
 type AccountListSearch = {
     page?: number
+    size?: number
 }
 
 export const AccountListRoute = createRoute({
@@ -24,6 +25,7 @@ export const AccountListRoute = createRoute({
     validateSearch: (search: AccountListSearch) => {
         return {
             page: search.page ? Number(search.page) : 1,
+            size: search.size ? Number(search.size) : 8,
         }
     },
 })

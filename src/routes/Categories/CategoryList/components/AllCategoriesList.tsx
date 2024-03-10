@@ -11,6 +11,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { Dropdown, Table } from 'antd'
 import dayjs from 'dayjs'
+import { useState } from 'react'
 
 type AllCategoriesListProps = {
     disabled?: boolean
@@ -18,6 +19,7 @@ type AllCategoriesListProps = {
 
 export default function AllCategoriesList({ disabled = false }: AllCategoriesListProps) {
     const navigate = useNavigate()
+    const [pageSize, setPageSize] = useState(8)
     const { data: categories, isLoading, isError } = useQuery(disabled ? queryCategory_GetAll_Deleted() : queryCategory_GetAll())
 
     const searchColumnProps = GetColumnSearchProps<Category>()
@@ -109,7 +111,18 @@ export default function AllCategoriesList({ disabled = false }: AllCategoriesLis
                         },
                     ]}
                     pagination={{
-                        pageSize: 8,
+                        pageSize: pageSize,
+                        total: categories?.total ?? 0,
+                        pageSizeOptions: ['8', '16', '24', '32'],
+                        showSizeChanger: true,
+                        onShowSizeChange(_, size) {
+                            setPageSize(size)
+                        },
+                        showTotal: (total, range) => {
+                            return `${range[0]}-${range[1]} of ${total} items`
+                        },
+                        showLessItems: true,
+                        showQuickJumper: true,
                     }}
                     loading={isLoading}
                 />

@@ -1,19 +1,22 @@
+import Head from '@/common/components/Head'
 import RefreshButton from '@/common/components/RefreshButton'
 import { BookingsRoute } from '@/routes/Bookings'
-import { Trash } from '@phosphor-icons/react'
+import ViewBookingModal from '@/routes/Bookings/modal/ViewBookingModal'
 import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
 import { Dropdown, Flex, Table, Typography } from 'antd'
 import dayjs from 'dayjs'
 import { queryBookingVisit_GetAll } from '../../api/booking-visit/Booking-Visit_GetAll'
 import { BookingVisit } from '../../lib/types/BookingVisit'
 import GetColumnSearchProps from '../../lib/util/getColumnSearchProps'
-import Head from '@/common/components/Head'
-
-const size = 5
 
 export default function BookingsPage() {
+    const navigate = useNavigate()
     const page = BookingsRoute.useSearch({
         select: data => data.page,
+    })
+    const size = BookingsRoute.useSearch({
+        select: data => data.size,
     })
     const { data: bookings, isLoading, isError } = useQuery(queryBookingVisit_GetAll({ page, limit: size }))
     const searchColumnProps = GetColumnSearchProps<BookingVisit>()
@@ -35,74 +38,89 @@ export default function BookingsPage() {
                     Bookings List
                     <RefreshButton queryKey={['booking-visits']} isLoading={isLoading} />
                 </Typography.Title>
-                {/* <Flex justify='space-between'>
-                    <CreateBookingModal>
-                        {({ handleOpen }) => (
-                            <Button type='primary' icon={<Plus />} onClick={handleOpen}>
-                                Add Booking
-                            </Button>
-                        )}
-                    </CreateBookingModal>
-                </Flex> */}
-                <Table
-                    dataSource={bookings?.data ?? []}
-                    columns={[
-                        {
-                            title: 'No.',
-                            render: (_, __, index) => index + 1,
-                        },
-                        {
-                            key: 'customer_name',
-                            title: 'Customer Name',
-                            dataIndex: 'customer_name',
-                            ...searchColumnProps('customer_name'),
-                            sortDirections: ['ascend', 'descend'],
-                            sorter: (a, b) => a.customer_name.localeCompare(b.customer_name),
-                            defaultSortOrder: 'ascend',
-                        },
-                        {
-                            key: 'visit_date',
-                            title: 'Visit Date',
-                            dataIndex: 'visit_date',
-                            render: (value: Date) => {
-                                return dayjs(value).format('DD-MM-YYYY')
-                            },
-                            sorter: (a, b) => a.visit_date.getTime() - b.visit_date.getTime(),
-                            sortDirections: ['ascend', 'descend'],
-                        },
-                        {
-                            key: 'phone_number',
-                            title: 'Phone Number',
-                            dataIndex: 'phone_number',
-                            ...searchColumnProps('phone_number'),
-                        },
-                        {
-                            title: 'Action',
-                            dataIndex: 'action',
-                            key: 'action',
-                            render: () => (
-                                <Dropdown.Button
-                                    menu={{
-                                        items: [
-                                            {
-                                                label: 'Delete',
-                                                key: '1',
-                                                icon: <Trash />,
-                                                danger: true,
-                                            },
-                                        ],
-                                    }}
-                                >
-                                    View
-                                </Dropdown.Button>
-                            ),
-                        },
-                    ]}
-                    pagination={{
-                        pageSize: size,
-                    }}
-                    loading={isLoading}
-                />
+                <ViewBookingModal>
+                    {({ handleOpen: openViewBooking }) => (
+                        <Table
+                            dataSource={bookings?.data ?? []}
+                            columns={[
+                                {
+                                    title: 'No.',
+                                    render: (_, __, index) => index + 1 + (page - 1) * size,
+                                },
+                                {
+                                    key: 'customer_name',
+                                    title: 'Customer Name',
+                                    dataIndex: 'customer_name',
+                                    ...searchColumnProps('customer_name'),
+                                    sortDirections: ['ascend', 'descend'],
+                                    sorter: (a, b) => a.customer_name.localeCompare(b.customer_name),
+                                    defaultSortOrder: 'ascend',
+                                },
+                                {
+                                    key: 'visit_date',
+                                    title: 'Visit Date',
+                                    dataIndex: 'visit_date',
+                                    render: (value: Date) => {
+                                        return dayjs(value).format('DD-MM-YYYY')
+                                    },
+                                    sorter: (a, b) => a.visit_date.getTime() - b.visit_date.getTime(),
+                                    sortDirections: ['ascend', 'descend'],
+                                },
+                                {
+                                    key: 'phone_number',
+                                    title: 'Phone Number',
+                                    dataIndex: 'phone_number',
+                                    ...searchColumnProps('phone_number'),
+                                },
+                                {
+                                    title: 'Action',
+                                    dataIndex: 'action',
+                                    key: 'action',
+                                    render: (_, record) => (
+                                        <Dropdown.Button
+                                            menu={{
+                                                items: [],
+                                            }}
+                                            onClick={() => openViewBooking(record)}
+                                        >
+                                            View
+                                        </Dropdown.Button>
+                                    ),
+                                },
+                            ]}
+                            pagination={{
+                                pageSize: size,
+                                total: bookings?.total,
+                                pageSizeOptions: ['8', '16', '24', '32'],
+                                showSizeChanger: true,
+                                onChange(page, pageSize) {
+                                    navigate({
+                                        to: BookingsRoute.to,
+                                        search: {
+                                            page,
+                                            size: pageSize,
+                                        },
+                                    })
+                                },
+                                onShowSizeChange(_, size) {
+                                    navigate({
+                                        to: BookingsRoute.to,
+                                        search: {
+                                            page: 1,
+                                            size,
+                                        },
+                                    })
+                                },
+                                showTotal: (total, range) => {
+                                    return `${range[0]}-${range[1]} of ${total} items`
+                                },
+                                showLessItems: true,
+                                showQuickJumper: true,
+                            }}
+                            loading={isLoading}
+                        />
+                    )}
+                </ViewBookingModal>
             </Flex>
         </>
     )

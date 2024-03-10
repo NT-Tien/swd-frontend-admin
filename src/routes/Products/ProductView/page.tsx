@@ -60,6 +60,7 @@ export default function ProductViewPage() {
                                 to: ProductListRoute.to,
                                 search: {
                                     page: 1,
+                                    size: 8,
                                     tab: 'all',
                                 },
                             })

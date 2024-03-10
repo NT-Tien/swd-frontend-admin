@@ -2,7 +2,7 @@ import { MessageContextProvider } from '@/common/context/MessageContext/MessageC
 import NotificationContextProvider from '@/common/context/NotificationContext/NotificationContext'
 import ThemeContextProvider from '@/common/context/ThemeContext/ThemeContext'
 import { Outlet } from '@tanstack/react-router'
-import App from 'antd/es/app'
+import { App } from 'antd'
 // import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 
 export default function RootLayout() {

@@ -1,51 +1,118 @@
-import { Timeline, Typography } from 'antd'
+import { DeliveryStatus } from '@/lib/types/Order'
+import { queryOrder_RecentWithUser_DB } from '@/routes/Dashboard/util/queryOrder_GetAll_WithUser'
+import { OrdersListRoute } from '@/routes/Orders/OrdersList'
+import { OrdersViewRoute } from '@/routes/Orders/OrdersView'
+import { useSuspenseQuery } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
+import { Button, Skeleton, Timeline, Typography } from 'antd'
+import dayjs from 'dayjs'
 
 export default function OrderHistory() {
-    const timelineList = [
-        {
-            title: '$2,400 - Redesign store',
-            time: '09 JUN 7:20 PM',
-            color: 'green',
-        },
-        {
-            title: 'New order #3654323',
-            time: '08 JUN 12:20 PM',
-            color: 'green',
-        },
-        {
-            title: 'Company server payments',
-            time: '04 JUN 3:10 PM',
-        },
-        {
-            title: 'New card added for order #4826321',
-            time: '02 JUN 2:45 PM',
-        },
-        {
-            title: 'Unlock folders for development',
-            time: '18 MAY 1:30 PM',
-        },
-        {
-            title: 'New order #46282344',
-            time: '14 MAY 3:30 PM',
-            color: 'gray',
-        },
-    ]
+    const navigate = useNavigate()
+    const { data: orders, isLoading, isError, isSuccess } = useSuspenseQuery(queryOrder_RecentWithUser_DB({ limit: 6 }))
 
     return (
         <div className='timeline-box'>
-            <Typography.Title level={5}>Orders History</Typography.Title>
+            <Typography.Title level={5}>Recent Orders</Typography.Title>
             <Typography.Paragraph className='lastweek' style={{ marginBottom: 24 }}>
-                this month <span className='bnb2'>20%</span>
+                There are currently <span>{orders.isActive}</span> active order(s)
             </Typography.Paragraph>
+            {isLoading && (
+                <Timeline
+                    pending
+                    items={new Array(6).fill('').map((_, index) => ({
+                        key: index,
+                        pending: true,
+                        children: (
+                            <>
+                                <div>
+                                    <Skeleton.Input
+                                        style={{
+                                            width: '100%',
+                                            height: '20px',
+                                        }}
+                                    ></Skeleton.Input>
+                                </div>
+                                <div>
+                                    <Skeleton.Button
+                                        style={{
+                                            width: '100%',
+                                            height: '15px',
+                                            marginTop: '10px',
+                                        }}
+                                    ></Skeleton.Button>
+                                </div>
+                            </>
+                        ),
+                    }))}
+                />
+            )}
+            {isError && 'Error loading orders. Please try again later.'}
+            {isSuccess && (
+                <Timeline
+                    className='timelineList'
+                    items={orders.recent
+                        .sort((a, b) => dayjs(b.createdAt).diff(dayjs(a.createdAt)))
+                        .map(order => {
+                            let color
+                            switch (order.status_delivery) {
+                                case DeliveryStatus.PENDING:
+                                    color = 'gray'
+                                    break
+                                case DeliveryStatus.SHIPPING:
+                                    color = 'blue'
+                                    break
+                                case DeliveryStatus.DELIVERED:
+                                    color = 'green'
+                                    break
+                                case DeliveryStatus.CANCELED:
+                                    color = 'red'
+                                    break
+                                default:
+                                    color = 'gray'
+                            }
 
-            <Timeline className='timelinelist'>
-                {timelineList.map((t, index) => (
-                    <Timeline.Item color={t.color} key={index}>
-                        <Typography.Title level={5}>{t.title}</Typography.Title>
-                        <Typography.Text>{t.time}</Typography.Text>
-                    </Timeline.Item>
-                ))}
-            </Timeline>
+                            return {
+                                color,
+                                children: (
+                                    <div>
+                                        <Typography.Title
+                                            level={5}
+                                            onClick={() =>
+                                                navigate({
+                                                    to: OrdersViewRoute.to,
+                                                    params: {
+                                                        id: order.id,
+                                                    },
+                                                })
+                                            }
+                                            style={{
+                                                cursor: 'pointer',
+                                            }}
+                                        >
+                                            {order.products.length + ' item' + (order.products.length > 1 ? 's' : '')} by{' '}
+                                            {order.user_id.data.email}
+                                        </Typography.Title>
+                                        <Typography.Text>{dayjs(order.createdAt).format('DD MMM h:mm A')}</Typography.Text>
+                                    </div>
+                                ),
+                            }
+                        })}
+                />
+            )}
+            <Button
+                type='primary'
+                onClick={() =>
+                    navigate({
+                        to: OrdersListRoute.to,
+                        search: {
+                            tab: 'all',
+                        },
+                    })
+                }
+            >
+                View More
+            </Button>
         </div>
     )
 }

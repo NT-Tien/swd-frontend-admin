@@ -26,7 +26,7 @@ export default function OrdersListPage() {
                     }}
                 >
                     Order List
-                    <RefreshButton isLoading={false} queryKey={currentTab === 'all' ? ['orders'] : ['orders-deleted']} />
+                    <RefreshButton isLoading={false} queryKey={currentTab === 'all' ? ['orders'] : ['orders', 'to-deliver']} />
                 </Typography.Title>
                 <Tabs
                     defaultActiveKey={currentTab}

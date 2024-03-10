@@ -14,16 +14,19 @@ import { useNavigate } from '@tanstack/react-router'
 import { Dropdown, Table } from 'antd'
 import dayjs from 'dayjs'
 
-const size = 8
-
 type AllProductsListProps = {
     disabled?: boolean
 }
+
+// TODO retest this component
 
 export default function AllProductsList({ disabled = false }: AllProductsListProps) {
     const navigate = useNavigate()
     const page = ProductListRoute.useSearch({
         select: data => data.page,
+    })
+    const size = ProductListRoute.useSearch({
+        select: data => data.size,
     })
     const { data: products, isLoading, isError } = useQuery(queryProduct_GetAll({ page, size, deleted: disabled }))
     const searchColumnProps = GetColumnSearchProps<Product>()
@@ -160,12 +163,30 @@ export default function AllProductsList({ disabled = false }: AllProductsListPro
                                     pagination={{
                                         pageSize: size,
                                         total: products?.total ?? 0,
+                                        pageSizeOptions: ['8', '16', '24', '32'],
+                                        showSizeChanger: true,
+                                        onShowSizeChange(_, size) {
+                                            navigate({
+                                                to: ProductListRoute.to,
+                                                search: {
+                                                    page,
+                                                    tab: 'all',
+                                                    size: size,
+                                                },
+                                            })
+                                        },
+                                        showTotal: (total, range) => {
+                                            return `${range[0]}-${range[1]} of ${total} items`
+                                        },
+                                        showLessItems: true,
+                                        showQuickJumper: true,
                                         onChange(page) {
                                             navigate({
                                                 to: ProductListRoute.to,
                                                 search: {
                                                     page,
                                                     tab: 'all',
+                                                    size,
                                                 },
                                             })
                                         },

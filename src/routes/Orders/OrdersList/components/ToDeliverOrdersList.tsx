@@ -6,9 +6,11 @@ import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { Button, Table } from 'antd'
 import dayjs from 'dayjs'
+import { useState } from 'react'
 
 export default function ToDeliverOrdersList() {
     const navigate = useNavigate()
+    const [pageSize, setPageSize] = useState(8)
     const { data: orders, isLoading, isError } = useQuery(queryDStaff_GetAll_OrderToDeliver())
 
     if (isError) {
@@ -85,7 +87,18 @@ export default function ToDeliverOrdersList() {
                 },
             ]}
             pagination={{
-                pageSize: 8,
+                pageSize: pageSize,
+                total: orders?.length,
+                pageSizeOptions: ['8', '16', '24', '32'],
+                showSizeChanger: true,
+                onShowSizeChange(_, size) {
+                    setPageSize(size)
+                },
+                showTotal: (total, range) => {
+                    return `${range[0]}-${range[1]} of ${total} items`
+                },
+                showLessItems: true,
+                showQuickJumper: true,
             }}
             loading={isLoading}
         />

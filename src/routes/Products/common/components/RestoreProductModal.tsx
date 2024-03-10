@@ -38,7 +38,7 @@ export default function RestoreProductModal({ children }: RestoreProductModalPro
                                 <span>Product Restored successfully.</span>
                                 <Button
                                     type='dashed'
-                                    onClick={() => navigate({ to: ProductListRoute.to, search: { tab: 'all', page: 0 } })}
+                                    onClick={() => navigate({ to: ProductListRoute.to, search: { tab: 'all', page: 1, size: 8 } })}
                                 >
                                     View
                                 </Button>

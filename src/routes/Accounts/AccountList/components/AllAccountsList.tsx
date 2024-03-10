@@ -17,12 +17,13 @@ import { useNavigate } from '@tanstack/react-router'
 import { AccountViewRoute } from '@/routes/Accounts/AccountView'
 import dayjs from 'dayjs'
 
-const size = 5
-
 export default function AllAccountsList() {
     const navigate = useNavigate()
     const page = AccountListRoute.useSearch({
         select: data => data.page,
+    })
+    const size = AccountListRoute.useSearch({
+        select: data => data.size,
     })
     const { data: accounts, isLoading, isError } = useQuery(queryAccount_GetAll({ page, size }))
     const searchColumnProps = GetColumnSearchProps<Account>()
@@ -172,11 +173,28 @@ export default function AllAccountsList() {
                                     pagination={{
                                         pageSize: size,
                                         total: accounts?.total ?? 0,
-                                        onChange(page) {
+                                        pageSizeOptions: ['8', '16', '24', '32'],
+                                        showSizeChanger: true,
+                                        onShowSizeChange(_, size) {
                                             navigate({
                                                 to: AccountListRoute.to,
                                                 search: {
                                                     page,
+                                                    size,
+                                                },
+                                            })
+                                        },
+                                        showTotal: (total, range) => {
+                                            return `${range[0]}-${range[1]} of ${total} items`
+                                        },
+                                        showLessItems: true,
+                                        showQuickJumper: true,
+                                        onChange(page, pageSize) {
+                                            navigate({
+                                                to: AccountListRoute.to,
+                                                search: {
+                                                    page,
+                                                    size: pageSize,
                                                 },
                                             })
                                         },

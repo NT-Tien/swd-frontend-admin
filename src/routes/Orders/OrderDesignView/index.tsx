@@ -26,7 +26,7 @@ export const OrderDesignViewRoute = createRoute({
         }
     },
     loader: async ({ context: { queryClient }, params: { id } }) => {
-        const orderDesigns = await queryClient.ensureQueryData(queryStaff_OrderDesigns_GetAll())
+        const orderDesigns = await queryClient.fetchQuery(queryStaff_OrderDesigns_GetAll())
 
         const currentOrderDesign = orderDesigns.data.find(orderDesign => orderDesign.id === id)
         if (!currentOrderDesign) {

@@ -6,6 +6,7 @@ import { createRoute, lazyRouteComponent, redirect } from '@tanstack/react-route
 
 type ProductListSearch = {
     page: number
+    size: number
     tab: tabKeys
 }
 
@@ -25,6 +26,7 @@ export const ProductListRoute = createRoute({
     validateSearch: (search: Partial<ProductListSearch>): ProductListSearch => {
         return {
             page: search.page ? Number(search.page) : 1,
+            size: search.size ? Number(search.size) : 8,
             tab: search.tab ? search.tab : 'all',
         }
     },

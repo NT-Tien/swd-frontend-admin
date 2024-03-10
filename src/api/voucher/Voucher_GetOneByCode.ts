@@ -24,7 +24,7 @@ export function Voucher_GetOneByCode({ code }: Voucher_GetOneByCode_Req) {
             (res: ApiResponse<Voucher>) => {
                 if ('data' in res) {
                     // success
-                    return ResponseToVoucher(res.data)
+                    return res.data ? ResponseToVoucher(res.data) : null
                 } else {
                     // error
                     devLog('Error while getting voucher', res.message, ' (', res.statusCode, ')')

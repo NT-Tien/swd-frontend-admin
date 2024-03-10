@@ -5,6 +5,7 @@ import { createRoute, lazyRouteComponent, redirect } from '@tanstack/react-route
 
 type BookingsRouteSearch = {
     page?: number
+    size?: number
 }
 
 export const BookingsRoute = createRoute({
@@ -23,7 +24,8 @@ export const BookingsRoute = createRoute({
     component: lazyRouteComponent(() => import('./page')),
     validateSearch: (data: BookingsRouteSearch) => {
         return {
-            page: data.page ?? 1,
+            page: data.page ? Number(data.page) : 1,
+            size: data.size ? Number(data.size) : 8,
         }
     },
 })

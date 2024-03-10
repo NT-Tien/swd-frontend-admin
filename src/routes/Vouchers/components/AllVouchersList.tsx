@@ -9,6 +9,7 @@ import { MoreOutlined } from '@ant-design/icons'
 import { Pencil, Trash } from '@phosphor-icons/react'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Dropdown, Table } from 'antd'
+import { useState } from 'react'
 
 type AllVouchersListProps = {
     disabled?: boolean
@@ -16,6 +17,7 @@ type AllVouchersListProps = {
 
 export default function AllVouchersList({ disabled = false }: AllVouchersListProps) {
     const { data: vouchers, isLoading, isError } = useQuery(disabled ? queryVoucher_GetAllDisabled() : queryVoucher_GetAll())
+    const [pageSize, setPageSize] = useState(8)
     const searchColumnProps = GetColumnSearchProps<Voucher>()
 
     if (isError) {
@@ -113,8 +115,8 @@ export default function AllVouchersList({ disabled = false }: AllVouchersListPro
                                                         onClick: () => handleOpenUpdate(record),
                                                     },
                                                     {
-                                                        label: 'Delete',
-                                                        key: 'delete-product-dropdown-button',
+                                                        label: 'Disable',
+                                                        key: 'Disable-product-dropdown-button',
                                                         icon: <Trash />,
                                                         style: {
                                                             marginTop: '10px',
@@ -132,7 +134,18 @@ export default function AllVouchersList({ disabled = false }: AllVouchersListPro
                                 },
                             ]}
                             pagination={{
-                                pageSize: 8,
+                                pageSize: pageSize,
+                                total: vouchers?.length,
+                                pageSizeOptions: ['8', '16', '24', '32'],
+                                showSizeChanger: true,
+                                onShowSizeChange(_, size) {
+                                    setPageSize(size)
+                                },
+                                showTotal: (total, range) => {
+                                    return `${range[0]}-${range[1]} of ${total} items`
+                                },
+                                showLessItems: true,
+                                showQuickJumper: true,
                             }}
                             loading={isLoading}
                         />

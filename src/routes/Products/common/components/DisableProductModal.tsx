@@ -38,7 +38,7 @@ export default function DisableProductModal({ children }: DisableProductModalPro
                                 <span>Product disabled successfully.</span>
                                 <Button
                                     type='dashed'
-                                    onClick={() => navigate({ to: ProductListRoute.to, search: { tab: 'disabled', page: 0 } })}
+                                    onClick={() => navigate({ to: ProductListRoute.to, search: { tab: 'disabled', page: 1, size: 8 } })}
                                 >
                                     View Deleted
                                 </Button>

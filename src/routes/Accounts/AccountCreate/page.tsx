@@ -40,7 +40,7 @@ export default function AccountCreatePage() {
                     <span>
                         Account created successfully.
                         <Button
-                            onClick={() => navigate({ to: AccountListRoute.to, search: { page: 1 } })}
+                            onClick={() => navigate({ to: AccountListRoute.to, search: { page: 1, size: 8 } })}
                             style={{
                                 marginLeft: '10px',
                             }}

@@ -1,4 +1,5 @@
 import { Voucher_Create } from '@/api/voucher/Voucher_Create'
+import { Voucher_GetOneByCode } from '@/api/voucher/Voucher_GetOneByCode'
 import { Voucher_Update } from '@/api/voucher/Voucher_Update'
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { Voucher } from '@/lib/types/Voucher'
@@ -108,66 +109,71 @@ export default function CreateOrUpdateVoucherModal({ children }: CreateVoucherMo
         form.setFieldsValue({
             code: generateRandomCode(),
         })
+        form.validateFields(['code'])
     }
 
     return (
         <>
             {children({ handleOpen })}
-            <Modal
-                open={open}
-                onCancel={handleClose}
-                title={currentVoucher ? 'Update Voucher' : 'Create Voucher'}
-                footer={[
-                    <Button type='default' onClick={handleClose}>
-                        Close
-                    </Button>,
-                    <Button type='primary' loading={createVoucherMutation.isPending} onClick={handleOk}>
-                        {currentVoucher ? 'Update Voucher' : 'Create Voucher'}
-                    </Button>,
-                ]}
-            >
-                <Form<FieldType>
-                    name='create-voucher-modal-form'
-                    form={form}
-                    disabled={createVoucherMutation.isPending}
-                    layout='vertical'
-                    initialValues={{
-                        code: currentVoucher?.code ?? '',
-                        expired_date: currentVoucher?.expired_date ? dayjs(currentVoucher?.expired_date) : undefined,
-                        amount: currentVoucher?.amount ?? undefined,
-                        limit_total_max: currentVoucher?.limit_total_max ?? undefined,
-                        limit_total_min: currentVoucher?.limit_total_min ?? undefined,
-                        discount_percent: currentVoucher?.discount_percent ?? undefined,
-                    }}
-                    onFinish={values => {
-                        if (currentVoucher) {
-                            updateVoucherMutation.mutate({
-                                id: currentVoucher.id,
-                                payload: {
-                                    code: values.code,
-                                    expired_date: values.expired_date.toDate().toUTCString(),
-                                    amount: values.amount,
-                                    limit_total_max: values.limit_total_max,
-                                    limit_total_min: values.limit_total_min,
-                                    discount_percent: values.discount_percent,
-                                },
-                            })
-                        } else {
-                            createVoucherMutation.mutate({
+            <Form<FieldType>
+                name='create-voucher-modal-form'
+                form={form}
+                disabled={createVoucherMutation.isPending}
+                layout='vertical'
+                initialValues={{
+                    code: currentVoucher?.code ?? '',
+                    expired_date: currentVoucher?.expired_date ? dayjs(currentVoucher?.expired_date) : undefined,
+                    amount: currentVoucher?.amount ?? undefined,
+                    limit_total_max: currentVoucher?.limit_total_max ?? undefined,
+                    limit_total_min: currentVoucher?.limit_total_min ?? undefined,
+                    discount_percent: currentVoucher?.discount_percent ?? undefined,
+                }}
+                onFinish={values => {
+                    if (currentVoucher) {
+                        updateVoucherMutation.mutate({
+                            id: currentVoucher.id,
+                            payload: {
                                 code: values.code,
                                 expired_date: values.expired_date.toDate().toUTCString(),
                                 amount: values.amount,
                                 limit_total_max: values.limit_total_max,
                                 limit_total_min: values.limit_total_min,
                                 discount_percent: values.discount_percent,
-                            })
-                        }
-                    }}
+                            },
+                        })
+                    } else {
+                        createVoucherMutation.mutate({
+                            code: values.code,
+                            expired_date: values.expired_date.toDate().toUTCString(),
+                            amount: values.amount,
+                            limit_total_max: values.limit_total_max,
+                            limit_total_min: values.limit_total_min,
+                            discount_percent: values.discount_percent,
+                        })
+                    }
+                }}
+            >
+                <Modal
+                    open={open}
+                    onCancel={handleClose}
+                    title={currentVoucher ? 'Update Voucher' : 'Create Voucher'}
+                    footer={[
+                        <Button type='default' onClick={handleClose}>
+                            Close
+                        </Button>,
+                        <Button type='primary' loading={createVoucherMutation.isPending} onClick={handleOk}>
+                            {currentVoucher ? 'Update Voucher' : 'Create Voucher'}
+                        </Button>,
+                    ]}
                 >
                     <Flex gap={10} align='center'>
                         <Form.Item<FieldType>
                             name='code'
                             label='Voucher Code'
+                            validateDebounce={500}
+                            validateFirst
+                            hasFeedback
+                            normalize={value => value.toUpperCase()}
                             rules={[
                                 {
                                     required: true,
@@ -180,6 +186,16 @@ export default function CreateOrUpdateVoucherModal({ children }: CreateVoucherMo
                                 {
                                     max: 20,
                                     message: 'Voucher code must be at most 20 characters',
+                                },
+                                {
+                                    validator: async (_, value) => {
+                                        const exists = await Voucher_GetOneByCode({ code: value })
+                                        if (exists.data === null) {
+                                            return Promise.resolve()
+                                        } else {
+                                            return Promise.reject('Code already exists')
+                                        }
+                                    },
                                 },
                             ]}
                             style={{
@@ -288,8 +304,8 @@ export default function CreateOrUpdateVoucherModal({ children }: CreateVoucherMo
                     >
                         <Input type='number' prefix='%' />
                     </Form.Item>
-                </Form>
-            </Modal>
+                </Modal>
+            </Form>
         </>
     )
 }

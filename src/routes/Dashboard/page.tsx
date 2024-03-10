@@ -1,5 +1,6 @@
 import Head from '@/common/components/Head'
 import ActiveUsers from '@/routes/Dashboard/components/ActiveUsers'
+import LatestBookings from '@/routes/Dashboard/components/LatestBookings'
 import LineChart from '@/routes/Dashboard/components/LineChart'
 import OrderHistory from '@/routes/Dashboard/components/OrderHistory'
 import QuickStats from '@/routes/Dashboard/components/QuickStats'
@@ -29,7 +30,15 @@ export default function DashboardPage() {
                 }}
             >
                 <Col xs={24} sm={24} md={12} lg={12} xl={16} className='mb-24'>
-                    <Card bordered={false} className='criclebox cardbody h-full'></Card>
+                    <Card
+                        bordered={false}
+                        style={{
+                            display: 'flex',
+                            gap: '10px',
+                        }}
+                    >
+                        <LatestBookings />
+                    </Card>
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={8} className='mb-24'>
                     <Card bordered={false} className='criclebox h-full'>

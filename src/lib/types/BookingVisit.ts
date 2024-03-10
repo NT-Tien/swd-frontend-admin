@@ -1,3 +1,5 @@
+import dayjs from 'dayjs'
+
 export type BookingVisit = {
     visit_date: Date
     phone_number: string
@@ -7,7 +9,7 @@ export type BookingVisit = {
 
 export function ResponseToBookingVisit(response: Record<string, any>): BookingVisit {
     return {
-        visit_date: new Date(response.visit_date),
+        visit_date: dayjs.utc(response.visit_date).toDate(),
         phone_number: response.phone_number,
         customer_name: response.customer_name,
         email: response.email ?? undefined,

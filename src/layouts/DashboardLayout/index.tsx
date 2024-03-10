@@ -21,6 +21,7 @@ import { VouchersRoute } from '@/routes/Vouchers'
 import { socket } from '@/socket'
 import { MoneyCollectFilled } from '@ant-design/icons'
 import { Basket, Bell, Book, BookOpen, Browser, Gear, House, List, User, UserCircle } from '@phosphor-icons/react'
+import { useQueryClient } from '@tanstack/react-query'
 import { Outlet, createRoute, redirect, useNavigate } from '@tanstack/react-router'
 import { Avatar, Button, Flex, Input, Layout, Menu, theme } from 'antd'
 import { useEffect, useMemo } from 'react'
@@ -49,19 +50,17 @@ function DashboardLayout() {
     const { token } = useToken()
     const currentRole = AuthenticationHandler.getCurrentRole()
     const { notiApi } = useNotification()
+    const queryClient = useQueryClient()
 
     useEffect(() => {
-        socket.on('connect', () => {
-            notiApi.info({
-                type: 'info',
-                message: 'Connected to server',
-            })
-        })
-
         socket.connect().on('message', () => {
             notiApi.info({
                 type: 'info',
                 message: 'You have a new order!',
+            })
+            queryClient.invalidateQueries({
+                queryKey: ['order', 'recent'],
+                type: 'all',
             })
         })
 
@@ -94,7 +93,7 @@ function DashboardLayout() {
                                 key: 'product-list',
                                 label: 'Product List',
                                 shown: isAuthorized(Role.STAFF, currentRole),
-                                onClick: () => navigate({ to: ProductListRoute.to, search: { page: 1, tab: 'all' } }),
+                                onClick: () => navigate({ to: ProductListRoute.to, search: { page: 1, size: 8, tab: 'all' } }),
                             }),
                             getItem_2({
                                 key: 'product-create',
@@ -166,7 +165,7 @@ function DashboardLayout() {
                                 key: 'account-list',
                                 label: 'Account List',
                                 shown: isAuthorized(Role.ADMIN, currentRole),
-                                onClick: () => navigate({ to: AccountListRoute.to, search: { page: 1 } }),
+                                onClick: () => navigate({ to: AccountListRoute.to, search: { page: 1, size: 8 } }),
                             }),
                             getItem_2({
                                 key: 'account-create',
@@ -181,7 +180,7 @@ function DashboardLayout() {
                         label: 'Bookings',
                         icon: <BookOpen />,
                         shown: isAuthorized(Role.STAFF, currentRole),
-                        onClick: () => navigate({ to: BookingsRoute.to, search: { page: 1 } }),
+                        onClick: () => navigate({ to: BookingsRoute.to, search: { page: 1, size: 8 } }),
                     }),
                     getItem_1({
                         key: 'vouchers',

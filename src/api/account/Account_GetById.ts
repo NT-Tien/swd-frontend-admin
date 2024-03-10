@@ -29,9 +29,10 @@ export async function Account_GetById({ id }: Account_GetById_Req) {
     })
 }
 
-export const queryAccount_GetById = ({ id }: Account_GetById_Req) =>
+export const queryAccount_GetById = ({ id, enabled = true }: Account_GetById_Req & { enabled?: boolean }) =>
     queryOptions({
         queryKey: ['account', id],
         queryFn: () => Account_GetById({ id }),
         select: res => res.data,
+        enabled,
     })
