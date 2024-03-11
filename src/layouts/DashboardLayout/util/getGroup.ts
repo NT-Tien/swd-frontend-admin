@@ -2,7 +2,7 @@ import { MenuItem } from '@/lib/types/MenuItem'
 
 type getGroupProps = {
     key: string
-    label: string
+    label: any
     children: MenuItem[]
     shown?: boolean
 }

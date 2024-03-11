@@ -1,7 +1,8 @@
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { LoginRoute } from '@/routes/Login'
-import { Gear, ShoppingBag, User } from '@phosphor-icons/react'
+import { SiteSettingsRoute } from '@/routes/SiteSettings'
+import { Gear } from '@phosphor-icons/react'
 import { useNavigate } from '@tanstack/react-router'
 import { Typography } from 'antd'
 import Dropdown from 'antd/es/dropdown'
@@ -62,22 +63,13 @@ export default function ProfileDropdown({ children }: ProfileDropdownProps) {
             },
         },
         {
-            key: '1',
-            label: 'Profile',
-            icon: <User />,
-            onClick: () => {},
-        },
-        {
             key: '2',
             label: 'Settings',
             icon: <Gear />,
-            onClick: () => {},
-        },
-        {
-            key: '3',
-            label: 'My Orders',
-            icon: <ShoppingBag />,
-            onClick: () => {},
+            onClick: () =>
+                navigate({
+                    to: SiteSettingsRoute.to,
+                }),
         },
         {
             key: '4',
@@ -110,7 +102,7 @@ export default function ProfileDropdown({ children }: ProfileDropdownProps) {
             trigger={['click']}
             menu={{ items }}
             overlayStyle={{
-                paddingTop: '25px',
+                paddingTop: '0px',
                 minWidth: '170px',
             }}
         >

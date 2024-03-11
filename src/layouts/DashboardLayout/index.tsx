@@ -1,5 +1,4 @@
 import { useNotification } from '@/common/context/NotificationContext/useNotification'
-import NotificationsDropdown from '@/layouts/DashboardLayout/components/NotificationsDropdown'
 import ProfileDropdown from '@/layouts/DashboardLayout/components/ProfileDropdown'
 import { getGroup, getItem_1, getItem_2 } from '@/layouts/DashboardLayout/util'
 import AuthenticationHandler from '@/lib/AuthenticationHandler'
@@ -16,15 +15,14 @@ import { OrderDesignListRoute } from '@/routes/Orders/OrderDesignList'
 import { OrdersListRoute } from '@/routes/Orders/OrdersList'
 import { ProductCreateRoute } from '@/routes/Products/ProductCreate'
 import { ProductListRoute } from '@/routes/Products/ProductList'
-import { SiteSettingsRoute } from '@/routes/SiteSettings'
 import { VouchersRoute } from '@/routes/Vouchers'
 import { socket } from '@/socket'
 import { MoneyCollectFilled } from '@ant-design/icons'
-import { Basket, Bell, Book, BookOpen, Browser, Gear, House, List, User, UserCircle } from '@phosphor-icons/react'
+import { Basket, Book, BookOpen, Browser, House, List, User, UserCircle } from '@phosphor-icons/react'
 import { useQueryClient } from '@tanstack/react-query'
 import { Outlet, createRoute, redirect, useNavigate } from '@tanstack/react-router'
-import { Avatar, Button, Flex, Input, Layout, Menu, theme } from 'antd'
-import { useEffect, useMemo } from 'react'
+import { Avatar, Button, Flex, Layout, Menu, Tag, theme } from 'antd'
+import { useEffect, useMemo, useState } from 'react'
 
 const { useToken } = theme
 const { Sider, Header, Content } = Layout
@@ -49,6 +47,7 @@ function DashboardLayout() {
     const navigate = useNavigate()
     const { token } = useToken()
     const currentRole = AuthenticationHandler.getCurrentRole()
+    const [collapsed, setCollapsed] = useState(false)
     const { notiApi } = useNotification()
     const queryClient = useQueryClient()
 
@@ -68,13 +67,29 @@ function DashboardLayout() {
             socket.off('message')
             socket.disconnect()
         }
-    }, [notiApi])
+    }, [notiApi, queryClient])
 
     const menuItems: MenuItem[] = useMemo(
         () => [
             getGroup({
-                key: 'admin',
-                label: 'Admin',
+                key: 'role',
+                label: (
+                    <Tag
+                        color={
+                            isAuthorized(Role.ADMIN, currentRole)
+                                ? 'red-inverse'
+                                : isAuthorized(Role.STAFF, currentRole)
+                                  ? 'blue-inverse'
+                                  : 'green-inverse'
+                        }
+                        style={{
+                            width: '100%',
+                            textAlign: 'center',
+                        }}
+                    >
+                        {currentRole}
+                    </Tag>
+                ),
                 children: [
                     getItem_1({
                         key: 'dashboard',
@@ -191,18 +206,6 @@ function DashboardLayout() {
                     }),
                 ],
             }),
-            getGroup({
-                key: 'site',
-                label: 'Site',
-                children: [
-                    getItem_1({
-                        key: 'site-settings',
-                        label: 'Site Settings',
-                        icon: <Gear />,
-                        onClick: () => navigate({ to: SiteSettingsRoute.to }),
-                    }),
-                ],
-            }),
         ],
         [currentRole, navigate],
     )
@@ -213,20 +216,38 @@ function DashboardLayout() {
                 minHeight: '100vh',
             }}
         >
-            <Sider collapsible breakpoint='md' collapsedWidth={80} style={{}}>
+            <Sider collapsible breakpoint='md' collapsedWidth={80} collapsed={collapsed} onCollapse={data => setCollapsed(data)} style={{}}>
                 <Flex
                     justify='space-between'
                     style={{
                         padding: token.paddingMD,
                     }}
                 >
-                    <h1
-                        style={{
-                            color: token.colorTextLightSolid,
-                        }}
-                    >
-                        eFurniture
-                    </h1>
+                    {collapsed ? (
+                        <div
+                            style={{
+                                width: '100%',
+                                aspectRatio: '1/1',
+                                color: token.colorTextLightSolid,
+                                display: 'grid',
+                                placeItems: 'center',
+                                fontSize: token.fontSizeXL,
+                                fontWeight: 'bold',
+                                border: `2px solid ${token.colorBorder}`,
+                                borderRadius: token.borderRadius,
+                            }}
+                        >
+                            EF
+                        </div>
+                    ) : (
+                        <h1
+                            style={{
+                                color: token.colorTextLightSolid,
+                            }}
+                        >
+                            eFurniture
+                        </h1>
+                    )}
                 </Flex>
                 <Menu items={menuItems} defaultSelectedKeys={['1']} mode='inline' theme='dark' inlineIndent={10} />
             </Sider>
@@ -244,34 +265,53 @@ function DashboardLayout() {
                     }}
                 >
                     <Flex gap='1rem'>
-                        <Button type='primary' icon={<Browser />}>
+                        <Button
+                            type='primary'
+                            icon={<Browser />}
+                            onClick={() => window.open('https://e-furniture-swd.vercel.app/', '__blank')}
+                        >
                             Browse Website
                         </Button>
                     </Flex>
                     <Flex gap='1rem' align='center'>
-                        <Input.Search />
-                        <NotificationsDropdown>
-                            <Button
-                                icon={<Bell size={20} weight='fill' />}
-                                type='text'
-                                shape='circle'
-                                style={{
-                                    aspectRatio: '1/1',
-                                }}
-                            />
-                        </NotificationsDropdown>
                         <ProfileDropdown>
-                            <Avatar
-                                size='large'
-                                icon={<User size={20} weight='fill' />}
+                            <Button
+                                ghost
                                 style={{
-                                    height: '100%',
-                                    display: 'grid',
-                                    placeItems: 'center',
-                                    aspectRatio: '1/1',
-                                    cursor: 'pointer',
+                                    background: 'none',
+                                    border: 'none',
+                                    padding: 0,
                                 }}
-                            />
+                            >
+                                <Flex
+                                    gap={10}
+                                    align='center'
+                                    style={{
+                                        cursor: 'pointer',
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            fontSize: token.fontSize,
+                                            fontWeight: 'bold',
+                                            color: token.colorTextBase,
+                                            textTransform: 'capitalize',
+                                        }}
+                                    >
+                                        {currentRole}
+                                    </div>
+                                    <Avatar
+                                        size='default'
+                                        icon={<User size={20} weight='fill' />}
+                                        style={{
+                                            height: '100%',
+                                            display: 'grid',
+                                            placeItems: 'center',
+                                            aspectRatio: '1/1',
+                                        }}
+                                    />
+                                </Flex>
+                            </Button>
                         </ProfileDropdown>
                     </Flex>
                 </Header>
