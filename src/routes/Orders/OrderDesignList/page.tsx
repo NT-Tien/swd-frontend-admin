@@ -120,7 +120,7 @@ export default function OrderDesignListPage() {
                                     value: 'Not Paid',
                                 },
                             ],
-                            onFilter(value, record) {
+                            onFilter: (value, record) => {
                                 if (value === 'Pending') {
                                     return !record.isMailed && !record.isDenied
                                 }
@@ -131,13 +131,13 @@ export default function OrderDesignListPage() {
                                     return record.isDenied
                                 }
                                 if (value === 'Paid') {
-                                    return record.isPaid
+                                    return record.isMailed && record.isPaid
                                 }
                                 if (value === 'Not Paid') {
-                                    return !record.isPaid
+                                    return record.isMailed && !record.isPaid
                                 }
 
-                                return true
+                                return false
                             },
                         },
                         {

@@ -13,6 +13,8 @@ import ReactDOM from 'react-dom/client'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
 import utc from 'dayjs/plugin/utc'
 import isToday from 'dayjs/plugin/isToday'
+import ErrorComponent from '@/common/components/ErrorComponent'
+import LoadingComponent from '@/common/components/LoadingComponent'
 
 // load ENV file to memory
 env.load()
@@ -42,6 +44,7 @@ export const router = createRouter({
     },
     defaultPreload: 'intent',
     defaultPreloadStaleTime: 0,
+    defaultPendingComponent: () => <LoadingComponent />,
 })
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

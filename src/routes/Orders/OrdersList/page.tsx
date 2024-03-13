@@ -4,14 +4,14 @@ import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { Role, isAuthorized } from '@/lib/types/Account'
 import { OrdersListRoute } from '@/routes/Orders/OrdersList'
 import { tabItems, tabKeys } from '@/routes/Orders/OrdersList/util/tabItems'
+import { useNavigate } from '@tanstack/react-router'
 import { Flex, Tabs, Typography } from 'antd'
-import { useState } from 'react'
 
 export default function OrdersListPage() {
+    const navigate = useNavigate()
     const tab = OrdersListRoute.useSearch({
-        select: data => data.tab,
+        select: data => data.tab!,
     })
-    const [currentTab, setCurrentTab] = useState(tab)
 
     return (
         <>
@@ -26,14 +26,19 @@ export default function OrdersListPage() {
                     }}
                 >
                     Order List
-                    <RefreshButton isLoading={false} queryKey={currentTab === 'all' ? ['orders'] : ['orders', 'to-deliver']} />
+                    <RefreshButton isLoading={false} queryKey={tab === 'all' ? ['orders'] : ['orders', 'to-deliver']} />
                 </Typography.Title>
                 <Tabs
-                    defaultActiveKey={currentTab}
-                    activeKey={currentTab}
+                    defaultActiveKey={tab}
+                    activeKey={tab}
                     items={tabItems(isAuthorized(Role.STAFF, AuthenticationHandler.getCurrentRole()) ? [] : ['all'])}
                     onTabClick={tab => {
-                        setCurrentTab(tab as tabKeys)
+                        navigate({
+                            to: OrdersListRoute.to,
+                            search: {
+                                tab: tab as tabKeys,
+                            },
+                        })
                     }}
                 />
             </Flex>

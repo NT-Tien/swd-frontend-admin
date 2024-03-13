@@ -32,6 +32,9 @@ export default function OrderDesignViewPage() {
             navigate({
                 replace: true,
                 to: OrderDesignViewRoute.to,
+                search: {
+                    hasPaid: 'paid',
+                },
                 params: {
                     id: orderDesign.id,
                 },
@@ -144,10 +147,13 @@ export default function OrderDesignViewPage() {
                     <SendEmailModal>
                         {({ handleOpen: openSendEmail }) => (
                             <SetPriceModal
-                                afterUpdate={() => {
+                                afterUpdate={result => {
                                     navigate({
                                         replace: true,
                                         to: OrderDesignViewRoute.to,
+                                        search: {
+                                            result,
+                                        },
                                         params: {
                                             id: orderDesign.id,
                                         },

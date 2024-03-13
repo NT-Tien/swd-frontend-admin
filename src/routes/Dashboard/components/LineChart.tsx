@@ -100,10 +100,13 @@ export default function LineChart() {
                         yaxis: {},
 
                         xaxis: {
-                            categories: (Object.keys(accountsByMonth).length > Object.keys(ordersByMonth).length
-                                ? Object.keys(accountsByMonth)
-                                : Object.keys(ordersByMonth)
-                            ).map(data => `Week ${data}`),
+                            categories: [
+                                'Start',
+                                ...(Object.keys(accountsByMonth).length > Object.keys(ordersByMonth).length
+                                    ? Object.keys(accountsByMonth)
+                                    : Object.keys(ordersByMonth)
+                                ).map(data => `Week ${data}`),
+                            ],
                         },
 
                         tooltip: {
@@ -117,11 +120,11 @@ export default function LineChart() {
                     series={[
                         {
                             name: 'Orders',
-                            data: Object.values(ordersByMonth).map(orders => orders.length),
+                            data: [0, ...Object.values(ordersByMonth).map(orders => orders.length)],
                         },
                         {
                             name: 'Users',
-                            data: Object.values(accountsByMonth),
+                            data: [0, ...Object.values(accountsByMonth)],
                         },
                     ]}
                     type='area'

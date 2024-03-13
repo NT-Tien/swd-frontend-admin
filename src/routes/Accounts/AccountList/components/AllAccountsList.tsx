@@ -49,7 +49,7 @@ export default function AllAccountsList() {
                         <UpdatePasswordmodal>
                             {({ handleOpen: handleOpenUpdatePassword }) => (
                                 <Table
-                                    dataSource={accounts?.data ?? []}
+                                    dataSource={accounts?.data}
                                     rowClassName={row => {
                                         if (row.email === AuthenticationHandler.getEmail()) {
                                             return 'my-row'

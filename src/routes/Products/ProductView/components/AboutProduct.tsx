@@ -3,10 +3,12 @@ import ModalWrapper from '@/common/components/modal/ModalWrapper'
 import { ProductViewRoute } from '@/routes/Products/ProductView'
 import OptionalProductsCard from '@/routes/Products/ProductView/components/OptionalProductsCard'
 import ProductImagesView from '@/routes/Products/ProductView/components/ProductImagesView'
-import { EditOutlined } from '@ant-design/icons'
+import { EditOutlined, SelectOutlined } from '@ant-design/icons'
 import { Info } from '@phosphor-icons/react'
 import { Button, Card, Col, Flex, Row, Tooltip, Typography } from 'antd'
 import dayjs from 'dayjs'
+import { useNavigate } from '@tanstack/react-router'
+import { CategoryViewRoute } from '@/routes/Categories/CategoryView'
 
 const DEFAULT_GUTTER_SIZE = 10
 
@@ -18,6 +20,7 @@ export default function AboutProduct({ product }: AboutProductProps) {
     const isEditing = ProductViewRoute.useSearch({
         select: data => data.editing,
     })
+    const navigate = useNavigate()
 
     return (
         <Flex gap={DEFAULT_GUTTER_SIZE} vertical>
@@ -101,7 +104,24 @@ export default function AboutProduct({ product }: AboutProductProps) {
                                 width: '100%',
                             }}
                         >
-                            <Typography.Paragraph ellipsis>{product.category_id.name}</Typography.Paragraph>
+                            <Typography.Paragraph ellipsis>
+                                {product.category_id.name}
+                                <Button
+                                    size='small'
+                                    icon={<SelectOutlined />}
+                                    style={{
+                                        marginLeft: '10px',
+                                    }}
+                                    onClick={() =>
+                                        navigate({
+                                            to: CategoryViewRoute.to,
+                                            params: {
+                                                id: product.category_id.id,
+                                            },
+                                        })
+                                    }
+                                />
+                            </Typography.Paragraph>
                         </Card>
                     </Flex>
                     <ModalWrapper

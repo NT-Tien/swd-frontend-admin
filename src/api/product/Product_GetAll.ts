@@ -56,9 +56,9 @@ export const queryKeyProduct_GetAll = ({ page, size, deleted }: Partial<Product_
     size,
 ]
 
-export const queryProduct_GetAll = ({ page, size, deleted }: Product_GetAll_Req) =>
+export const queryProduct_GetAll = ({ page, size, deleted, categoryId }: Product_GetAll_Req) =>
     queryOptions({
-        queryKey: queryKeyProduct_GetAll({ page, size, deleted }),
-        queryFn: () => Product_GetAll({ page, size, deleted }),
-        select: data => data.data,
+        queryKey: queryKeyProduct_GetAll({ page, size, deleted, categoryId }),
+        queryFn: () => Product_GetAll({ page, size, deleted, categoryId }),
+        select: res => res.data,
     })

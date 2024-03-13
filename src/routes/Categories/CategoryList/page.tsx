@@ -5,14 +5,14 @@ import AddCategoryModal from '@/routes/Categories/CategoryList/modals/AddCategor
 import { tabItems } from '@/routes/Categories/CategoryList/util/tabItems'
 import { tabKeys } from '@/routes/Products/ProductList/util/tabItems'
 import { Plus } from '@phosphor-icons/react'
+import { useNavigate } from '@tanstack/react-router'
 import { Button, Flex, Tabs, Typography } from 'antd'
-import { useState } from 'react'
 
 export default function CategoryListPage() {
     const tab = CategoryListRoute.useSearch({
-        select: data => data.tab,
+        select: data => data.tab!,
     })
-    const [currentTab, setCurrentTab] = useState<tabKeys>(tab)
+    const navigate = useNavigate()
 
     return (
         <>
@@ -28,7 +28,7 @@ export default function CategoryListPage() {
                 >
                     Category List
                     <RefreshButton
-                        queryKey={currentTab === 'all' ? ['categories'] : ['categories-deleted']}
+                        queryKey={tab === 'all' ? ['categories'] : ['categories-deleted']}
                         isLoading={false}
                         style={{
                             marginLeft: '10px',
@@ -39,7 +39,12 @@ export default function CategoryListPage() {
                     defaultActiveKey={tab}
                     items={tabItems}
                     onTabClick={key => {
-                        setCurrentTab(key as tabKeys)
+                        navigate({
+                            to: CategoryListRoute.to,
+                            search: {
+                                tab: key as tabKeys,
+                            },
+                        })
                     }}
                     tabBarExtraContent={
                         <Flex gap={5}>

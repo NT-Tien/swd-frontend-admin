@@ -5,13 +5,13 @@ import DeleteModal from '@/common/components/modal/DeleteModal'
 import { Category } from '@/lib/types/Category'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
 import { queryClient } from '@/main'
+import { CategoryListRoute } from '@/routes/Categories/CategoryList'
 import { CategoryViewRoute } from '@/routes/Categories/CategoryView'
 import { Trash } from '@phosphor-icons/react'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { Dropdown, Table } from 'antd'
 import dayjs from 'dayjs'
-import { useState } from 'react'
 
 type AllCategoriesListProps = {
     disabled?: boolean
@@ -19,7 +19,12 @@ type AllCategoriesListProps = {
 
 export default function AllCategoriesList({ disabled = false }: AllCategoriesListProps) {
     const navigate = useNavigate()
-    const [pageSize, setPageSize] = useState(8)
+    const pageSize = CategoryListRoute.useSearch({
+        select: data => data.size,
+    })
+    const page = CategoryListRoute.useSearch({
+        select: data => data.page,
+    })
     const { data: categories, isLoading, isError } = useQuery(disabled ? queryCategory_GetAll_Deleted() : queryCategory_GetAll())
 
     const searchColumnProps = GetColumnSearchProps<Category>()
@@ -46,6 +51,7 @@ export default function AllCategoriesList({ disabled = false }: AllCategoriesLis
                         {
                             title: 'No.',
                             render: (_, __, index) => index + 1,
+                            width: 100,
                         },
                         {
                             title: 'Name',
@@ -53,13 +59,14 @@ export default function AllCategoriesList({ disabled = false }: AllCategoriesLis
                             key: 'name',
                             sorter: (a, b) => a.name.localeCompare(b.name),
                             sortDirections: ['ascend', 'descend'],
+                            ellipsis: true,
                             ...searchColumnProps('name'),
                         },
                         {
                             title: disabled ? 'Deleted At' : 'Created At',
                             dataIndex: disabled ? 'deletedAt' : 'createdAt',
                             key: disabled ? 'deletedAt' : 'createdAt',
-                            render: value => dayjs(value).format('DD-MM-YYYY'),
+                            render: value => dayjs(value).format('DD-MM-YYYY HH:mm:ss'),
                             sorter: (a, b) =>
                                 disabled ? a.deletedAt!.getTime() - b.deletedAt!.getTime() : a.createdAt.getTime() - b.createdAt.getTime(),
                             sortDirections: ['ascend', 'descend'],
@@ -69,7 +76,7 @@ export default function AllCategoriesList({ disabled = false }: AllCategoriesLis
                             title: 'Updated At',
                             dataIndex: 'updatedAt',
                             key: 'updatedAt',
-                            render: value => dayjs(value).format('DD-MM-YYYY'),
+                            render: value => dayjs(value).format('DD-MM-YYYY HH:mm:ss'),
                             sorter: (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime(),
                             sortDirections: ['ascend', 'descend'],
                         },
@@ -111,12 +118,30 @@ export default function AllCategoriesList({ disabled = false }: AllCategoriesLis
                         },
                     ]}
                     pagination={{
+                        defaultCurrent: page,
                         pageSize: pageSize,
                         total: categories?.total ?? 0,
                         pageSizeOptions: ['8', '16', '24', '32'],
                         showSizeChanger: true,
-                        onShowSizeChange(_, size) {
-                            setPageSize(size)
+                        onShowSizeChange(page, size) {
+                            navigate({
+                                to: CategoryListRoute.to,
+                                search: {
+                                    size: size,
+                                    page: page,
+                                    tab: disabled ? 'disabled' : 'all',
+                                },
+                            })
+                        },
+                        onChange(page, size) {
+                            navigate({
+                                to: CategoryListRoute.to,
+                                search: {
+                                    page: page,
+                                    size: size,
+                                    tab: disabled ? 'disabled' : 'all',
+                                },
+                            })
                         },
                         showTotal: (total, range) => {
                             return `${range[0]}-${range[1]} of ${total} items`

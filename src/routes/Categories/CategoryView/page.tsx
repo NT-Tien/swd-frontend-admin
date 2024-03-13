@@ -4,16 +4,20 @@ import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
 import { CategoryViewRoute } from '@/routes/Categories/CategoryView'
 import { ProductViewRoute } from '@/routes/Products/ProductView'
 import { Await, useNavigate } from '@tanstack/react-router'
-import { Button, Card, Descriptions, Table, Typography } from 'antd'
+import { Button, Card, Descriptions, Flex, Table, Typography } from 'antd'
 import dayjs from 'dayjs'
 import { Suspense } from 'react'
-
-const size = 5
 
 export default function CategoryViewPage() {
     const navigate = useNavigate()
     const { category, products } = CategoryViewRoute.useLoaderData()
     const id = CategoryViewRoute.useParams({ select: data => data.id })
+    const page = CategoryViewRoute.useSearch({
+        select: data => data.page!,
+    })
+    const size = CategoryViewRoute.useSearch({
+        select: data => data.size!,
+    })
 
     const searchColumnProps = GetColumnSearchProps<Product>()
 
@@ -59,18 +63,31 @@ export default function CategoryViewPage() {
                     )}
                 </Await>
             </Suspense>
-            <Card
-                title='Products in this category'
-                style={{
-                    marginTop: '10px',
-                }}
-            >
-                <Suspense fallback={<Card loading />}>
-                    <Await promise={products}>
-                        {({ data: products }) => (
+            <Suspense fallback={<Card loading />}>
+                <Await promise={products}>
+                    {({ data: products }) => (
+                        <Card
+                            title={
+                                <Flex align='center' justify='space-between'>
+                                    <div>Products</div>
+                                    <div>
+                                        There {products.total === 1 ? 'is' : 'are'} {products.total} product{products.total !== 1 && 's'} in
+                                        this category.
+                                    </div>
+                                </Flex>
+                            }
+                            style={{
+                                marginTop: '10px',
+                            }}
+                        >
                             <Table
-                                dataSource={products?.data ?? []}
+                                dataSource={products?.data}
                                 columns={[
+                                    {
+                                        title: 'No.',
+                                        render: (_, __, index) => index + 1 + (page - 1) * size,
+                                        width: 70,
+                                    },
                                     {
                                         title: 'Name',
                                         dataIndex: 'name',
@@ -132,8 +149,28 @@ export default function CategoryViewPage() {
                                     },
                                 ]}
                                 pagination={{
+                                    defaultCurrent: page,
                                     pageSize: size,
                                     total: products?.total ?? 0,
+                                    pageSizeOptions: ['8', '16', '24', '32'],
+                                    showSizeChanger: true,
+                                    onShowSizeChange(_, size) {
+                                        navigate({
+                                            to: CategoryViewRoute.to,
+                                            params: {
+                                                id,
+                                            },
+                                            search: {
+                                                page,
+                                                size: size,
+                                            },
+                                        })
+                                    },
+                                    showTotal: (total, range) => {
+                                        return `${range[0]}-${range[1]} of ${total} items`
+                                    },
+                                    showLessItems: true,
+                                    showQuickJumper: true,
                                     onChange(page) {
                                         navigate({
                                             to: CategoryViewRoute.to,
@@ -142,15 +179,16 @@ export default function CategoryViewPage() {
                                             },
                                             search: {
                                                 page,
+                                                size,
                                             },
                                         })
                                     },
                                 }}
                             />
-                        )}
-                    </Await>
-                </Suspense>
-            </Card>
+                        </Card>
+                    )}
+                </Await>
+            </Suspense>
         </>
     )
 }

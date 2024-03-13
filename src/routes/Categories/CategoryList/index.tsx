@@ -5,7 +5,9 @@ import { tabKeys } from '@/routes/Categories/CategoryList/util/tabItems'
 import { createRoute, lazyRouteComponent, redirect } from '@tanstack/react-router'
 
 type CategoryListSearch = {
-    tab: tabKeys
+    tab?: tabKeys
+    size?: number
+    page?: number
 }
 
 export const CategoryListRoute = createRoute({
@@ -22,9 +24,11 @@ export const CategoryListRoute = createRoute({
     path: '/categories',
     getParentRoute: () => DashboardLayoutRoute,
     component: lazyRouteComponent(() => import('./page')),
-    validateSearch: (search: Partial<CategoryListSearch>): CategoryListSearch => {
+    validateSearch: (search: CategoryListSearch): CategoryListSearch => {
         return {
             tab: search.tab || 'all',
+            size: Number(search.size) || 8,
+            page: Number(search.page) || 1,
         }
     },
 })

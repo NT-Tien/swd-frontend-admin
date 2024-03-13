@@ -6,14 +6,12 @@ import { tabItems, tabKeys } from '@/routes/Products/ProductList/util/tabItems'
 import { Plus } from '@phosphor-icons/react'
 import { useNavigate } from '@tanstack/react-router'
 import { Button, Flex, Tabs, Typography } from 'antd'
-import { useState } from 'react'
 
 export default function ProductListPage() {
     const navigate = useNavigate()
     const tab = ProductListRoute.useSearch({
-        select: data => data.tab,
+        select: data => data.tab!,
     })
-    const [currentTab, setCurrentTab] = useState(tab)
 
     return (
         <>
@@ -28,14 +26,19 @@ export default function ProductListPage() {
                     }}
                 >
                     Product List
-                    <RefreshButton isLoading={false} queryKey={currentTab === 'all' ? ['products'] : ['products-deleted']} />
+                    <RefreshButton isLoading={false} queryKey={tab === 'all' ? ['products'] : ['products-deleted']} />
                 </Typography.Title>
                 <Tabs
-                    defaultActiveKey={currentTab}
-                    activeKey={currentTab}
+                    defaultActiveKey={tab}
+                    activeKey={tab}
                     items={tabItems}
                     onTabClick={tab => {
-                        setCurrentTab(tab as tabKeys)
+                        navigate({
+                            to: ProductListRoute.to,
+                            search: {
+                                tab: tab as tabKeys,
+                            },
+                        })
                     }}
                     tabBarExtraContent={
                         <Button

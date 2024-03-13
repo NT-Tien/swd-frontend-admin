@@ -42,6 +42,9 @@ export default function SendEmailModal({ children }: SendEmailModalProps) {
             navigate({
                 replace: true,
                 to: OrderDesignViewRoute.to,
+                search: {
+                    result: isAccepting ? 'accepted' : 'denied',
+                },
                 params: {
                     id: orderId!,
                 },

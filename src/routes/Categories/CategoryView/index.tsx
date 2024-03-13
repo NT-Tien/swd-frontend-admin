@@ -7,7 +7,8 @@ import { CategoryListRoute } from '@/routes/Categories/CategoryList'
 import { Navigate, createRoute, defer, lazyRouteComponent, redirect } from '@tanstack/react-router'
 
 type CategoryViewSearch = {
-    page: number
+    page?: number
+    size?: number
 }
 
 export const CategoryViewRoute = createRoute({
@@ -30,6 +31,7 @@ export const CategoryViewRoute = createRoute({
     validateSearch: (search: Record<string, unknown>) => {
         return {
             page: Number(search.page ?? 0),
+            size: Number(search.size ?? 5),
         } as CategoryViewSearch
     },
     loaderDeps: ({ search: { page } }) => ({
@@ -37,7 +39,7 @@ export const CategoryViewRoute = createRoute({
     }),
     loader: ({ context: { queryClient }, params: { id }, deps: { page } }) => {
         const category = queryClient.ensureQueryData(queryCategory_GetOne({ id }))
-        const products = queryClient.ensureQueryData(queryProduct_GetAll({ page, size: 5, categoryId: id }))
+        const products = queryClient.fetchQuery(queryProduct_GetAll({ page: page!, size: 5, categoryId: id }))
 
         return {
             category: defer(category),

@@ -23,10 +23,10 @@ type AllProductsListProps = {
 export default function AllProductsList({ disabled = false }: AllProductsListProps) {
     const navigate = useNavigate()
     const page = ProductListRoute.useSearch({
-        select: data => data.page,
+        select: data => data.page!,
     })
     const size = ProductListRoute.useSearch({
-        select: data => data.size,
+        select: data => data.size!,
     })
     const { data: products, isLoading, isError } = useQuery(queryProduct_GetAll({ page, size, deleted: disabled }))
     const searchColumnProps = GetColumnSearchProps<Product>()
@@ -43,7 +43,7 @@ export default function AllProductsList({ disabled = false }: AllProductsListPro
                         <RestoreProductModal>
                             {({ handleOpen: handleOpenRestoreProduct }) => (
                                 <Table
-                                    dataSource={products?.data ?? []}
+                                    dataSource={products?.data}
                                     columns={[
                                         {
                                             title: 'No.',
@@ -56,29 +56,28 @@ export default function AllProductsList({ disabled = false }: AllProductsListPro
                                             key: 'name',
                                             sorter: (a, b) => a.name.localeCompare(b.name),
                                             sortDirections: ['ascend', 'descend'],
+                                            width: 300,
                                             ...searchColumnProps('name'),
                                         },
                                         {
                                             title: disabled ? 'Disabled Date' : 'Created At',
                                             dataIndex: disabled ? 'deletedAt' : 'createdAt',
                                             key: disabled ? 'deletedAt' : 'createdAt',
-                                            render: value => dayjs(value).format('DD-MM-YYYY'),
+                                            render: value => dayjs(value).format('DD-MM-YYYY HH:mm:ss'),
                                             sorter: (a, b) =>
                                                 disabled
                                                     ? a.deletedAt!.getTime() - b.deletedAt!.getTime()
                                                     : a.createdAt.getTime() - b.createdAt.getTime(),
                                             sortDirections: ['ascend', 'descend'],
                                             defaultSortOrder: 'descend',
-                                            width: 150,
                                         },
                                         {
                                             title: 'Updated At',
                                             dataIndex: 'updatedAt',
                                             key: 'updatedAt',
-                                            render: value => dayjs(value).format('DD-MM-YYYY'),
+                                            render: value => dayjs(value).format('DD-MM-YYYY HH:mm:ss'),
                                             sorter: (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime(),
                                             sortDirections: ['ascend', 'descend'],
-                                            width: 150,
                                         },
                                         {
                                             title: 'Category',
@@ -89,7 +88,6 @@ export default function AllProductsList({ disabled = false }: AllProductsListPro
                                             },
                                             width: 150,
                                             ellipsis: true,
-                                            filters: [],
                                         },
                                         {
                                             title: 'Description',
@@ -161,6 +159,7 @@ export default function AllProductsList({ disabled = false }: AllProductsListPro
                                         },
                                     ]}
                                     pagination={{
+                                        defaultCurrent: page,
                                         pageSize: size,
                                         total: products?.total ?? 0,
                                         pageSizeOptions: ['8', '16', '24', '32'],
@@ -170,7 +169,7 @@ export default function AllProductsList({ disabled = false }: AllProductsListPro
                                                 to: ProductListRoute.to,
                                                 search: {
                                                     page,
-                                                    tab: 'all',
+                                                    tab: disabled ? 'disabled' : 'all',
                                                     size: size,
                                                 },
                                             })
@@ -185,7 +184,7 @@ export default function AllProductsList({ disabled = false }: AllProductsListPro
                                                 to: ProductListRoute.to,
                                                 search: {
                                                     page,
-                                                    tab: 'all',
+                                                    tab: disabled ? 'disabled' : 'all',
                                                     size,
                                                 },
                                             })

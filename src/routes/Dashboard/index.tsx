@@ -25,7 +25,6 @@ export const DashboardRoute = createRoute({
     component: lazyRouteComponent(() => import('./page')),
     getParentRoute: () => DashboardLayoutRoute,
     path: '/dashboard',
-    pendingComponent: () => 'LOADING...',
     loader: ({ context: { queryClient } }) => {
         const allProducts = queryClient.ensureQueryData({
             queryKey: ['products', 1, 0],

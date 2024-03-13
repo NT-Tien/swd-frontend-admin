@@ -8,11 +8,11 @@ export const tabItems: (Tab & { key: tabKeys })[] = [
     {
         key: 'all',
         label: 'All',
-        children: <AllProductsList />,
+        children: <AllProductsList key={'all-products'} />,
     },
     {
         key: 'disabled',
         label: 'Disabled',
-        children: <AllProductsList disabled />,
+        children: <AllProductsList disabled key={'disabled-products'} />,
     },
 ]

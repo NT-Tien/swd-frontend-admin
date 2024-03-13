@@ -5,7 +5,9 @@ import { tabKeys } from '@/routes/Orders/OrdersList/util/tabItems'
 import { createRoute, lazyRouteComponent, redirect } from '@tanstack/react-router'
 
 type OrdersListRouteSearch = {
-    tab: tabKeys
+    tab?: tabKeys
+    page?: number
+    size?: number
 }
 
 export const OrdersListRoute = createRoute({
@@ -22,9 +24,11 @@ export const OrdersListRoute = createRoute({
     path: '/orders',
     getParentRoute: () => DashboardLayoutRoute,
     component: lazyRouteComponent(() => import('./page')),
-    validateSearch: (search: Partial<OrdersListRouteSearch>): OrdersListRouteSearch => {
+    validateSearch: (search: OrdersListRouteSearch): OrdersListRouteSearch => {
         return {
             tab: search.tab || 'all',
+            page: Number(search.page) || 1,
+            size: Number(search.size) || 8,
         }
     },
 })

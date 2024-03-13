@@ -5,9 +5,9 @@ import { tabKeys } from '@/routes/Products/ProductList/util/tabItems'
 import { createRoute, lazyRouteComponent, redirect } from '@tanstack/react-router'
 
 type ProductListSearch = {
-    page: number
-    size: number
-    tab: tabKeys
+    page?: number
+    size?: number
+    tab?: tabKeys
 }
 
 export const ProductListRoute = createRoute({
@@ -23,7 +23,7 @@ export const ProductListRoute = createRoute({
     },
     path: '/products',
     component: lazyRouteComponent(() => import('./page')),
-    validateSearch: (search: Partial<ProductListSearch>): ProductListSearch => {
+    validateSearch: (search: ProductListSearch): ProductListSearch => {
         return {
             page: search.page ? Number(search.page) : 1,
             size: search.size ? Number(search.size) : 8,
