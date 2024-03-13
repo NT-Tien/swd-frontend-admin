@@ -21,6 +21,7 @@ import { QueryClient } from '@tanstack/react-query'
 import { createRootRouteWithContext } from '@tanstack/react-router'
 import { BookingsRoute } from './routes/Bookings'
 import { LoginRoute } from './routes/Login'
+import { TransactionListRoute } from '@/routes/Transactions/TransactionList'
 
 export type RouterContext = {
     queryClient: QueryClient
@@ -47,6 +48,7 @@ export const routeTree = rootRoute.addChildren([
         OrderDesignViewRoute,
         OrdersListRoute,
         OrdersViewRoute,
+        TransactionListRoute,
         BookingsRoute,
         SiteSettingsRoute,
         VouchersRoute,

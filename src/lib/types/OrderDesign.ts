@@ -9,6 +9,9 @@ export type OrderDesign = {
     phone: string
     address: string
     set_price: string | null
+    isMailed: boolean
+    isPaid: boolean
+    isDenied: boolean
 }
 
 export function ResponseToOrderDesign(record: Record<string, any>) {
@@ -23,6 +26,9 @@ export function ResponseToOrderDesign(record: Record<string, any>) {
         phone: record.phone,
         address: record.address,
         set_price: record.set_price,
+        isMailed: record.isMailed,
+        isPaid: record.isPaid,
+        isDenied: record.isDenied,
     } as OrderDesign
 }
 

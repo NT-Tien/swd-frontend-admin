@@ -1,4 +1,5 @@
 import { ParseResponse } from '@/api/defaults'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { Product, ResponseToProductList } from '@/lib/types/Product'
 import { queryOptions } from '@tanstack/react-query'
 import axios from 'axios'
@@ -24,6 +25,9 @@ export async function Product_GetAll({ page, size, query, categoryId, sortBy, di
                 categoryId,
                 sortBy,
                 direction,
+            },
+            headers: {
+                Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
             },
             responseType: 'json',
             transformResponse: [

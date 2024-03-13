@@ -1,11 +1,10 @@
+import Head from '@/common/components/Head'
 import RefreshButton from '@/common/components/RefreshButton'
-import AccountStats from '@/routes/Accounts/AccountList/components/AccountStats'
 import AllAccountsList from '@/routes/Accounts/AccountList/components/AllAccountsList'
 import CreateAccountModal from '@/routes/Accounts/AccountList/modals/CreateAccountModal'
 import { Plus } from '@phosphor-icons/react'
 import { Button, Flex, Tabs, Typography } from 'antd'
 import './style.css'
-import Head from '@/common/components/Head'
 
 export default function AccountListPage() {
     return (
@@ -36,11 +35,6 @@ export default function AccountListPage() {
                             key: '1',
                             label: 'Active',
                             children: <AllAccountsList />,
-                        },
-                        {
-                            key: '2',
-                            label: 'Stats',
-                            children: <AccountStats />,
                         },
                     ]}
                     tabBarExtraContent={

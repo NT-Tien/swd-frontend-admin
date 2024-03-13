@@ -15,9 +15,10 @@ import { OrderDesignListRoute } from '@/routes/Orders/OrderDesignList'
 import { OrdersListRoute } from '@/routes/Orders/OrdersList'
 import { ProductCreateRoute } from '@/routes/Products/ProductCreate'
 import { ProductListRoute } from '@/routes/Products/ProductList'
+import { TransactionListRoute } from '@/routes/Transactions/TransactionList'
 import { VouchersRoute } from '@/routes/Vouchers'
 import { socket } from '@/socket'
-import { MoneyCollectFilled } from '@ant-design/icons'
+import { MoneyCollectFilled, TransactionOutlined } from '@ant-design/icons'
 import { Basket, Book, BookOpen, Browser, House, List, User, UserCircle } from '@phosphor-icons/react'
 import { useQueryClient } from '@tanstack/react-query'
 import { Outlet, createRoute, redirect, useNavigate } from '@tanstack/react-router'
@@ -171,6 +172,15 @@ function DashboardLayout() {
                         ],
                     }),
                     getItem_1({
+                        key: 'transactions',
+                        label: 'Transactions',
+                        icon: <TransactionOutlined />,
+                        onClick: () =>
+                            navigate({
+                                to: TransactionListRoute.to,
+                            }),
+                    }),
+                    getItem_1({
                         key: 'accounts',
                         label: 'Accounts',
                         icon: <UserCircle />,
@@ -249,7 +259,7 @@ function DashboardLayout() {
                         </h1>
                     )}
                 </Flex>
-                <Menu items={menuItems} defaultSelectedKeys={['1']} mode='inline' theme='dark' inlineIndent={10} />
+                <Menu items={menuItems} defaultSelectedKeys={['1']} mode='inline' theme='dark' inlineIndent={15} />
             </Sider>
 
             <Layout>

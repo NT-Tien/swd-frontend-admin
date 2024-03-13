@@ -107,6 +107,20 @@ export default function SetPriceModal({ children, afterUpdate }: SetPriceModalPr
                     >
                         <Input type='number' />
                     </Form.Item>
+                    {/* <Flex gap={10}>
+                        <Button>+100</Button>
+                        <Button>+1000</Button>
+                        <Button>+10000</Button>
+                        <Button>+100000</Button>
+                        <Button>+1000000</Button>
+                    </Flex>
+                    <Flex gap={10}>
+                        <Button>-100</Button>
+                        <Button>-1000</Button>
+                        <Button>-10000</Button>
+                        <Button>-100000</Button>
+                        <Button>-1000000</Button>
+                    </Flex> */}
                 </Form>
             </Modal>
         </>
