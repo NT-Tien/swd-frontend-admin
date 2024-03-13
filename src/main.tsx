@@ -1,4 +1,5 @@
 import { configAxios } from '@/api/defaults'
+import LoadingComponent from '@/common/components/LoadingComponent'
 import env from '@/env'
 import { routeTree } from '@/routeTree'
 import '@/socket'
@@ -8,13 +9,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import dayjs from 'dayjs'
+import isToday from 'dayjs/plugin/isToday'
+import utc from 'dayjs/plugin/utc'
+import weekOfYear from 'dayjs/plugin/weekOfYear'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import weekOfYear from 'dayjs/plugin/weekOfYear'
-import utc from 'dayjs/plugin/utc'
-import isToday from 'dayjs/plugin/isToday'
-import ErrorComponent from '@/common/components/ErrorComponent'
-import LoadingComponent from '@/common/components/LoadingComponent'
 
 // load ENV file to memory
 env.load()
