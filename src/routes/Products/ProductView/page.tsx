@@ -1,15 +1,13 @@
 import { queryProduct_GetOne } from '@/api/product/Product_GetOne'
 import Head from '@/common/components/Head'
-import { ProductListRoute } from '@/routes/Products/ProductList'
+import LoadingComponent from '@/common/components/LoadingComponent'
 import { ProductViewRoute } from '@/routes/Products/ProductView'
 import AboutProduct from '@/routes/Products/ProductView/components/AboutProduct'
 import ProductSettings from '@/routes/Products/ProductView/components/ProductSettings'
 import ProductStats from '@/routes/Products/ProductView/components/ProductStats'
-import DeleteProductModal from '@/routes/Products/common/components/DeleteProductModal'
 import DisableProductModal from '@/routes/Products/common/components/DisableProductModal'
 import UpdateProductModal from '@/routes/Products/common/components/UpdateProductModal'
 import { useQuery } from '@tanstack/react-query'
-import { useNavigate } from '@tanstack/react-router'
 import { Button, Flex, Tabs, Typography } from 'antd'
 
 export default function ProductViewPage() {
@@ -20,10 +18,9 @@ export default function ProductViewPage() {
         select: data => data.editing,
     })
     const { data: product, isLoading, isError, isSuccess } = useQuery(queryProduct_GetOne({ id }))
-    const navigate = useNavigate()
 
     if (isLoading) {
-        return 'Loading...'
+        return <LoadingComponent />
     }
 
     if (isError) {
@@ -49,12 +46,12 @@ export default function ProductViewPage() {
                     </UpdateProductModal>
                     <DisableProductModal>
                         {({ handleOpen }) => (
-                            <Button type='default' onClick={() => handleOpen(id)}>
+                            <Button type='primary' onClick={() => handleOpen(id)} danger>
                                 Disable
                             </Button>
                         )}
                     </DisableProductModal>
-                    <DeleteProductModal
+                    {/* <DeleteProductModal
                         afterDelete={() =>
                             navigate({
                                 to: ProductListRoute.to,
@@ -71,7 +68,7 @@ export default function ProductViewPage() {
                                 Delete
                             </Button>
                         )}
-                    </DeleteProductModal>
+                    </DeleteProductModal> */}
                 </Flex>
             </Flex>
             <Tabs

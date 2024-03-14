@@ -4,11 +4,10 @@ import { Product } from '@/lib/types/Product'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
 import { ProductListRoute } from '@/routes/Products/ProductList'
 import { ProductViewRoute } from '@/routes/Products/ProductView'
-import DeleteProductModal from '@/routes/Products/common/components/DeleteProductModal'
 import DisableProductModal from '@/routes/Products/common/components/DisableProductModal'
 import RestoreProductModal from '@/routes/Products/common/components/RestoreProductModal'
 import { PoweroffOutlined } from '@ant-design/icons'
-import { FileX, Pencil, Trash } from '@phosphor-icons/react'
+import { FileX, Pencil } from '@phosphor-icons/react'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { Dropdown, Table } from 'antd'
@@ -17,8 +16,6 @@ import dayjs from 'dayjs'
 type AllProductsListProps = {
     disabled?: boolean
 }
-
-// TODO retest this component
 
 export default function AllProductsList({ disabled = false }: AllProductsListProps) {
     const navigate = useNavigate()
@@ -38,164 +35,161 @@ export default function AllProductsList({ disabled = false }: AllProductsListPro
     return (
         <DisableProductModal>
             {({ handleOpen: handleOpenDisableProduct }) => (
-                <DeleteProductModal>
-                    {({ handleOpen: handleOpenDeleteProduct }) => (
-                        <RestoreProductModal>
-                            {({ handleOpen: handleOpenRestoreProduct }) => (
-                                <Table
-                                    dataSource={products?.data}
-                                    columns={[
-                                        {
-                                            title: 'No.',
-                                            render: (_, __, index) => index + 1 + (page - 1) * size,
-                                            width: 70,
+                <RestoreProductModal>
+                    {({ handleOpen: handleOpenRestoreProduct }) => (
+                        <Table
+                            dataSource={products?.data}
+                            columns={[
+                                {
+                                    title: 'No.',
+                                    render: (_, __, index) => index + 1 + (page - 1) * size,
+                                    width: 70,
+                                },
+                                {
+                                    title: 'Name',
+                                    dataIndex: 'name',
+                                    key: 'name',
+                                    sorter: (a, b) => a.name.localeCompare(b.name),
+                                    sortDirections: ['ascend', 'descend'],
+                                    width: 300,
+                                    ...searchColumnProps('name'),
+                                },
+                                {
+                                    title: disabled ? 'Disabled Date' : 'Created At',
+                                    dataIndex: disabled ? 'deletedAt' : 'createdAt',
+                                    key: disabled ? 'deletedAt' : 'createdAt',
+                                    render: value => dayjs(value).format('DD-MM-YYYY HH:mm:ss'),
+                                    sorter: (a, b) =>
+                                        disabled
+                                            ? a.deletedAt!.getTime() - b.deletedAt!.getTime()
+                                            : a.createdAt.getTime() - b.createdAt.getTime(),
+                                    sortDirections: ['ascend', 'descend'],
+                                    defaultSortOrder: 'descend',
+                                },
+                                {
+                                    title: 'Updated At',
+                                    dataIndex: 'updatedAt',
+                                    key: 'updatedAt',
+                                    render: value => dayjs(value).format('DD-MM-YYYY HH:mm:ss'),
+                                    sorter: (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime(),
+                                    sortDirections: ['ascend', 'descend'],
+                                },
+                                {
+                                    title: 'Category',
+                                    dataIndex: 'category_id',
+                                    key: 'category_id',
+                                    render: (value: Category) => {
+                                        return value.name
+                                    },
+                                    width: 150,
+                                    ellipsis: true,
+                                },
+                                {
+                                    title: 'Description',
+                                    dataIndex: 'description',
+                                    key: 'description',
+                                    render: (value: string) => {
+                                        return value.slice(0, 70) + (value.length > 70 ? '...' : '')
+                                    },
+                                    ellipsis: true,
+                                    ...searchColumnProps('description'),
+                                },
+                                {
+                                    title: 'Action',
+                                    dataIndex: 'action',
+                                    key: 'action',
+                                    render: (_, record) => (
+                                        <Dropdown.Button
+                                            menu={{
+                                                items: [
+                                                    {
+                                                        label: 'Update',
+                                                        key: 'update-product-dropdown-button',
+                                                        icon: <Pencil />,
+                                                        onClick: () =>
+                                                            navigate({
+                                                                to: ProductViewRoute.to,
+                                                                params: { id: record.id },
+                                                                search: { editing: true },
+                                                            }),
+                                                    },
+                                                    {
+                                                        label: disabled ? 'Restore' : 'Disable',
+                                                        danger: true,
+                                                        key: disabled
+                                                            ? 'restore-product-dropdown-button'
+                                                            : 'disable-product-dropdown-button',
+                                                        icon: disabled ? <FileX /> : <PoweroffOutlined />,
+                                                        onClick: () =>
+                                                            disabled
+                                                                ? handleOpenRestoreProduct(record.id)
+                                                                : handleOpenDisableProduct(record.id),
+                                                    },
+                                                    // {
+                                                    //     label: 'Delete',
+                                                    //     key: 'delete-product-dropdown-button',
+                                                    //     icon: <Trash />,
+                                                    //     style: {
+                                                    //         marginTop: '10px',
+                                                    //     },
+                                                    //     danger: true,
+                                                    //     onClick: () => handleOpenDeleteProduct(record.id),
+                                                    // },
+                                                ],
+                                            }}
+                                            onClick={() => {
+                                                navigate({
+                                                    to: ProductViewRoute.to,
+                                                    params: {
+                                                        id: record.id,
+                                                    },
+                                                    search: {
+                                                        editing: false,
+                                                    },
+                                                })
+                                            }}
+                                        >
+                                            View
+                                        </Dropdown.Button>
+                                    ),
+                                },
+                            ]}
+                            pagination={{
+                                defaultCurrent: page,
+                                pageSize: size,
+                                total: products?.total ?? 0,
+                                pageSizeOptions: ['8', '16', '24', '32'],
+                                showSizeChanger: true,
+                                onShowSizeChange(_, size) {
+                                    navigate({
+                                        to: ProductListRoute.to,
+                                        search: {
+                                            page,
+                                            tab: disabled ? 'disabled' : 'all',
+                                            size: size,
                                         },
-                                        {
-                                            title: 'Name',
-                                            dataIndex: 'name',
-                                            key: 'name',
-                                            sorter: (a, b) => a.name.localeCompare(b.name),
-                                            sortDirections: ['ascend', 'descend'],
-                                            width: 300,
-                                            ...searchColumnProps('name'),
+                                    })
+                                },
+                                showTotal: (total, range) => {
+                                    return `${range[0]}-${range[1]} of ${total} items`
+                                },
+                                showLessItems: true,
+                                showQuickJumper: true,
+                                onChange(page) {
+                                    navigate({
+                                        to: ProductListRoute.to,
+                                        search: {
+                                            page,
+                                            tab: disabled ? 'disabled' : 'all',
+                                            size,
                                         },
-                                        {
-                                            title: disabled ? 'Disabled Date' : 'Created At',
-                                            dataIndex: disabled ? 'deletedAt' : 'createdAt',
-                                            key: disabled ? 'deletedAt' : 'createdAt',
-                                            render: value => dayjs(value).format('DD-MM-YYYY HH:mm:ss'),
-                                            sorter: (a, b) =>
-                                                disabled
-                                                    ? a.deletedAt!.getTime() - b.deletedAt!.getTime()
-                                                    : a.createdAt.getTime() - b.createdAt.getTime(),
-                                            sortDirections: ['ascend', 'descend'],
-                                            defaultSortOrder: 'descend',
-                                        },
-                                        {
-                                            title: 'Updated At',
-                                            dataIndex: 'updatedAt',
-                                            key: 'updatedAt',
-                                            render: value => dayjs(value).format('DD-MM-YYYY HH:mm:ss'),
-                                            sorter: (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime(),
-                                            sortDirections: ['ascend', 'descend'],
-                                        },
-                                        {
-                                            title: 'Category',
-                                            dataIndex: 'category_id',
-                                            key: 'category_id',
-                                            render: (value: Category) => {
-                                                return value.name
-                                            },
-                                            width: 150,
-                                            ellipsis: true,
-                                        },
-                                        {
-                                            title: 'Description',
-                                            dataIndex: 'description',
-                                            key: 'description',
-                                            render: (value: string) => {
-                                                return value.slice(0, 70) + (value.length > 70 ? '...' : '')
-                                            },
-                                            ellipsis: true,
-                                            ...searchColumnProps('description'),
-                                        },
-                                        {
-                                            title: 'Action',
-                                            dataIndex: 'action',
-                                            key: 'action',
-                                            render: (_, record) => (
-                                                <Dropdown.Button
-                                                    menu={{
-                                                        items: [
-                                                            {
-                                                                label: 'Update',
-                                                                key: 'update-product-dropdown-button',
-                                                                icon: <Pencil />,
-                                                                onClick: () =>
-                                                                    navigate({
-                                                                        to: ProductViewRoute.to,
-                                                                        params: { id: record.id },
-                                                                        search: { editing: true },
-                                                                    }),
-                                                            },
-                                                            {
-                                                                label: disabled ? 'Restore' : 'Disable',
-                                                                key: disabled
-                                                                    ? 'restore-product-dropdown-button'
-                                                                    : 'disable-product-dropdown-button',
-                                                                icon: disabled ? <FileX /> : <PoweroffOutlined />,
-                                                                onClick: () =>
-                                                                    disabled
-                                                                        ? handleOpenRestoreProduct(record.id)
-                                                                        : handleOpenDisableProduct(record.id),
-                                                            },
-                                                            {
-                                                                label: 'Delete',
-                                                                key: 'delete-product-dropdown-button',
-                                                                icon: <Trash />,
-                                                                style: {
-                                                                    marginTop: '10px',
-                                                                },
-                                                                danger: true,
-                                                                onClick: () => handleOpenDeleteProduct(record.id),
-                                                            },
-                                                        ],
-                                                    }}
-                                                    onClick={() => {
-                                                        navigate({
-                                                            to: ProductViewRoute.to,
-                                                            params: {
-                                                                id: record.id,
-                                                            },
-                                                            search: {
-                                                                editing: false,
-                                                            },
-                                                        })
-                                                    }}
-                                                >
-                                                    View
-                                                </Dropdown.Button>
-                                            ),
-                                        },
-                                    ]}
-                                    pagination={{
-                                        defaultCurrent: page,
-                                        pageSize: size,
-                                        total: products?.total ?? 0,
-                                        pageSizeOptions: ['8', '16', '24', '32'],
-                                        showSizeChanger: true,
-                                        onShowSizeChange(_, size) {
-                                            navigate({
-                                                to: ProductListRoute.to,
-                                                search: {
-                                                    page,
-                                                    tab: disabled ? 'disabled' : 'all',
-                                                    size: size,
-                                                },
-                                            })
-                                        },
-                                        showTotal: (total, range) => {
-                                            return `${range[0]}-${range[1]} of ${total} items`
-                                        },
-                                        showLessItems: true,
-                                        showQuickJumper: true,
-                                        onChange(page) {
-                                            navigate({
-                                                to: ProductListRoute.to,
-                                                search: {
-                                                    page,
-                                                    tab: disabled ? 'disabled' : 'all',
-                                                    size,
-                                                },
-                                            })
-                                        },
-                                    }}
-                                    loading={isLoading}
-                                />
-                            )}
-                        </RestoreProductModal>
+                                    })
+                                },
+                            }}
+                            loading={isLoading}
+                        />
                     )}
-                </DeleteProductModal>
+                </RestoreProductModal>
             )}
         </DisableProductModal>
     )

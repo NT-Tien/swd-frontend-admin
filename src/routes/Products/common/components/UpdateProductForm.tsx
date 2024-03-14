@@ -1,6 +1,7 @@
 import { queryCategory_GetAll } from '@/api/category/Category_GetAll'
 import { Product_GetByName } from '@/api/product/Product_GetByName'
 import { Product_GetOne, queryProduct_GetOne } from '@/api/product/Product_GetOne'
+import LoadingComponent from '@/common/components/LoadingComponent'
 import ModalWrapper from '@/common/components/modal/ModalWrapper'
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { urlToFile } from '@/lib/util/urlToFile'
@@ -124,7 +125,7 @@ export default function UpdateProductForm({ productId }: UpdateProductFormProps)
     }
 
     if (isLoading || isLoading_Images) {
-        return <div>Loading...</div>
+        return <LoadingComponent />
     }
 
     if (isError || isError_Images) {

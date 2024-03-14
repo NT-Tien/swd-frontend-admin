@@ -8,6 +8,7 @@ export default function LoadingComponent() {
                 height: '100%',
                 display: 'grid',
                 placeItems: 'center',
+                minHeight: '300px',
             }}
         >
             <div
