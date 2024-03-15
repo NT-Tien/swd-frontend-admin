@@ -3,6 +3,7 @@ import { Product_GetByName } from '@/api/product/Product_GetByName'
 import Head from '@/common/components/Head'
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { Category } from '@/lib/types/Category'
+import useRefresh from '@/lib/util/useRefresh'
 import { queryClient } from '@/main'
 import { DashboardBreadcrumb } from '@/routes/Dashboard/DashboardBreadcrumb'
 import { ProductCreateRoute } from '@/routes/Products/ProductCreate'
@@ -33,6 +34,7 @@ export default function ProductCreatePage() {
     const categories = ProductCreateRoute.useLoaderData({
         select: data => data.categories,
     })
+    const refresh = useRefresh()
     const createProductMutation = useMutation({
         mutationFn: createProductWrapper,
         onSuccess(data) {
@@ -218,6 +220,7 @@ export default function ProductCreatePage() {
                                 // onPreview={file => handleOpen(file)}
                                 onChange={info => {
                                     form.setFieldValue('images', info.fileList)
+                                    refresh()
                                 }}
                             >
                                 <div

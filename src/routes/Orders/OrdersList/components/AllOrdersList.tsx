@@ -47,6 +47,7 @@ export default function AllOrdersList() {
                     render: value => dayjs(value).format('DD-MM-YYYY, HH:mm:ss'),
                     sorter: (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
                     sortDirections: ['ascend', 'descend'],
+                    defaultSortOrder: 'descend',
                     ...columnDateSearchProps('createdAt'),
                 },
                 {

@@ -45,6 +45,7 @@ export default function ToDeliverOrdersList() {
                     sorter: (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
                     sortDirections: ['ascend', 'descend'],
                     width: 150,
+                    defaultSortOrder: 'descend',
                     ...searchDateColumnProps('createdAt'),
                 },
                 {

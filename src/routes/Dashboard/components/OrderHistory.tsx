@@ -12,7 +12,12 @@ export default function OrderHistory() {
     const { data: orders, isLoading, isError, isSuccess } = useSuspenseQuery(queryOrder_RecentWithUser_DB({ limit: 6 }))
 
     return (
-        <div className='timeline-box'>
+        <div
+            style={{
+                height: '100%',
+            }}
+            className='timeline-box'
+        >
             <Typography.Title level={5}>Recent Orders</Typography.Title>
             <Typography.Paragraph className='lastweek' style={{ marginBottom: 24 }}>
                 There are currently <span>{orders.isActive}</span> active order(s)

@@ -1,97 +1,126 @@
-import { Col, Row, Typography, theme } from 'antd'
+import { Account_GetAll } from '@/api/account/Account_GetAll'
+import { Role } from '@/lib/types/Account'
+import { useQuery } from '@tanstack/react-query'
+import { Card, Typography } from 'antd'
+import { useMemo } from 'react'
 import ReactApexChart from 'react-apexcharts'
 
-const { useToken } = theme
-
-const options: ApexCharts.ApexOptions = {
-    chart: {
-        type: 'bar',
-        width: '100%',
-        height: 'auto',
-
-        toolbar: {
-            show: false,
-        },
-    },
-    plotOptions: {
-        bar: {
-            horizontal: false,
-            columnWidth: '55%',
-            borderRadius: 5,
-        },
-    },
-    dataLabels: {
-        enabled: false,
-    },
-    stroke: {
-        show: true,
-        width: 1,
-        colors: ['transparent'],
-    },
-    grid: {
-        show: true,
-        borderColor: '#fff',
-        strokeDashArray: 2,
-    },
-    xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        labels: {
-            show: true,
-            style: {
-                colors: '#fff',
-            },
-        },
-    },
-    yaxis: {
-        labels: {
-            show: true,
-            style: {
-                colors: '#fff',
-            },
-        },
-    },
-
-    tooltip: {
-        y: {
-            formatter: function (val: any) {
-                return val
-            },
-        },
-    },
-}
+const gcTime = 1000 * 60
+const staleTime = 1000 * 60
 
 export default function ActiveUsers() {
-    const { token } = useToken()
-    const { Title, Paragraph } = Typography
+    const {
+        data: accounts,
+        isLoading,
+        isError,
+    } = useQuery({
+        queryKey: ['account', 'cached'],
+        queryFn: () => Account_GetAll({ page: 1, size: 1000 }),
+        gcTime,
+        staleTime,
+    })
 
-    const items = [
-        {
-            Title: '3,6K',
-            user: 'Users',
-        },
-        {
-            Title: '2m',
-            user: 'Clicks',
-        },
-        {
-            Title: '$772',
-            user: 'Sales',
-        },
-        {
-            Title: '82',
-            user: 'Items',
-        },
-    ]
+    const accountPercentages = useMemo(() => {
+        if (!accounts) {
+            return {
+                users: 0,
+                admins: 0,
+                dstaff: 0,
+                staff: 0,
+            }
+        }
+
+        const total = accounts.data.total || 0
+        const users = (accounts.data.data.filter(account => account.role === Role.USER).length * 100) / total
+        const admins = (accounts.data.data.filter(account => account.role === Role.ADMIN).length * 100) / total
+        const dstaff = (accounts.data.data.filter(account => account.role === Role.DSTAFF).length * 100) / total
+        const staff = (accounts.data.data.filter(account => account.role === Role.STAFF).length * 100) / total
+
+        return {
+            users,
+            admins,
+            dstaff,
+            staff,
+        }
+    }, [accounts])
+
+    if (isLoading) {
+        return <Card loading />
+    }
+
+    if (isError) {
+        return <Card>Failed to load data</Card>
+    }
 
     return (
         <>
-            <ReactApexChart
+            {/* <ReactApexChart
                 className='bar-chart'
-                options={options}
+                options={{
+                    chart: {
+                        type: 'bar',
+                        width: '100%',
+                        height: 'auto',
+
+                        toolbar: {
+                            show: false,
+                        },
+                    },
+                    plotOptions: {
+                        bar: {
+                            horizontal: false,
+                            columnWidth: '55%',
+                            borderRadius: 5,
+                        },
+                    },
+                    dataLabels: {
+                        enabled: false,
+                    },
+                    stroke: {
+                        show: true,
+                        width: 1,
+                        colors: ['transparent'],
+                    },
+                    grid: {
+                        show: true,
+                        borderColor: '#fff',
+                        strokeDashArray: 2,
+                    },
+                    xaxis: {
+                        categories: [
+                            ...new Array(numberOfDays)
+                                .fill(0)
+                                .map((_, i) => today.subtract(i, 'days').format('MMM DD'))
+                                .reverse(),
+                        ],
+                        labels: {
+                            show: true,
+                            style: {
+                                colors: '#fff',
+                            },
+                        },
+                    },
+                    yaxis: {
+                        labels: {
+                            show: true,
+                            style: {
+                                colors: '#fff',
+                            },
+                        },
+                    },
+
+                    tooltip: {
+                        y: {
+                            formatter: function (val: any) {
+                                return val
+                            },
+                        },
+                    },
+                }}
                 series={[
                     {
-                        name: 'Users',
-                        data: [450, 200, 100, 220, 500, 100, 400, 230, 500, 500, 234, 333],
+                        name: 'Bookings',
+                        data: bookingsByDay.data.reverse(),
                         color: '#fff',
                     },
                 ]}
@@ -102,8 +131,38 @@ export default function ActiveUsers() {
                     boxShadow: token.boxShadowSecondary,
                     borderRadius: token.borderRadiusLG,
                 }}
+            /> */}
+            <Typography.Title level={5}>Users</Typography.Title>
+            <Typography.Paragraph className='lastweek' style={{ marginBottom: 24 }}>
+                Percentages of different user roles on the website
+            </Typography.Paragraph>
+            <ReactApexChart
+                options={{
+                    chart: {
+                        width: 380,
+                        type: 'pie',
+                    },
+                    labels: Object.keys(accountPercentages),
+                    responsive: [
+                        {
+                            breakpoint: 480,
+                            options: {
+                                chart: {
+                                    width: 200,
+                                },
+                                legend: {
+                                    position: 'bottom',
+                                },
+                            },
+                        },
+                    ],
+                }}
+                series={Object.values(accountPercentages)}
+                type='pie'
+                width='100%'
             />
-            <div
+
+            {/* <div
                 style={{
                     marginTop: '20px',
                 }}
@@ -115,7 +174,7 @@ export default function ActiveUsers() {
                         fontWeight: 700,
                     }}
                 >
-                    Active Users
+                    Booking Details
                 </Title>
                 <Paragraph
                     style={{
@@ -123,14 +182,16 @@ export default function ActiveUsers() {
                         color: token.colorTextTertiary,
                     }}
                 >
-                    than last week{' '}
+                    than yesterday{' '}
                     <span
                         style={{
                             color: token.colorSuccess,
                             fontWeight: 700,
                         }}
                     >
-                        +30%
+                        {((bookingsByDay.data[bookingsByDay.data.length - 1] - bookingsByDay.data[bookingsByDay.data.length - 2]) * 100) /
+                            bookingsByDay.data[bookingsByDay.data.length - 2]}
+                        %
                     </span>
                 </Paragraph>
                 <Paragraph
@@ -140,7 +201,7 @@ export default function ActiveUsers() {
                         marginBottom: '24px',
                     }}
                 >
-                    We have created multiple options for you to put together and customise into pixel perfect pages.
+                    Here's some interesting information on the booking data of your website!
                 </Paragraph>
                 <Row gutter={5}>
                     {items.map((v, index) => (
@@ -167,7 +228,7 @@ export default function ActiveUsers() {
                         </Col>
                     ))}
                 </Row>
-            </div>
+            </div> */}
         </>
     )
 }

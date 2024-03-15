@@ -17,7 +17,7 @@ export default function LatestBookings() {
         <div>
             <Typography.Title level={5}>Bookings</Typography.Title>
             <Typography.Paragraph className='lastweek' style={{ marginBottom: 24 }}>
-                {/* There are currently <span>{orders.isActive}</span> active order(s) */}
+                These are the current and future bookings
             </Typography.Paragraph>
             <ViewBookingModal>
                 {({ handleOpen: openViewBooking }) => (
@@ -26,7 +26,7 @@ export default function LatestBookings() {
                             {({ data: bookings }) => {
                                 const items: TimelineProps['items'] = bookings.data
                                     .filter(booking => dayjs(booking.visit_date).isAfter(dayjs()))
-                                    .slice(0, 6)
+                                    .slice(0, 8)
                                     .map(booking => ({
                                         color: dayjs(booking.visit_date).isToday() ? 'red' : 'blue',
                                         children: (
@@ -39,9 +39,22 @@ export default function LatestBookings() {
                                             </div>
                                         ),
                                     }))
+
+                                while (items.length < 8) {
+                                    items.push({
+                                        color: 'grey',
+                                        children: (
+                                            <div>
+                                                <Flex gap={10}>
+                                                    <Typography.Title level={5}>No Booking</Typography.Title>
+                                                </Flex>
+                                            </div>
+                                        ),
+                                    })
+                                }
                                 return (
                                     <>
-                                        <Timeline items={items} reverse />
+                                        <Timeline items={items} />
                                         <Button
                                             type='primary'
                                             onClick={() =>
