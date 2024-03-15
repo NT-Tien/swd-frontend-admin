@@ -1,3 +1,5 @@
 import makeBreadcrumb from '@/lib/util/makeBreadcrumb'
 
-export const AccountViewBreadcrumb = makeBreadcrumb({})
+export const AccountViewBreadcrumb = makeBreadcrumb({
+    isCopyable: true,
+})

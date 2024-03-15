@@ -3,6 +3,7 @@ import Head from '@/common/components/Head'
 import RefreshButton from '@/common/components/RefreshButton'
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { WalletTransaction } from '@/lib/types/WalletTransaction'
+import GetColumnDateSearchProps from '@/lib/util/getColumnDateSearchProps'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
 import { DashboardBreadcrumb } from '@/routes/Dashboard/DashboardBreadcrumb'
 import { TransactionListRoute } from '@/routes/Transactions/TransactionList'
@@ -24,6 +25,7 @@ export default function TransactionListPage() {
     })
 
     const searchColumnProps = GetColumnSearchProps<WalletTransaction>()
+    const searchDateColumnProps = GetColumnDateSearchProps<WalletTransaction>()
 
     if (isError) {
         return <div>Failed to load data</div>
@@ -96,6 +98,7 @@ export default function TransactionListPage() {
                             sorter: (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
                             sortDirections: ['ascend', 'descend'],
                             width: 200,
+                            ...searchDateColumnProps('createdAt'),
                         },
                         {
                             title: 'Action',

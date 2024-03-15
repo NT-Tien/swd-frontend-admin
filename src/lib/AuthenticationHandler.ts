@@ -138,9 +138,6 @@ export default class AuthenticationHandler {
             // decode token manually and insert into token_email cookie
 
             // * No idea if this works lmao
-
-            // TODO FIX this shit
-
             const currentToken = this.getCookieToken()
             const decodedJwt = jwtDecode(currentToken || '') as {
                 email: string

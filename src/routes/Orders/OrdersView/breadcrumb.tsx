@@ -1,3 +1,5 @@
 import makeBreadcrumb from '@/lib/util/makeBreadcrumb'
 
-export const OrdersViewBreadcrumb = makeBreadcrumb({})
+export const OrdersViewBreadcrumb = makeBreadcrumb({
+    isCopyable: true,
+})

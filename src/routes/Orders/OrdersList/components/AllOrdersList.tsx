@@ -2,6 +2,7 @@ import { queryOrder_GetAll } from '@/api/order/Order_GetAll'
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { DeliveryStatus, Order } from '@/lib/types/Order'
 import { copyId } from '@/lib/util/copyId'
+import GetColumnDateSearchProps from '@/lib/util/getColumnDateSearchProps'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
 import { OrdersListRoute } from '@/routes/Orders/OrdersList'
 import { OrdersViewRoute } from '@/routes/Orders/OrdersView'
@@ -27,6 +28,7 @@ export default function AllOrdersList() {
     }
 
     const searchColumnProps = GetColumnSearchProps<Order>()
+    const columnDateSearchProps = GetColumnDateSearchProps<Order>()
 
     return (
         <Table
@@ -45,6 +47,7 @@ export default function AllOrdersList() {
                     render: value => dayjs(value).format('DD-MM-YYYY, HH:mm:ss'),
                     sorter: (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
                     sortDirections: ['ascend', 'descend'],
+                    ...columnDateSearchProps('createdAt'),
                 },
                 {
                     title: 'Updated At',
@@ -53,6 +56,7 @@ export default function AllOrdersList() {
                     render: value => dayjs(value).format('DD-MM-YYYY, HH:mm:ss'),
                     sorter: (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime(),
                     sortDirections: ['ascend', 'descend'],
+                    ...columnDateSearchProps('updatedAt'),
                 },
                 {
                     title: 'Email',

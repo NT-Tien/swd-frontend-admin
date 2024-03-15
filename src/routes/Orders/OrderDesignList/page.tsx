@@ -4,6 +4,7 @@ import RefreshButton from '@/common/components/RefreshButton'
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { OrderDesign } from '@/lib/types/OrderDesign'
 import { copyId } from '@/lib/util/copyId'
+import GetColumnDateSearchProps from '@/lib/util/getColumnDateSearchProps'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
 import { DashboardBreadcrumb } from '@/routes/Dashboard/DashboardBreadcrumb'
 import { OrderDesignListRoute } from '@/routes/Orders/OrderDesignList'
@@ -30,6 +31,7 @@ export default function OrderDesignListPage() {
     }
 
     const columnSearchProps = GetColumnSearchProps<OrderDesign>()
+    const columnDateSearchProps = GetColumnDateSearchProps<OrderDesign>()
 
     return (
         <>
@@ -160,6 +162,7 @@ export default function OrderDesignListPage() {
                             render: date => dayjs(date).format('DD/MM/YYYY HH:mm:ss'),
                             sorter: (a, b) => dayjs(a.createdAt).unix() - dayjs(b.createdAt).unix(),
                             defaultSortOrder: 'descend',
+                            ...columnDateSearchProps('createdAt'),
                         },
                         {
                             title: 'Action',

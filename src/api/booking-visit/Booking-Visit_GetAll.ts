@@ -20,12 +20,11 @@ export async function BookingVisit_GetAll({ page, limit }: BookingVisit_GetAll_R
         },
         transformResponse: [
             ParseResponse,
-            (res: ApiResponse<string[]>) => {
+            (res: ApiResponse<any>) => {
                 if ('data' in res) {
-                    // TODO - add total to response
                     return {
-                        data: ResponseToBookingVisitList(res.data as unknown as Record<string, any>[]),
-                        total: 404,
+                        data: ResponseToBookingVisitList(res.data.data as unknown as Record<string, any>[]),
+                        total: res.data.totalItem,
                     }
                 } else {
                     devLog('Error while getting products', res.message, ' (', res.statusCode, ')')

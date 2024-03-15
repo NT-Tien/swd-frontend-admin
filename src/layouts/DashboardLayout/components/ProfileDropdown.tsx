@@ -85,12 +85,12 @@ export default function ProfileDropdown({ children }: ProfileDropdownProps) {
             style: {
                 fontWeight: 600,
             },
-            onClick: () => {
-                AuthenticationHandler.logout()
-                messageApi.success('Logged out successfully')
-                navigate({
+            onClick: async () => {
+                await navigate({
                     to: LoginRoute.to,
                 })
+                AuthenticationHandler.logout()
+                messageApi.success('Logged out successfully')
             },
         },
     ]

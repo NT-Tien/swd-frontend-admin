@@ -11,6 +11,7 @@ import dayjs from 'dayjs'
 import { queryBookingVisit_GetAll } from '../../api/booking-visit/Booking-Visit_GetAll'
 import { BookingVisit } from '../../lib/types/BookingVisit'
 import GetColumnSearchProps from '../../lib/util/getColumnSearchProps'
+import GetColumnDateSearchProps from '@/lib/util/getColumnDateSearchProps'
 
 export default function BookingsPage() {
     const navigate = useNavigate()
@@ -20,8 +21,9 @@ export default function BookingsPage() {
     const size = BookingsRoute.useSearch({
         select: data => data.size!,
     })
-    const { data: bookings, isLoading, isError } = useQuery(queryBookingVisit_GetAll({ page: 1, limit: 1000 }))
+    const { data: bookings, isLoading, isError } = useQuery(queryBookingVisit_GetAll({ page, limit: size }))
     const searchColumnProps = GetColumnSearchProps<BookingVisit>()
+    const searchColumnDateProps = GetColumnDateSearchProps<BookingVisit>()
 
     if (isError) return <div>Error</div>
 
@@ -73,6 +75,7 @@ export default function BookingsPage() {
                                     sorter: (a, b) => a.visit_date.getTime() - b.visit_date.getTime(),
                                     sortDirections: ['ascend', 'descend'],
                                     defaultSortOrder: 'descend',
+                                    ...searchColumnDateProps('visit_date'),
                                 },
                                 {
                                     key: 'phone_number',
@@ -93,7 +96,7 @@ export default function BookingsPage() {
                             ]}
                             pagination={{
                                 pageSize: size,
-                                total: bookings?.data.length,
+                                total: bookings?.total,
                                 pageSizeOptions: ['8', '16', '24', '32'],
                                 showSizeChanger: true,
                                 onChange(page, pageSize) {

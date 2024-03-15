@@ -232,7 +232,15 @@ function DashboardLayout() {
                 collapsedWidth={80}
                 collapsed={collapsed}
                 onCollapse={data => setCollapsed(data)}
-                style={{ overflow: 'auto', height: '100vh', width: '500px', zIndex: 10, position: 'fixed', left: 0, top: 0, bottom: 0 }}
+                style={{
+                    overflow: 'auto',
+                    height: '100vh',
+                    zIndex: 10,
+                    position: 'fixed',
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                }}
             >
                 <Flex
                     justify='space-between'

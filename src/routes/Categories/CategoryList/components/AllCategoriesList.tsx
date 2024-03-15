@@ -3,6 +3,7 @@ import { queryCategory_GetAll } from '@/api/category/Category_GetAll'
 import { queryCategory_GetAll_Deleted } from '@/api/category/Category_GetAll_Deleted'
 import DeleteModal from '@/common/components/modal/DeleteModal'
 import { Category } from '@/lib/types/Category'
+import GetColumnDateSearchProps from '@/lib/util/getColumnDateSearchProps'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
 import { queryClient } from '@/main'
 import { CategoryListRoute } from '@/routes/Categories/CategoryList'
@@ -28,6 +29,7 @@ export default function AllCategoriesList({ disabled = false }: AllCategoriesLis
     const { data: categories, isLoading, isError } = useQuery(disabled ? queryCategory_GetAll_Deleted() : queryCategory_GetAll())
 
     const searchColumnProps = GetColumnSearchProps<Category>()
+    const searchColumnDateProps = GetColumnDateSearchProps<Category>()
 
     if (isError) return <div>Something went wrong</div>
 
@@ -62,16 +64,27 @@ export default function AllCategoriesList({ disabled = false }: AllCategoriesLis
                             ellipsis: true,
                             ...searchColumnProps('name'),
                         },
-                        {
-                            title: disabled ? 'Deleted At' : 'Created At',
-                            dataIndex: disabled ? 'deletedAt' : 'createdAt',
-                            key: disabled ? 'deletedAt' : 'createdAt',
-                            render: value => dayjs(value).format('DD-MM-YYYY HH:mm:ss'),
-                            sorter: (a, b) =>
-                                disabled ? a.deletedAt!.getTime() - b.deletedAt!.getTime() : a.createdAt.getTime() - b.createdAt.getTime(),
-                            sortDirections: ['ascend', 'descend'],
-                            defaultSortOrder: 'descend',
-                        },
+                        disabled
+                            ? {
+                                  title: 'Disabled At',
+                                  dataIndex: 'deletedAt',
+                                  key: 'disabledAt',
+                                  render: value => dayjs(value).format('DD-MM-YYYY HH:mm:ss'),
+                                  sorter: (a, b) => a.deletedAt!.getTime() - b.deletedAt!.getTime(),
+                                  sortDirections: ['ascend', 'descend'],
+                                  defaultSortOrder: 'descend',
+                                  ...searchColumnDateProps('deletedAt'),
+                              }
+                            : {
+                                  title: 'Created At',
+                                  dataIndex: 'createdAt',
+                                  key: 'createdAt',
+                                  render: value => dayjs(value).format('DD-MM-YYYY HH:mm:ss'),
+                                  sorter: (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
+                                  sortDirections: ['ascend', 'descend'],
+                                  defaultSortOrder: 'descend',
+                                  ...searchColumnDateProps('createdAt'),
+                              },
                         {
                             title: 'Updated At',
                             dataIndex: 'updatedAt',
@@ -79,6 +92,7 @@ export default function AllCategoriesList({ disabled = false }: AllCategoriesLis
                             render: value => dayjs(value).format('DD-MM-YYYY HH:mm:ss'),
                             sorter: (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime(),
                             sortDirections: ['ascend', 'descend'],
+                            ...searchColumnDateProps('updatedAt'),
                         },
                         {
                             title: 'Action',

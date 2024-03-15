@@ -1,6 +1,5 @@
 import { configAxios } from '@/api/defaults'
 import LoadingComponent from '@/common/components/LoadingComponent'
-import TooManyRequests from '@/common/components/TooManyRequests'
 import env from '@/env'
 import { routeTree } from '@/routeTree'
 import '@/socket'
@@ -13,6 +12,7 @@ import dayjs from 'dayjs'
 import isToday from 'dayjs/plugin/isToday'
 import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
+import isBetween from 'dayjs/plugin/isBetween'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 
@@ -22,6 +22,7 @@ configAxios()
 dayjs.extend(weekOfYear)
 dayjs.extend(utc)
 dayjs.extend(isToday)
+dayjs.extend(isBetween)
 
 // #region global declarations
 declare global {
@@ -46,9 +47,9 @@ export const router = createRouter({
     defaultPreloadStaleTime: 0,
     defaultPendingComponent: () => <LoadingComponent />,
     defaultGcTime: 1000 * 5, // 5 seconds
-    defaultErrorComponent: () => {
-        return <TooManyRequests />
-    },
+    // defaultErrorComponent: () => {
+    //     return <TooManyRequests />
+    // },
 })
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

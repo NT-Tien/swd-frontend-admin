@@ -17,6 +17,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { AccountViewRoute } from '@/routes/Accounts/AccountView'
 import dayjs from 'dayjs'
 import { getRoleTag } from '@/routes/Accounts/common/util/getRoleTag'
+import GetColumnDateSearchProps from '@/lib/util/getColumnDateSearchProps'
 
 export default function AllAccountsList() {
     const navigate = useNavigate()
@@ -28,6 +29,7 @@ export default function AllAccountsList() {
     })
     const { data: accounts, isLoading, isError } = useQuery(queryAccount_GetAll({ page, size }))
     const searchColumnProps = GetColumnSearchProps<Account>()
+    const searchDateColumnProps = GetColumnDateSearchProps<Account>()
     const { messageApi } = useMessage()
 
     if (isError) {
@@ -81,6 +83,7 @@ export default function AllAccountsList() {
                                             sorter: (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
                                             sortDirections: ['ascend', 'descend'],
                                             defaultSortOrder: 'descend',
+                                            ...searchDateColumnProps('createdAt'),
                                         },
                                         {
                                             title: 'Updated At',
@@ -89,6 +92,7 @@ export default function AllAccountsList() {
                                             render: value => dayjs(value).format('DD-MM-YYYY'),
                                             sorter: (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime(),
                                             sortDirections: ['ascend', 'descend'],
+                                            ...searchDateColumnProps('updatedAt'),
                                         },
                                         {
                                             title: 'Role',

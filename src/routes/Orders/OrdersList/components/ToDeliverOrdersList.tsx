@@ -2,6 +2,7 @@ import { queryDStaff_GetAll_OrderToDeliver } from '@/api/dstaff/DStaff_GetAll_Or
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { Order } from '@/lib/types/Order'
 import { copyId } from '@/lib/util/copyId'
+import GetColumnDateSearchProps from '@/lib/util/getColumnDateSearchProps'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
 import { OrdersListRoute } from '@/routes/Orders/OrdersList'
 import { OrdersViewRoute } from '@/routes/Orders/OrdersView'
@@ -26,6 +27,7 @@ export default function ToDeliverOrdersList() {
     }
 
     const searchColumnProps = GetColumnSearchProps<Order>()
+    const searchDateColumnProps = GetColumnDateSearchProps<Order>()
 
     return (
         <Table
@@ -43,6 +45,7 @@ export default function ToDeliverOrdersList() {
                     sorter: (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
                     sortDirections: ['ascend', 'descend'],
                     width: 150,
+                    ...searchDateColumnProps('createdAt'),
                 },
                 {
                     title: 'Updated At',
@@ -52,6 +55,7 @@ export default function ToDeliverOrdersList() {
                     sorter: (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime(),
                     sortDirections: ['ascend', 'descend'],
                     width: 150,
+                    ...searchDateColumnProps('updatedAt'),
                 },
                 {
                     title: 'Email',

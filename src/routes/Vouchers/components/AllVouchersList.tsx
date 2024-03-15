@@ -2,6 +2,7 @@ import { Voucher_Delete } from '@/api/voucher/Voucher_Delete'
 import { queryVoucher_GetAll, queryVoucher_GetAllDisabled } from '@/api/voucher/Voucher_GetAll'
 import DeleteModal from '@/common/components/modal/DeleteModal'
 import { Voucher } from '@/lib/types/Voucher'
+import GetColumnDateSearchProps from '@/lib/util/getColumnDateSearchProps'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
 import { queryClient } from '@/main'
 import { VouchersRoute } from '@/routes/Vouchers'
@@ -19,6 +20,7 @@ type AllVouchersListProps = {
 export default function AllVouchersList({ disabled = false }: AllVouchersListProps) {
     const { data: vouchers, isLoading, isError } = useQuery(disabled ? queryVoucher_GetAllDisabled() : queryVoucher_GetAll())
     const searchColumnProps = GetColumnSearchProps<Voucher>()
+    const searchDateColumnProps = GetColumnDateSearchProps<Voucher>()
     const page = VouchersRoute.useSearch({
         select: data => data.page,
     })
@@ -80,6 +82,7 @@ export default function AllVouchersList({ disabled = false }: AllVouchersListPro
                                     title: 'Discount Percent',
                                     dataIndex: 'discount_percent',
                                     key: 'discount_percent',
+                                    render: value => `${value}%`,
                                     sorter: (a, b) => a.discount_percent - b.discount_percent,
                                 },
                                 {
@@ -88,24 +91,34 @@ export default function AllVouchersList({ disabled = false }: AllVouchersListPro
                                     key: 'expired_date',
                                     render: date => new Date(date).toLocaleDateString(),
                                     sorter: (a, b) => new Date(a.expired_date).getTime() - new Date(b.expired_date).getTime(),
+                                    ...searchDateColumnProps('expired_date'),
                                 },
-                                {
-                                    title: disabled ? 'Deleted At' : 'Created At',
-                                    dataIndex: disabled ? 'deletedAt' : 'createdAt',
-                                    key: disabled ? 'deletedAt' : 'createdAt',
-                                    render: date => new Date(date).toLocaleDateString(),
-                                    sorter: (a, b) =>
-                                        disabled
-                                            ? new Date(a.deletedAt!).getTime() - new Date(b.deletedAt!).getTime()
-                                            : new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-                                    defaultSortOrder: 'descend',
-                                },
+                                disabled
+                                    ? {
+                                          title: 'Disabled At',
+                                          dataIndex: 'deletedAt',
+                                          key: 'disabledAt',
+                                          render: date => new Date(date).toLocaleDateString(),
+                                          sorter: (a, b) => new Date(a.deletedAt!).getTime() - new Date(b.deletedAt!).getTime(),
+                                          defaultSortOrder: 'descend',
+                                          ...searchDateColumnProps('deletedAt'),
+                                      }
+                                    : {
+                                          title: 'Created At',
+                                          dataIndex: 'createdAt',
+                                          key: 'createdAt',
+                                          render: date => new Date(date).toLocaleDateString(),
+                                          sorter: (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+                                          defaultSortOrder: 'descend',
+                                          ...searchDateColumnProps('createdAt'),
+                                      },
                                 {
                                     title: 'Updated At',
                                     dataIndex: 'updatedAt',
                                     key: 'updatedAt',
                                     render: date => new Date(date).toLocaleDateString(),
                                     sorter: (a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime(),
+                                    ...searchDateColumnProps('updatedAt'),
                                 },
                                 {
                                     title: 'Action',

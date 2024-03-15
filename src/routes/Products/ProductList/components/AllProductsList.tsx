@@ -5,6 +5,7 @@ import { Role, isAuthorized } from '@/lib/types/Account'
 import { Category } from '@/lib/types/Category'
 import { Product } from '@/lib/types/Product'
 import { copyId } from '@/lib/util/copyId'
+import GetColumnDateSearchProps from '@/lib/util/getColumnDateSearchProps'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
 import { ProductListRoute } from '@/routes/Products/ProductList'
 import { ProductViewRoute } from '@/routes/Products/ProductView'
@@ -31,6 +32,7 @@ export default function AllProductsList({ disabled = false }: AllProductsListPro
     })
     const { data: products, isLoading, isError } = useQuery(queryProduct_GetAll({ page, size, deleted: disabled }))
     const searchColumnProps = GetColumnSearchProps<Product>()
+    const searchColumnDateProps = GetColumnDateSearchProps<Product>()
     const { messageApi } = useMessage()
 
     if (isError) {
@@ -59,18 +61,28 @@ export default function AllProductsList({ disabled = false }: AllProductsListPro
                                     width: 300,
                                     ...searchColumnProps('name'),
                                 },
-                                {
-                                    title: disabled ? 'Disabled Date' : 'Created At',
-                                    dataIndex: disabled ? 'deletedAt' : 'createdAt',
-                                    key: disabled ? 'deletedAt' : 'createdAt',
-                                    render: value => dayjs(value).format('DD-MM-YYYY HH:mm:ss'),
-                                    sorter: (a, b) =>
-                                        disabled
-                                            ? a.deletedAt!.getTime() - b.deletedAt!.getTime()
-                                            : a.createdAt.getTime() - b.createdAt.getTime(),
-                                    sortDirections: ['ascend', 'descend'],
-                                    defaultSortOrder: 'descend',
-                                },
+                                disabled
+                                    ? {
+                                          title: 'Disabled Date',
+                                          dataIndex: 'deletedAt',
+                                          key: 'deletedAt',
+                                          render: value => dayjs(value).format('DD-MM-YYYY HH:mm:ss'),
+                                          sorter: (a, b) => a.deletedAt!.getTime() - b.deletedAt!.getTime(),
+                                          sortDirections: ['ascend', 'descend'],
+                                          defaultSortOrder: 'descend',
+                                          ...searchColumnDateProps('deletedAt'),
+                                      }
+                                    : {
+                                          title: 'Created At',
+                                          dataIndex: 'createdAt',
+                                          key: 'createdAt',
+                                          render: value => dayjs(value).format('DD-MM-YYYY HH:mm:ss'),
+                                          sorter: (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
+                                          sortDirections: ['ascend', 'descend'],
+                                          defaultSortOrder: 'descend',
+                                          ...searchColumnDateProps('createdAt'),
+                                      },
+
                                 {
                                     title: 'Updated At',
                                     dataIndex: 'updatedAt',
@@ -78,6 +90,7 @@ export default function AllProductsList({ disabled = false }: AllProductsListPro
                                     render: value => dayjs(value).format('DD-MM-YYYY HH:mm:ss'),
                                     sorter: (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime(),
                                     sortDirections: ['ascend', 'descend'],
+                                    ...searchColumnDateProps('updatedAt'),
                                 },
                                 {
                                     title: 'Category',
@@ -111,6 +124,17 @@ export default function AllProductsList({ disabled = false }: AllProductsListPro
                                                     ...(isAuthorized(Role.ADMIN, AuthenticationHandler.getCurrentRole())
                                                         ? [
                                                               {
+                                                                  label: 'Update',
+                                                                  key: 'update-product-dropdown-button',
+                                                                  icon: <Pencil />,
+                                                                  onClick: () =>
+                                                                      navigate({
+                                                                          to: ProductViewRoute.to,
+                                                                          params: { id: record.id },
+                                                                          search: { editing: true },
+                                                                      }),
+                                                              },
+                                                              {
                                                                   label: disabled ? 'Restore' : 'Disable',
                                                                   danger: true,
                                                                   key: disabled
@@ -121,17 +145,6 @@ export default function AllProductsList({ disabled = false }: AllProductsListPro
                                                                       disabled
                                                                           ? handleOpenRestoreProduct(record.id)
                                                                           : handleOpenDisableProduct(record.id),
-                                                              },
-                                                              {
-                                                                  label: 'Update',
-                                                                  key: 'update-product-dropdown-button',
-                                                                  icon: <Pencil />,
-                                                                  onClick: () =>
-                                                                      navigate({
-                                                                          to: ProductViewRoute.to,
-                                                                          params: { id: record.id },
-                                                                          search: { editing: true },
-                                                                      }),
                                                               },
                                                           ]
                                                         : []),

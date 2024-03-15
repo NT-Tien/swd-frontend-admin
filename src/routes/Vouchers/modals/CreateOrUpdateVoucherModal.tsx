@@ -209,7 +209,7 @@ export default function CreateOrUpdateVoucherModal({ children }: CreateVoucherMo
                                 icon={<RotateRightOutlined />}
                                 onClick={handleGenerateCode}
                                 style={{
-                                    transform: 'translateY(4px)',
+                                    transform: 'translateY(-12px)',
                                 }}
                             />
                         </Tooltip>
@@ -243,14 +243,23 @@ export default function CreateOrUpdateVoucherModal({ children }: CreateVoucherMo
                         </Form.Item>
                         <Form.Item<FieldType>
                             name='amount'
-                            label='Discount Amount'
+                            label='Amount'
                             style={{
                                 width: '100%',
                             }}
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Discount amount is required',
+                                    message: 'Amount is required',
+                                },
+                                {
+                                    validator: (_, value) => {
+                                        if (isNaN(value)) return Promise.reject('Amount must be a number')
+                                        if (value < 0) {
+                                            return Promise.reject('Amount must be a positive number')
+                                        }
+                                        return Promise.resolve()
+                                    },
                                 },
                             ]}
                         >
@@ -265,6 +274,15 @@ export default function CreateOrUpdateVoucherModal({ children }: CreateVoucherMo
                                 {
                                     required: true,
                                     message: 'Maximum discount is required',
+                                },
+                                {
+                                    validator: (_, value) => {
+                                        if (isNaN(value)) return Promise.reject('Maximum discount must be a number')
+                                        if (value < 0) {
+                                            return Promise.reject('Maximum discount must be a positive number')
+                                        }
+                                        return Promise.resolve()
+                                    },
                                 },
                             ]}
                             style={{
@@ -281,6 +299,15 @@ export default function CreateOrUpdateVoucherModal({ children }: CreateVoucherMo
                                     required: true,
                                     message: 'Minimum discount is required',
                                 },
+                                {
+                                    validator: (_, value) => {
+                                        if (isNaN(value)) return Promise.reject('Minimum discount must be a number')
+                                        if (value < 0) {
+                                            return Promise.reject('Minimum discount must be a positive number')
+                                        }
+                                        return Promise.resolve()
+                                    },
+                                },
                             ]}
                             style={{
                                 width: '100%',
@@ -295,7 +322,16 @@ export default function CreateOrUpdateVoucherModal({ children }: CreateVoucherMo
                         rules={[
                             {
                                 required: true,
-                                message: 'Minimum discount is required',
+                                message: 'Discount Percentage is required',
+                            },
+                            {
+                                validator: (_, value) => {
+                                    if (isNaN(value)) return Promise.reject('Discount Percentage must be a number')
+                                    if (value < 0) {
+                                        return Promise.reject('Discount Percentage must be a positive number')
+                                    }
+                                    return Promise.resolve()
+                                },
                             },
                         ]}
                         style={{
