@@ -1,4 +1,5 @@
 import { ParseResponse } from '@/api/defaults'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { ResponseToVoucherList, Voucher } from '@/lib/types/Voucher'
 import { queryOptions } from '@tanstack/react-query'
 import axios from 'axios'
@@ -12,6 +13,9 @@ export type Voucher_GetAll_Res = Voucher[]
  */
 export async function Voucher_GetAll() {
     return await axios.get<Voucher_GetAll_Res>('/voucher/get-all', {
+        headers: {
+            Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
+        },
         transformResponse: [
             ParseResponse,
             (res: ApiResponse<Voucher[]>) => {

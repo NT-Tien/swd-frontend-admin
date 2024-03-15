@@ -1,10 +1,13 @@
 import Head from '@/common/components/Head'
 import { Product } from '@/lib/types/Product'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
+import { CategoryListBreadcrumb } from '@/routes/Categories/CategoryList/breadcrumb'
 import { CategoryViewRoute } from '@/routes/Categories/CategoryView'
+import { CategoryViewBreadcrumb } from '@/routes/Categories/CategoryView/breadcrumb'
+import { DashboardBreadcrumb } from '@/routes/Dashboard/DashboardBreadcrumb'
 import { ProductViewRoute } from '@/routes/Products/ProductView'
 import { Await, useNavigate } from '@tanstack/react-router'
-import { Button, Card, Descriptions, Flex, Table, Typography } from 'antd'
+import { Breadcrumb, Button, Card, Descriptions, Flex, Table, Typography } from 'antd'
 import dayjs from 'dayjs'
 import { Suspense } from 'react'
 
@@ -29,36 +32,43 @@ export default function CategoryViewPage() {
                     {({ data: category }) => (
                         <>
                             <Head title={`${category.name}`} />
-                            <Typography.Title level={2}>{category.name}</Typography.Title>
-                            <Descriptions
+                            <Breadcrumb
+                                style={{
+                                    marginBottom: '5px',
+                                }}
                                 items={[
-                                    {
-                                        key: 'id',
-                                        label: 'ID',
-                                        children: category.id,
-                                    },
-                                    {
-                                        key: 'name',
-                                        label: 'Name',
-                                        children: category.name,
-                                    },
-                                    {
-                                        key: 'createdAt',
-                                        label: 'Created At',
-                                        children: dayjs(category.createdAt).format('DD-MM-YYYY'),
-                                    },
-                                    {
-                                        key: 'updatedAt',
-                                        label: 'Updated At',
-                                        children: dayjs(category.updatedAt).format('DD-MM-YYYY'),
-                                    },
-                                    {
-                                        key: 'isDeleted',
-                                        label: 'Deleted',
-                                        children: category.deletedAt ? dayjs(category.deletedAt).format('DD-MM-YYYY') : 'No',
-                                    },
+                                    DashboardBreadcrumb(),
+                                    CategoryListBreadcrumb(),
+                                    CategoryViewBreadcrumb({ isCurrent: true, title: category.id }),
                                 ]}
                             />
+                            <Typography.Title level={2}>{category.name}</Typography.Title>
+                            <Card title='Details'>
+                                <Descriptions
+                                    items={[
+                                        {
+                                            key: 'name',
+                                            label: 'Name',
+                                            children: category.name,
+                                        },
+                                        {
+                                            key: 'createdAt',
+                                            label: 'Created At',
+                                            children: dayjs(category.createdAt).format('DD-MM-YYYY HH:mm:ss'),
+                                        },
+                                        {
+                                            key: 'updatedAt',
+                                            label: 'Updated At',
+                                            children: dayjs(category.updatedAt).format('DD-MM-YYYY HH:mm:ss'),
+                                        },
+                                        {
+                                            key: 'isDeleted',
+                                            label: 'Deleted',
+                                            children: category.deletedAt ? dayjs(category.deletedAt).format('DD-MM-YYYY HH:mm:ss') : 'No',
+                                        },
+                                    ]}
+                                />
+                            </Card>
                         </>
                     )}
                 </Await>

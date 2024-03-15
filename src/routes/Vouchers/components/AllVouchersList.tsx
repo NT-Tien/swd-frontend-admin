@@ -4,12 +4,13 @@ import DeleteModal from '@/common/components/modal/DeleteModal'
 import { Voucher } from '@/lib/types/Voucher'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
 import { queryClient } from '@/main'
+import { VouchersRoute } from '@/routes/Vouchers'
 import CreateOrUpdateVoucherModal from '@/routes/Vouchers/modals/CreateOrUpdateVoucherModal'
 import { MoreOutlined } from '@ant-design/icons'
 import { Pencil, Trash } from '@phosphor-icons/react'
 import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
 import { Button, Dropdown, Table } from 'antd'
-import { useState } from 'react'
 
 type AllVouchersListProps = {
     disabled?: boolean
@@ -17,8 +18,14 @@ type AllVouchersListProps = {
 
 export default function AllVouchersList({ disabled = false }: AllVouchersListProps) {
     const { data: vouchers, isLoading, isError } = useQuery(disabled ? queryVoucher_GetAllDisabled() : queryVoucher_GetAll())
-    const [pageSize, setPageSize] = useState(8)
     const searchColumnProps = GetColumnSearchProps<Voucher>()
+    const page = VouchersRoute.useSearch({
+        select: data => data.page,
+    })
+    const size = VouchersRoute.useSearch({
+        select: data => data.size,
+    })
+    const navigate = useNavigate()
 
     if (isError) {
         return <div>A fatal error has occurred.</div>
@@ -134,12 +141,30 @@ export default function AllVouchersList({ disabled = false }: AllVouchersListPro
                                 },
                             ]}
                             pagination={{
-                                pageSize: pageSize,
+                                defaultCurrent: page,
+                                pageSize: size,
                                 total: vouchers?.length,
                                 pageSizeOptions: ['8', '16', '24', '32'],
                                 showSizeChanger: true,
-                                onShowSizeChange(_, size) {
-                                    setPageSize(size)
+                                onShowSizeChange(page, size) {
+                                    navigate({
+                                        to: VouchersRoute.to,
+                                        search: {
+                                            page,
+                                            size,
+                                            tab: disabled ? 'disabled' : 'all',
+                                        },
+                                    })
+                                },
+                                onChange: (page, size) => {
+                                    navigate({
+                                        to: VouchersRoute.to,
+                                        search: {
+                                            page,
+                                            size,
+                                            tab: disabled ? 'disabled' : 'all',
+                                        },
+                                    })
                                 },
                                 showTotal: (total, range) => {
                                     return `${range[0]}-${range[1]} of ${total} items`

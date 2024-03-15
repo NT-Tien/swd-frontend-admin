@@ -1,6 +1,10 @@
 import { queryProduct_GetAll } from '@/api/product/Product_GetAll'
+import { useMessage } from '@/common/context/MessageContext/useMessage'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
+import { Role, isAuthorized } from '@/lib/types/Account'
 import { Category } from '@/lib/types/Category'
 import { Product } from '@/lib/types/Product'
+import { copyId } from '@/lib/util/copyId'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
 import { ProductListRoute } from '@/routes/Products/ProductList'
 import { ProductViewRoute } from '@/routes/Products/ProductView'
@@ -27,6 +31,7 @@ export default function AllProductsList({ disabled = false }: AllProductsListPro
     })
     const { data: products, isLoading, isError } = useQuery(queryProduct_GetAll({ page, size, deleted: disabled }))
     const searchColumnProps = GetColumnSearchProps<Product>()
+    const { messageApi } = useMessage()
 
     if (isError) {
         return <div>A fatal error has occurred.</div>
@@ -102,29 +107,35 @@ export default function AllProductsList({ disabled = false }: AllProductsListPro
                                         <Dropdown.Button
                                             menu={{
                                                 items: [
-                                                    {
-                                                        label: 'Update',
-                                                        key: 'update-product-dropdown-button',
-                                                        icon: <Pencil />,
-                                                        onClick: () =>
-                                                            navigate({
-                                                                to: ProductViewRoute.to,
-                                                                params: { id: record.id },
-                                                                search: { editing: true },
-                                                            }),
-                                                    },
-                                                    {
-                                                        label: disabled ? 'Restore' : 'Disable',
-                                                        danger: true,
-                                                        key: disabled
-                                                            ? 'restore-product-dropdown-button'
-                                                            : 'disable-product-dropdown-button',
-                                                        icon: disabled ? <FileX /> : <PoweroffOutlined />,
-                                                        onClick: () =>
-                                                            disabled
-                                                                ? handleOpenRestoreProduct(record.id)
-                                                                : handleOpenDisableProduct(record.id),
-                                                    },
+                                                    copyId(record.id, messageApi),
+                                                    ...(isAuthorized(Role.ADMIN, AuthenticationHandler.getCurrentRole())
+                                                        ? [
+                                                              {
+                                                                  label: disabled ? 'Restore' : 'Disable',
+                                                                  danger: true,
+                                                                  key: disabled
+                                                                      ? 'restore-product-dropdown-button'
+                                                                      : 'disable-product-dropdown-button',
+                                                                  icon: disabled ? <FileX /> : <PoweroffOutlined />,
+                                                                  onClick: () =>
+                                                                      disabled
+                                                                          ? handleOpenRestoreProduct(record.id)
+                                                                          : handleOpenDisableProduct(record.id),
+                                                              },
+                                                              {
+                                                                  label: 'Update',
+                                                                  key: 'update-product-dropdown-button',
+                                                                  icon: <Pencil />,
+                                                                  onClick: () =>
+                                                                      navigate({
+                                                                          to: ProductViewRoute.to,
+                                                                          params: { id: record.id },
+                                                                          search: { editing: true },
+                                                                      }),
+                                                              },
+                                                          ]
+                                                        : []),
+
                                                     // {
                                                     //     label: 'Delete',
                                                     //     key: 'delete-product-dropdown-button',

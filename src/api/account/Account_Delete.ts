@@ -1,5 +1,5 @@
-import Cookies from 'js-cookie'
 import { ParseResponse } from '@/api/defaults'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import axios from 'axios'
 
 export type Account_Delete_Req = {
@@ -11,11 +11,9 @@ export type Account_Delete_Res = {
 }
 
 export function Account_Delete({ id }: Account_Delete_Req) {
-    const token = Cookies.get('token')
-
     return axios.delete<Account_Delete_Res>('/account/delete/' + encodeURIComponent(id), {
         headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
         },
         transformResponse: [
             ParseResponse,

@@ -1,4 +1,5 @@
 import { ParseResponse } from '@/api/defaults'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import axios from 'axios'
 
 export type Optional_Delete_Req = {
@@ -11,6 +12,9 @@ export type Optional_Delete_Res = {
 
 export function Optional_Delete({ id }: Optional_Delete_Req) {
     return axios.delete<Optional_Delete_Res>('option-products/delete/' + encodeURIComponent(id), {
+        headers: {
+            Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
+        },
         transformResponse: [
             ParseResponse,
             (res: ApiResponse<DeleteResponse>) => {

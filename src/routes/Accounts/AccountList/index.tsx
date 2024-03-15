@@ -22,7 +22,7 @@ export const AccountListRoute = createRoute({
     path: '/accounts',
     getParentRoute: () => DashboardLayoutRoute,
     component: lazyRouteComponent(() => import('./page')),
-    validateSearch: (search: AccountListSearch) => {
+    validateSearch: (search: AccountListSearch): AccountListSearch => {
         return {
             page: search.page ? Number(search.page) : 1,
             size: search.size ? Number(search.size) : 8,

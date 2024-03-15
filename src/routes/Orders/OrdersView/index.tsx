@@ -1,5 +1,5 @@
 import { queryAccount_GetById } from '@/api/account/Account_GetById'
-import { queryOrder_GetAll } from '@/api/order/Order_GetAll'
+import { Order_GetAll, queryKeyOrder_GetAll } from '@/api/order/Order_GetAll'
 import { DashboardLayoutRoute } from '@/layouts/DashboardLayout'
 import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { Role } from '@/lib/types/Account'
@@ -30,7 +30,11 @@ export const OrdersViewRoute = createRoute({
         }
     },
     loader: async ({ context: { queryClient }, params: { id } }) => {
-        const orders = await queryClient.fetchQuery(queryOrder_GetAll())
+        const orders = await queryClient.fetchQuery({
+            queryKey: queryKeyOrder_GetAll(),
+            queryFn: () => Order_GetAll(),
+            gcTime: 1000 * 15, // 15 second cache
+        })
         const result = orders.data.filter(order => order.id === id)
 
         if (!result || result.length === 0) {

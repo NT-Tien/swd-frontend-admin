@@ -1,11 +1,13 @@
 import Head from '@/common/components/Head'
 import RefreshButton from '@/common/components/RefreshButton'
+import { DashboardBreadcrumb } from '@/routes/Dashboard/DashboardBreadcrumb'
 import { ProductCreateRoute } from '@/routes/Products/ProductCreate'
 import { ProductListRoute } from '@/routes/Products/ProductList'
 import { tabItems, tabKeys } from '@/routes/Products/ProductList/util/tabItems'
+import { ProductListBreadcrumb } from '@/routes/Products/ProductList/breadcrumb'
 import { Plus } from '@phosphor-icons/react'
 import { useNavigate } from '@tanstack/react-router'
-import { Button, Flex, Tabs, Typography } from 'antd'
+import { Breadcrumb, Button, Flex, Tabs, Typography } from 'antd'
 
 export default function ProductListPage() {
     const navigate = useNavigate()
@@ -16,6 +18,7 @@ export default function ProductListPage() {
     return (
         <>
             <Head title='Products' />
+            <Breadcrumb items={[DashboardBreadcrumb(), ProductListBreadcrumb({ isCurrent: true })]} />
             <Flex vertical gap={0}>
                 <Typography.Title
                     level={2}

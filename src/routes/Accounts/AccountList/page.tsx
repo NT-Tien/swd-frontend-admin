@@ -1,16 +1,24 @@
 import Head from '@/common/components/Head'
 import RefreshButton from '@/common/components/RefreshButton'
+import { AccountListBreadcrumb } from '@/routes/Accounts/AccountList/breadcrumb'
 import AllAccountsList from '@/routes/Accounts/AccountList/components/AllAccountsList'
 import CreateAccountModal from '@/routes/Accounts/AccountList/modals/CreateAccountModal'
+import { DashboardBreadcrumb } from '@/routes/Dashboard/DashboardBreadcrumb'
 import { Plus } from '@phosphor-icons/react'
-import { Button, Flex, Tabs, Typography } from 'antd'
+import { Breadcrumb, Button, Flex, Tabs, Typography } from 'antd'
 import './style.css'
 
 export default function AccountListPage() {
     return (
         <>
             <Head title='Accounts' />
-            <Flex vertical gap={0}>
+            <Breadcrumb
+                style={{
+                    marginBottom: '5px',
+                }}
+                items={[DashboardBreadcrumb(), AccountListBreadcrumb({ isCurrent: true })]}
+            />
+            <Flex vertical>
                 <Typography.Title
                     level={2}
                     style={{

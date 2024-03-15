@@ -1,4 +1,5 @@
 import { ParseResponse } from '@/api/defaults'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { Category, ResponseToCategory } from '@/lib/types/Category'
 import { queryOptions } from '@tanstack/react-query'
 import axios from 'axios'
@@ -18,6 +19,9 @@ export type Category_GetOne_Res = Category
  */
 export function Category_GetOne({ id }: Category_GetOne_Req) {
     return axios.get<Category_GetOne_Res>('category/get-one/' + encodeURIComponent(id), {
+        headers: {
+            Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
+        },
         responseType: 'json',
         transformResponse: [
             ParseResponse,

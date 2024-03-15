@@ -12,7 +12,7 @@ export type Staff_OrderDesigns_UpdatePrice_Res = { success: boolean }
 export async function Staff_OrderDesigns_UpdatePrice({ id, price }: Staff_OrderDesigns_UpdatePrice_Req) {
     return await axios.put<Staff_OrderDesigns_UpdatePrice_Res>(`/staff/update-price-order-design/${id}/${price}`, undefined, {
         headers: {
-            Authorization: `Bearer ${AuthenticationHandler.getCookieToken()}`,
+            Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
         },
         responseType: 'json',
         transformResponse: [

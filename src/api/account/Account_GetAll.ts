@@ -1,5 +1,5 @@
-import Cookies from 'js-cookie'
 import { ParseResponse } from '@/api/defaults'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { Account, ResponseToAccountList } from '@/lib/types/Account'
 import { queryOptions } from '@tanstack/react-query'
 import axios from 'axios'
@@ -12,11 +12,9 @@ export type Account_GetAll_Req = {
 export type Account_GetAll_Res = GetResponse<Account>
 
 export async function Account_GetAll({ page, size }: Account_GetAll_Req) {
-    const token = Cookies.get('token')
-
     return await axios.get<Account_GetAll_Res>(`/account/get-all/${encodeURIComponent(size)}/${encodeURIComponent(page)}`, {
         headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
         },
         transformResponse: [
             ParseResponse,

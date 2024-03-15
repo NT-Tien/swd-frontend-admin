@@ -13,7 +13,7 @@ export type Staff_UpdateQuantityProduct_Res = Omit<ProductOptional, 'product_id'
 export async function Staff_UpdateQuantityProduct({ id, quantity }: Staff_UpdateQuantityProduct_Req) {
     return await axios.put(`/staff/update-quantity-product-in-stock/${encodeURIComponent(id)}/${encodeURIComponent(quantity)}`, undefined, {
         headers: {
-            Authorization: `Bearer ${AuthenticationHandler.getCookieToken()}`,
+            Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
         },
         transformResponse: [
             ParseResponse,

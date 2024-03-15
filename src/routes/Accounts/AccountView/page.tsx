@@ -1,8 +1,13 @@
 import Head from '@/common/components/Head'
+import LoadingComponent from '@/common/components/LoadingComponent'
+import { AccountListBreadcrumb } from '@/routes/Accounts/AccountList/breadcrumb'
 import { AccountViewRoute } from '@/routes/Accounts/AccountView'
+import { AccountViewBreadcrumb } from '@/routes/Accounts/AccountView/breadcrumb'
 import AccountOrders from '@/routes/Accounts/AccountView/components/AccountOrders'
+import { getRoleTag } from '@/routes/Accounts/common/util/getRoleTag'
+import { DashboardBreadcrumb } from '@/routes/Dashboard/DashboardBreadcrumb'
 import { Await } from '@tanstack/react-router'
-import { Card, Descriptions, Tabs } from 'antd'
+import { Breadcrumb, Card, Descriptions, Tabs, Typography } from 'antd'
 import dayjs from 'dayjs'
 import { Suspense } from 'react'
 
@@ -14,42 +19,49 @@ export default function AccountView() {
     return (
         <>
             <Head title={`Account`} />
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<LoadingComponent />}>
                 <Await promise={account}>
                     {({ data: account }) => (
                         <>
                             <Head title={`${account.email}`} />
-                            <Descriptions
-                                title='Account Details'
-                                column={3}
+                            <Breadcrumb
+                                style={{
+                                    marginBottom: '5px',
+                                }}
                                 items={[
-                                    {
-                                        key: 'id',
-                                        label: 'ID',
-                                        children: account.id,
-                                    },
-                                    {
-                                        key: 'Email',
-                                        label: 'Email',
-                                        children: account.email,
-                                    },
-                                    {
-                                        key: 'Role',
-                                        label: 'Role',
-                                        children: account.role,
-                                    },
-                                    {
-                                        key: 'createdAt',
-                                        label: 'Created',
-                                        children: dayjs(account.createdAt).format('DD-MM-YYYY'),
-                                    },
-                                    {
-                                        key: 'updatedAt',
-                                        label: 'Updated',
-                                        children: dayjs(account.updatedAt).format('DD-MM-YYYY'),
-                                    },
+                                    DashboardBreadcrumb(),
+                                    AccountListBreadcrumb(),
+                                    AccountViewBreadcrumb({ isCurrent: true, title: account.id }),
                                 ]}
                             />
+                            <Typography.Title level={3}>Account Details</Typography.Title>
+                            <Card>
+                                <Descriptions
+                                    column={3}
+                                    items={[
+                                        {
+                                            key: 'Email',
+                                            label: 'Email',
+                                            children: account.email,
+                                        },
+                                        {
+                                            key: 'Role',
+                                            label: 'Role',
+                                            children: getRoleTag(account.role),
+                                        },
+                                        {
+                                            key: 'createdAt',
+                                            label: 'Created',
+                                            children: dayjs(account.createdAt).format('DD-MM-YYYY HH:mm:ss'),
+                                        },
+                                        {
+                                            key: 'updatedAt',
+                                            label: 'Updated',
+                                            children: dayjs(account.updatedAt).format('DD-MM-YYYY HH:mm:ss'),
+                                        },
+                                    ]}
+                                />
+                            </Card>
                         </>
                     )}
                 </Await>
@@ -60,7 +72,7 @@ export default function AccountView() {
                         key: 'orders',
                         label: 'Orders',
                         children: (
-                            <Suspense fallback={<div>Loading...</div>}>
+                            <Suspense fallback={<Card loading />}>
                                 <Await promise={account}>
                                     {({ data: account }) => (
                                         <Card>

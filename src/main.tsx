@@ -1,5 +1,6 @@
 import { configAxios } from '@/api/defaults'
 import LoadingComponent from '@/common/components/LoadingComponent'
+import TooManyRequests from '@/common/components/TooManyRequests'
 import env from '@/env'
 import { routeTree } from '@/routeTree'
 import '@/socket'
@@ -44,6 +45,10 @@ export const router = createRouter({
     defaultPreload: 'intent',
     defaultPreloadStaleTime: 0,
     defaultPendingComponent: () => <LoadingComponent />,
+    defaultGcTime: 1000 * 5, // 5 seconds
+    defaultErrorComponent: () => {
+        return <TooManyRequests />
+    },
 })
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

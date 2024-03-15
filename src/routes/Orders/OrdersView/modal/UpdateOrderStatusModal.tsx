@@ -114,7 +114,7 @@ export default function UpdateOrderStatusModal({ children }: UpdateOrderStatusMo
                     >
                         <Select
                             options={Object.keys(DeliveryStatus)
-                                .filter(stat => stat !== DeliveryStatus.PENDING)
+                                .filter(stat => stat !== DeliveryStatus.PENDING && stat !== DeliveryStatus.SHIPPING)
                                 .map(stat => ({
                                     label: <span className='capitalize'>{stat}</span>,
                                     value: stat,

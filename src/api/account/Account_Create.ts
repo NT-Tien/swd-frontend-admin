@@ -1,5 +1,5 @@
-import Cookies from 'js-cookie'
 import { ParseResponse } from '@/api/defaults'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { Account, ResponseToAccount } from '@/lib/types/Account'
 import axios from 'axios'
 
@@ -12,7 +12,7 @@ export type Account_Create_Req = {
 export type Account_Create_Res = Account
 
 export async function Account_Create(payload: Account_Create_Req) {
-    const token = Cookies.get('token')
+    const token = AuthenticationHandler.getMemoryToken()
 
     return await axios.post<Account_Create_Res>('/account/create', payload, {
         headers: {

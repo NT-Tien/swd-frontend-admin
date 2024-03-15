@@ -1,4 +1,5 @@
 import { ParseResponse } from '@/api/defaults'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { ProductOptional, ResponseToProductOptionalList } from '@/lib/types/ProductOptional'
 import axios from 'axios'
 
@@ -6,6 +7,9 @@ export type Optional_GetAll_Res = GetResponse<ProductOptional>
 
 export function Optional_GetAll() {
     return axios.get<Optional_GetAll_Res>('option-products/get-all', {
+        headers: {
+            Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
+        },
         transformResponse: [
             ParseResponse,
             (res: ApiResponse<string[]>) => {

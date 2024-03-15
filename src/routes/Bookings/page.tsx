@@ -1,10 +1,12 @@
 import Head from '@/common/components/Head'
 import RefreshButton from '@/common/components/RefreshButton'
 import { BookingsRoute } from '@/routes/Bookings'
+import { BookingsBreadcrumb } from '@/routes/Bookings/breadcrumb'
 import ViewBookingModal from '@/routes/Bookings/modal/ViewBookingModal'
+import { DashboardBreadcrumb } from '@/routes/Dashboard/DashboardBreadcrumb'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import { Dropdown, Flex, Table, Typography } from 'antd'
+import { Breadcrumb, Dropdown, Flex, Table, Typography } from 'antd'
 import dayjs from 'dayjs'
 import { queryBookingVisit_GetAll } from '../../api/booking-visit/Booking-Visit_GetAll'
 import { BookingVisit } from '../../lib/types/BookingVisit'
@@ -13,12 +15,12 @@ import GetColumnSearchProps from '../../lib/util/getColumnSearchProps'
 export default function BookingsPage() {
     const navigate = useNavigate()
     const page = BookingsRoute.useSearch({
-        select: data => data.page,
+        select: data => data.page!,
     })
     const size = BookingsRoute.useSearch({
-        select: data => data.size,
+        select: data => data.size!,
     })
-    const { data: bookings, isLoading, isError } = useQuery(queryBookingVisit_GetAll({ page, limit: size }))
+    const { data: bookings, isLoading, isError } = useQuery(queryBookingVisit_GetAll({ page: 1, limit: 1000 }))
     const searchColumnProps = GetColumnSearchProps<BookingVisit>()
 
     if (isError) return <div>Error</div>
@@ -26,7 +28,13 @@ export default function BookingsPage() {
     return (
         <>
             <Head title='Bookings' />
-            <Flex vertical gap={20}>
+            <Breadcrumb
+                style={{
+                    marginBottom: '5px',
+                }}
+                items={[DashboardBreadcrumb(), BookingsBreadcrumb({ isCurrent: true })]}
+            />
+            <Flex vertical>
                 <Typography.Title
                     level={2}
                     style={{
@@ -54,7 +62,6 @@ export default function BookingsPage() {
                                     ...searchColumnProps('customer_name'),
                                     sortDirections: ['ascend', 'descend'],
                                     sorter: (a, b) => a.customer_name.localeCompare(b.customer_name),
-                                    defaultSortOrder: 'ascend',
                                 },
                                 {
                                     key: 'visit_date',
@@ -65,6 +72,7 @@ export default function BookingsPage() {
                                     },
                                     sorter: (a, b) => a.visit_date.getTime() - b.visit_date.getTime(),
                                     sortDirections: ['ascend', 'descend'],
+                                    defaultSortOrder: 'descend',
                                 },
                                 {
                                     key: 'phone_number',
@@ -77,12 +85,7 @@ export default function BookingsPage() {
                                     dataIndex: 'action',
                                     key: 'action',
                                     render: (_, record) => (
-                                        <Dropdown.Button
-                                            menu={{
-                                                items: [],
-                                            }}
-                                            onClick={() => openViewBooking(record)}
-                                        >
+                                        <Dropdown.Button menu={{ items: [] }} onClick={() => openViewBooking(record)}>
                                             View
                                         </Dropdown.Button>
                                     ),
@@ -90,7 +93,7 @@ export default function BookingsPage() {
                             ]}
                             pagination={{
                                 pageSize: size,
-                                total: bookings?.total,
+                                total: bookings?.data.length,
                                 pageSizeOptions: ['8', '16', '24', '32'],
                                 showSizeChanger: true,
                                 onChange(page, pageSize) {

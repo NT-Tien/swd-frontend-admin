@@ -1,6 +1,6 @@
 import { DashboardLayoutRoute } from '@/layouts/DashboardLayout'
 import AuthenticationHandler from '@/lib/AuthenticationHandler'
-import { Role } from '@/lib/types/Account'
+import { Role, isAuthorized } from '@/lib/types/Account'
 import { tabKeys } from '@/routes/Orders/OrdersList/util/tabItems'
 import { createRoute, lazyRouteComponent, redirect } from '@tanstack/react-router'
 
@@ -25,8 +25,18 @@ export const OrdersListRoute = createRoute({
     getParentRoute: () => DashboardLayoutRoute,
     component: lazyRouteComponent(() => import('./page')),
     validateSearch: (search: OrdersListRouteSearch): OrdersListRouteSearch => {
+        const canViewAll = isAuthorized(Role.STAFF, AuthenticationHandler.getCurrentRole())
+
+        if (!search.tab) {
+            search.tab = 'all'
+        }
+
+        if (!canViewAll) {
+            search.tab = 'orders-to-deliver'
+        }
+
         return {
-            tab: search.tab || 'all',
+            tab: search.tab,
             page: Number(search.page) || 1,
             size: Number(search.size) || 8,
         }

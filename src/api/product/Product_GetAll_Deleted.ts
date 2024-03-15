@@ -1,4 +1,5 @@
 import { ParseResponse } from '@/api/defaults'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { Product, ResponseToProductList } from '@/lib/types/Product'
 import { queryOptions } from '@tanstack/react-query'
 import axios from 'axios'
@@ -14,6 +15,9 @@ export async function Product_GetAll_Deleted({ page, size }: Product_GetAll_Dele
     return await axios.get<Product_GetAll_Deleted_Res>(
         'product/get-all-deleted/' + encodeURIComponent(size) + '/' + encodeURIComponent(page),
         {
+            headers: {
+                Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
+            },
             responseType: 'json',
             transformResponse: [
                 ParseResponse,

@@ -4,13 +4,16 @@ import Head from '@/common/components/Head'
 import ModalWrapper from '@/common/components/modal/ModalWrapper'
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { queryClient } from '@/main'
+import { DashboardBreadcrumb } from '@/routes/Dashboard/DashboardBreadcrumb'
+import { OrderDesignListBreadcrumb } from '@/routes/Orders/OrderDesignList/breadcrumb'
 import { OrderDesignViewRoute } from '@/routes/Orders/OrderDesignView'
+import { OrderDesignViewBreadcrumb } from '@/routes/Orders/OrderDesignView/breadcrumb'
 import SendEmailModal from '@/routes/Orders/common/modal/SendEmailModal'
 import SetPriceModal from '@/routes/Orders/common/modal/SetPriceModal'
-import { CopyFilled, MoreOutlined } from '@ant-design/icons'
+import { MoreOutlined } from '@ant-design/icons'
 import { useMutation } from '@tanstack/react-query'
 import { Await, useNavigate } from '@tanstack/react-router'
-import { Button, Card, Descriptions, Dropdown, Flex, Spin, Tag, Tooltip, Typography } from 'antd'
+import { Breadcrumb, Button, Card, Descriptions, Dropdown, Flex, Spin, Tag, Tooltip, Typography } from 'antd'
 import dayjs from 'dayjs'
 import { Suspense } from 'react'
 
@@ -58,6 +61,16 @@ export default function OrderDesignViewPage() {
     return (
         <>
             <Head title={`Order design details`} />
+            <Breadcrumb
+                style={{
+                    marginBottom: '5px',
+                }}
+                items={[
+                    DashboardBreadcrumb(),
+                    OrderDesignListBreadcrumb(),
+                    OrderDesignViewBreadcrumb({ title: orderDesign.id, isCurrent: true }),
+                ]}
+            />
             <Flex justify='space-between'>
                 <Typography.Title level={2}>
                     Order Design View{' '}
@@ -218,27 +231,6 @@ export default function OrderDesignViewPage() {
                     marginTop: '20px',
                 }}
                 items={[
-                    {
-                        label: 'ID',
-                        key: 'id',
-                        children: (
-                            <>
-                                {orderDesign.id}
-                                <Button
-                                    onClick={() => {
-                                        window.navigator.clipboard.writeText(orderDesign.id)
-                                        messageApi.success('ID copied to clipboard')
-                                    }}
-                                    icon={<CopyFilled />}
-                                    type='dashed'
-                                    size='small'
-                                    style={{
-                                        marginLeft: '10px',
-                                    }}
-                                ></Button>
-                            </>
-                        ),
-                    },
                     {
                         label: 'Created At',
                         key: 'createdAt',

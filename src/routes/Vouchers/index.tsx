@@ -5,7 +5,9 @@ import { tabKeys } from '@/routes/Vouchers/util/tabItems'
 import { createRoute, lazyRouteComponent, redirect } from '@tanstack/react-router'
 
 type VouchersRouteSearch = {
-    tab: tabKeys
+    tab?: tabKeys
+    page?: number
+    size?: number
 }
 
 export const VouchersRoute = createRoute({
@@ -22,9 +24,11 @@ export const VouchersRoute = createRoute({
     path: '/vouchers',
     getParentRoute: () => DashboardLayoutRoute,
     component: lazyRouteComponent(() => import('./page')),
-    validateSearch: (search: Partial<VouchersRouteSearch>): VouchersRouteSearch => {
+    validateSearch: (search: VouchersRouteSearch): VouchersRouteSearch => {
         return {
             tab: search.tab || 'all',
+            page: Number(search.page ?? 1),
+            size: Number(search.size ?? 8),
         }
     },
 })

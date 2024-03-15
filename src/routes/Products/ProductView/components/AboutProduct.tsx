@@ -1,14 +1,13 @@
-import { Product } from '@/lib/types/Product'
 import ModalWrapper from '@/common/components/modal/ModalWrapper'
-import { ProductViewRoute } from '@/routes/Products/ProductView'
+import { Product } from '@/lib/types/Product'
+import { CategoryViewRoute } from '@/routes/Categories/CategoryView'
 import OptionalProductsCard from '@/routes/Products/ProductView/components/OptionalProductsCard'
 import ProductImagesView from '@/routes/Products/ProductView/components/ProductImagesView'
-import { EditOutlined, SelectOutlined } from '@ant-design/icons'
+import { SelectOutlined } from '@ant-design/icons'
 import { Info } from '@phosphor-icons/react'
+import { useNavigate } from '@tanstack/react-router'
 import { Button, Card, Col, Flex, Row, Tooltip, Typography } from 'antd'
 import dayjs from 'dayjs'
-import { useNavigate } from '@tanstack/react-router'
-import { CategoryViewRoute } from '@/routes/Categories/CategoryView'
 
 const DEFAULT_GUTTER_SIZE = 10
 
@@ -17,9 +16,6 @@ type AboutProductProps = {
 }
 
 export default function AboutProduct({ product }: AboutProductProps) {
-    const isEditing = ProductViewRoute.useSearch({
-        select: data => data.editing,
-    })
     const navigate = useNavigate()
 
     return (
@@ -38,13 +34,9 @@ export default function AboutProduct({ product }: AboutProductProps) {
                             title={
                                 <Flex justify='space-between' align='center'>
                                     Name
-                                    {isEditing ? (
-                                        <Button icon={<EditOutlined />} />
-                                    ) : (
-                                        <Tooltip title='Info'>
-                                            <Info />
-                                        </Tooltip>
-                                    )}
+                                    <Tooltip title='Info'>
+                                        <Info />
+                                    </Tooltip>
                                 </Flex>
                             }
                             style={{
@@ -57,11 +49,9 @@ export default function AboutProduct({ product }: AboutProductProps) {
                             title={
                                 <Flex justify='space-between' align='center'>
                                     Created
-                                    {!isEditing && (
-                                        <Tooltip title='Info'>
-                                            <Info />
-                                        </Tooltip>
-                                    )}
+                                    <Tooltip title='Info'>
+                                        <Info />
+                                    </Tooltip>
                                 </Flex>
                             }
                             style={{
@@ -74,11 +64,9 @@ export default function AboutProduct({ product }: AboutProductProps) {
                             title={
                                 <Flex justify='space-between' align='center'>
                                     Updated
-                                    {!isEditing && (
-                                        <Tooltip title='Info'>
-                                            <Info />
-                                        </Tooltip>
-                                    )}
+                                    <Tooltip title='Info'>
+                                        <Info />
+                                    </Tooltip>
                                 </Flex>
                             }
                             style={{
@@ -91,13 +79,9 @@ export default function AboutProduct({ product }: AboutProductProps) {
                             title={
                                 <Flex justify='space-between' align='center'>
                                     Category
-                                    {isEditing ? (
-                                        <Button icon={<EditOutlined />} />
-                                    ) : (
-                                        <Tooltip title='Info'>
-                                            <Info />
-                                        </Tooltip>
-                                    )}
+                                    <Tooltip title='Info'>
+                                        <Info />
+                                    </Tooltip>
                                 </Flex>
                             }
                             style={{
@@ -135,13 +119,9 @@ export default function AboutProduct({ product }: AboutProductProps) {
                                 title={
                                     <Flex justify='space-between' align='center'>
                                         Description
-                                        {isEditing ? (
-                                            <Button icon={<EditOutlined />} />
-                                        ) : (
-                                            <Tooltip title='Info'>
-                                                <Info />
-                                            </Tooltip>
-                                        )}
+                                        <Tooltip title='Info'>
+                                            <Info />
+                                        </Tooltip>
                                     </Flex>
                                 }
                                 style={{

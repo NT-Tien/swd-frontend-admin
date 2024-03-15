@@ -9,7 +9,7 @@ export type Staff_OrderDesigns_GetAll_Res = OrderDesign[]
 export async function Staff_OrderDesigns_GetAll() {
     return await axios.get<Staff_OrderDesigns_GetAll_Res>('/staff/get-list-order-design', {
         headers: {
-            Authorization: `Bearer ${AuthenticationHandler.getCookieToken()}`,
+            Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
         },
         responseType: 'json',
         transformResponse: [

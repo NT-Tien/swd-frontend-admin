@@ -1,17 +1,20 @@
+import { Optional_Create_Req } from '@/api/option-product/Optional_Create'
+import { Product_GetByName } from '@/api/product/Product_GetByName'
+import Head from '@/common/components/Head'
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { Category } from '@/lib/types/Category'
+import { queryClient } from '@/main'
+import { DashboardBreadcrumb } from '@/routes/Dashboard/DashboardBreadcrumb'
+import { ProductCreateRoute } from '@/routes/Products/ProductCreate'
+import { ProductCreateBreadcrumb } from '@/routes/Products/ProductCreate/breadcrumb'
 import { createProductWrapper } from '@/routes/Products/ProductCreate/util/createProductWrapper'
+import { ProductListBreadcrumb } from '@/routes/Products/ProductList/breadcrumb'
 import { ProductViewRoute } from '@/routes/Products/ProductView'
-import { PlusCircle, UploadSimple, X } from '@phosphor-icons/react'
+import { PlusCircle, X } from '@phosphor-icons/react'
 import { useMutation } from '@tanstack/react-query'
 import { Await, useNavigate } from '@tanstack/react-router'
-import { Button, Card, Divider, Flex, Form, Input, Select, Tooltip, Typography, Upload, UploadFile } from 'antd'
+import { Breadcrumb, Button, Card, Divider, Flex, Form, Input, Select, Tooltip, Typography, Upload, UploadFile } from 'antd'
 import { Suspense } from 'react'
-import { ProductCreateRoute } from '@/routes/Products/ProductCreate'
-import { Product_GetByName } from '@/api/product/Product_GetByName'
-import { queryClient } from '@/main'
-import { Optional_Create_Req } from '@/api/option-product/Optional_Create'
-import Head from '@/common/components/Head'
 
 const { Item: FormItem, List: FormList } = Form
 
@@ -67,10 +70,21 @@ export default function ProductCreatePage() {
     return (
         <>
             <Head title='Create Product' />
-            <Flex vertical gap={20}>
-                <Flex justify='space-between'>
+            <div>
+                <Breadcrumb
+                    style={{
+                        marginBottom: '5px',
+                    }}
+                    items={[DashboardBreadcrumb(), ProductListBreadcrumb(), ProductCreateBreadcrumb({ isCurrent: true })]}
+                />
+                <Flex
+                    justify='space-between'
+                    style={{
+                        marginBottom: '20px',
+                    }}
+                >
                     <Typography.Title level={2}>Create a new Product</Typography.Title>
-                    <Button
+                    {/* <Button
                         type='primary'
                         icon={<UploadSimple size={14} />}
                         onClick={() => {
@@ -79,7 +93,7 @@ export default function ProductCreatePage() {
                         }}
                     >
                         Import from JSON
-                    </Button>
+                    </Button> */}
                 </Flex>
                 <Form<FieldType>
                     form={form}
@@ -452,7 +466,7 @@ export default function ProductCreatePage() {
                         Create
                     </Button>
                 </Form>
-            </Flex>
+            </div>
         </>
     )
 }

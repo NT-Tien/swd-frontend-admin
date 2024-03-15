@@ -16,14 +16,15 @@ import '../style.css'
 import { useNavigate } from '@tanstack/react-router'
 import { AccountViewRoute } from '@/routes/Accounts/AccountView'
 import dayjs from 'dayjs'
+import { getRoleTag } from '@/routes/Accounts/common/util/getRoleTag'
 
 export default function AllAccountsList() {
     const navigate = useNavigate()
     const page = AccountListRoute.useSearch({
-        select: data => data.page,
+        select: data => data.page!,
     })
     const size = AccountListRoute.useSearch({
-        select: data => data.size,
+        select: data => data.size!,
     })
     const { data: accounts, isLoading, isError } = useQuery(queryAccount_GetAll({ page, size }))
     const searchColumnProps = GetColumnSearchProps<Account>()
@@ -93,15 +94,7 @@ export default function AllAccountsList() {
                                             title: 'Role',
                                             dataIndex: 'role',
                                             key: 'role',
-                                            render: value => (
-                                                <span
-                                                    style={{
-                                                        textTransform: 'uppercase',
-                                                    }}
-                                                >
-                                                    {value}
-                                                </span>
-                                            ),
+                                            render: value => getRoleTag(value),
                                             filters: Object.values(Role).map(role => ({
                                                 text: (
                                                     <span
@@ -115,6 +108,8 @@ export default function AllAccountsList() {
                                                 value: role,
                                             })),
                                             onFilter: (value, record) => record.role === value,
+                                            width: 100,
+                                            align: 'center',
                                         },
                                         {
                                             title: 'Action',

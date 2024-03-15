@@ -1,4 +1,5 @@
 import { ParseResponse } from '@/api/defaults'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { ProductOptional, ResponseToProductOptional } from '@/lib/types/ProductOptional'
 import axios from 'axios'
 
@@ -14,6 +15,9 @@ export type Optional_Update_Req = {
 
 export function Optional_Update(payload: Optional_Update_Req) {
     return axios.put('option-products/update/' + encodeURIComponent(payload.id), payload.payload, {
+        headers: {
+            Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
+        },
         transformResponse: [
             ParseResponse,
             (res: ApiResponse<ProductOptional>) => {

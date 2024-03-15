@@ -1,12 +1,14 @@
 import Head from '@/common/components/Head'
 import RefreshButton from '@/common/components/RefreshButton'
 import { CategoryListRoute } from '@/routes/Categories/CategoryList'
+import { CategoryListBreadcrumb } from '@/routes/Categories/CategoryList/breadcrumb'
 import AddCategoryModal from '@/routes/Categories/CategoryList/modals/AddCategoryModal'
 import { tabItems } from '@/routes/Categories/CategoryList/util/tabItems'
+import { DashboardBreadcrumb } from '@/routes/Dashboard/DashboardBreadcrumb'
 import { tabKeys } from '@/routes/Products/ProductList/util/tabItems'
 import { Plus } from '@phosphor-icons/react'
 import { useNavigate } from '@tanstack/react-router'
-import { Button, Flex, Tabs, Typography } from 'antd'
+import { Breadcrumb, Button, Flex, Tabs, Typography } from 'antd'
 
 export default function CategoryListPage() {
     const tab = CategoryListRoute.useSearch({
@@ -17,7 +19,8 @@ export default function CategoryListPage() {
     return (
         <>
             <Head title='Categories' />
-            <Flex vertical gap={0}>
+            <Flex vertical>
+                <Breadcrumb items={[DashboardBreadcrumb(), CategoryListBreadcrumb({ isCurrent: true })]} />
                 <Typography.Title
                     level={2}
                     style={{

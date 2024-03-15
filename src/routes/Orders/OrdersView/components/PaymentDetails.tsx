@@ -88,6 +88,7 @@ export default function PaymentDetails() {
                             },
                         ]}
                         dataSource={payment.transactions}
+                        pagination={false}
                     />
                 </>
             ) : (

@@ -21,7 +21,7 @@ import { socket } from '@/socket'
 import { MoneyCollectFilled, TransactionOutlined } from '@ant-design/icons'
 import { Basket, Book, BookOpen, Browser, House, List, User, UserCircle } from '@phosphor-icons/react'
 import { useQueryClient } from '@tanstack/react-query'
-import { Outlet, createRoute, redirect, useNavigate } from '@tanstack/react-router'
+import { Outlet, createRoute, redirect, useNavigate, useRouterState } from '@tanstack/react-router'
 import { Avatar, Button, Flex, Layout, Menu, Tag, theme } from 'antd'
 import { useEffect, useMemo, useState } from 'react'
 
@@ -51,6 +51,7 @@ function DashboardLayout() {
     const [collapsed, setCollapsed] = useState(false)
     const { notiApi } = useNotification()
     const queryClient = useQueryClient()
+    const routerState = useRouterState()
 
     useEffect(() => {
         socket.connect().on('message', () => {
@@ -93,7 +94,7 @@ function DashboardLayout() {
                 ),
                 children: [
                     getItem_1({
-                        key: 'dashboard',
+                        key: DashboardRoute.to,
                         label: 'Dashboard',
                         icon: <House />,
                         onClick: () => navigate({ to: DashboardRoute.to }),
@@ -106,13 +107,13 @@ function DashboardLayout() {
                         shown: isAuthorized(Role.STAFF, currentRole),
                         children: [
                             getItem_2({
-                                key: 'product-list',
+                                key: ProductListRoute.to,
                                 label: 'Product List',
                                 shown: isAuthorized(Role.STAFF, currentRole),
-                                onClick: () => navigate({ to: ProductListRoute.to, search: { page: 1, size: 8, tab: 'all' } }),
+                                onClick: () => navigate({ to: ProductListRoute.to }),
                             }),
                             getItem_2({
-                                key: 'product-create',
+                                key: ProductCreateRoute.to,
                                 label: 'Create Product',
                                 shown: isAuthorized(Role.STAFF, currentRole),
                                 onClick: () => navigate({ to: ProductCreateRoute.to }),
@@ -126,13 +127,13 @@ function DashboardLayout() {
                         shown: isAuthorized(Role.ADMIN, currentRole),
                         children: [
                             getItem_2({
-                                key: 'category-list',
+                                key: CategoryListRoute.to,
                                 label: 'Category List',
                                 shown: isAuthorized(Role.ADMIN, currentRole),
-                                onClick: () => navigate({ to: CategoryListRoute.to, search: { tab: 'all' } }),
+                                onClick: () => navigate({ to: CategoryListRoute.to }),
                             }),
                             getItem_2({
-                                key: 'category-create',
+                                key: CategoryCreateRoute.to,
                                 label: 'Create Category',
                                 shown: isAuthorized(Role.ADMIN, currentRole),
                                 onClick: () =>
@@ -149,19 +150,16 @@ function DashboardLayout() {
                         shown: isAuthorized(Role.DSTAFF, currentRole),
                         children: [
                             getItem_2({
-                                key: 'order-list',
+                                key: OrdersListRoute.to,
                                 label: 'Order List',
                                 shown: isAuthorized(Role.DSTAFF, currentRole),
                                 onClick: () =>
                                     navigate({
                                         to: OrdersListRoute.to,
-                                        search: {
-                                            tab: isAuthorized(Role.STAFF, currentRole) ? 'all' : 'orders-to-deliver',
-                                        },
                                     }),
                             }),
                             getItem_2({
-                                key: 'order-designs-list',
+                                key: OrderDesignListRoute.to,
                                 label: 'Order Designs',
                                 shown: isAuthorized(Role.STAFF, currentRole),
                                 onClick: () =>
@@ -172,9 +170,10 @@ function DashboardLayout() {
                         ],
                     }),
                     getItem_1({
-                        key: 'transactions',
+                        key: TransactionListRoute.to,
                         label: 'Transactions',
                         icon: <TransactionOutlined />,
+                        shown: isAuthorized(Role.ADMIN, currentRole),
                         onClick: () =>
                             navigate({
                                 to: TransactionListRoute.to,
@@ -187,13 +186,13 @@ function DashboardLayout() {
                         shown: isAuthorized(Role.ADMIN, currentRole),
                         children: [
                             getItem_2({
-                                key: 'account-list',
+                                key: AccountListRoute.to,
                                 label: 'Account List',
                                 shown: isAuthorized(Role.ADMIN, currentRole),
-                                onClick: () => navigate({ to: AccountListRoute.to, search: { page: 1, size: 8 } }),
+                                onClick: () => navigate({ to: AccountListRoute.to }),
                             }),
                             getItem_2({
-                                key: 'account-create',
+                                key: AccountCreateRoute.to,
                                 label: 'Create Account',
                                 shown: isAuthorized(Role.ADMIN, currentRole),
                                 onClick: () => navigate({ to: AccountCreateRoute.to }),
@@ -201,18 +200,18 @@ function DashboardLayout() {
                         ],
                     }),
                     getItem_1({
-                        key: 'bookings',
+                        key: BookingsRoute.to,
                         label: 'Bookings',
                         icon: <BookOpen />,
                         shown: isAuthorized(Role.STAFF, currentRole),
-                        onClick: () => navigate({ to: BookingsRoute.to, search: { page: 1, size: 8 } }),
+                        onClick: () => navigate({ to: BookingsRoute.to }),
                     }),
                     getItem_1({
-                        key: 'vouchers',
+                        key: VouchersRoute.to,
                         label: 'Vouchers',
                         icon: <MoneyCollectFilled />,
                         shown: isAuthorized(Role.ADMIN, currentRole),
-                        onClick: () => navigate({ to: VouchersRoute.to, search: { tab: 'all' } }),
+                        onClick: () => navigate({ to: VouchersRoute.to }),
                     }),
                 ],
             }),
@@ -222,11 +221,19 @@ function DashboardLayout() {
 
     return (
         <Layout
+            hasSider
             style={{
                 minHeight: '100vh',
             }}
         >
-            <Sider collapsible breakpoint='md' collapsedWidth={80} collapsed={collapsed} onCollapse={data => setCollapsed(data)} style={{}}>
+            <Sider
+                collapsible
+                breakpoint='md'
+                collapsedWidth={80}
+                collapsed={collapsed}
+                onCollapse={data => setCollapsed(data)}
+                style={{ overflow: 'auto', height: '100vh', width: '500px', zIndex: 10, position: 'fixed', left: 0, top: 0, bottom: 0 }}
+            >
                 <Flex
                     justify='space-between'
                     style={{
@@ -259,10 +266,17 @@ function DashboardLayout() {
                         </h1>
                     )}
                 </Flex>
-                <Menu items={menuItems} defaultSelectedKeys={['1']} mode='inline' theme='dark' inlineIndent={15} />
+                <Menu
+                    items={menuItems}
+                    mode='inline'
+                    theme='dark'
+                    inlineIndent={15}
+                    defaultSelectedKeys={[routerState.location.pathname]}
+                    defaultOpenKeys={['products', 'categories', 'orders', 'accounts']}
+                />
             </Sider>
 
-            <Layout>
+            <Layout style={{ marginLeft: collapsed ? 80 : 200 }}>
                 <Header
                     style={{
                         backgroundColor: token.colorBgContainer,

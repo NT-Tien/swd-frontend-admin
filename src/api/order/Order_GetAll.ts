@@ -28,7 +28,7 @@ export async function Order_GetAll() {
 export const queryKeyOrder_GetAll = () => ['orders']
 export const queryOrder_GetAll = () =>
     queryOptions({
-        queryKey: ['orders'],
+        queryKey: queryKeyOrder_GetAll(),
         queryFn: () => Order_GetAll(),
         select: res => res.data,
     })

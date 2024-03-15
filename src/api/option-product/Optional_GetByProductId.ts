@@ -1,4 +1,5 @@
 import { ParseResponse } from '@/api/defaults'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { ProductOptional, ResponseToProductOptionalList } from '@/lib/types/ProductOptional'
 import { queryOptions } from '@tanstack/react-query'
 import axios from 'axios'
@@ -11,6 +12,9 @@ export type Optional_GetByProductId_Res = ProductOptional[]
 
 export function Optional_GetByProductId({ productId }: Optional_GetByProductId_Req) {
     return axios.get<Optional_GetByProductId_Res>('option-products/get-all/' + encodeURIComponent(productId), {
+        headers: {
+            Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
+        },
         transformResponse: [
             ParseResponse,
             (res: ApiResponse<ProductOptional[]>) => {

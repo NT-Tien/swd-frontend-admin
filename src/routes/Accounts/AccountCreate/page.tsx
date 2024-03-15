@@ -4,11 +4,14 @@ import Head from '@/common/components/Head'
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { Role } from '@/lib/types/Account'
 import { queryClient } from '@/main'
+import { AccountCreateBreadcrumb } from '@/routes/Accounts/AccountCreate/breadcrumb'
 import { AccountListRoute } from '@/routes/Accounts/AccountList'
+import { AccountListBreadcrumb } from '@/routes/Accounts/AccountList/breadcrumb'
+import { DashboardBreadcrumb } from '@/routes/Dashboard/DashboardBreadcrumb'
 import { UploadSimple } from '@phosphor-icons/react'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import { Button, Card, Flex, Form, Input, Select, Typography } from 'antd'
+import { Breadcrumb, Button, Card, Flex, Form, Input, Select, Typography } from 'antd'
 
 type FieldType = {
     email: string
@@ -65,7 +68,13 @@ export default function AccountCreatePage() {
     return (
         <>
             <Head title='Create Account' />
-            <Flex vertical gap={20}>
+            <Breadcrumb
+                style={{
+                    marginBottom: '5px',
+                }}
+                items={[DashboardBreadcrumb(), AccountListBreadcrumb(), AccountCreateBreadcrumb({ isCurrent: true })]}
+            />
+            <Flex vertical>
                 <Flex justify='space-between'>
                     <Typography.Title level={2}>Create a new Account</Typography.Title>
                     <Button type='primary' icon={<UploadSimple size={14} />}>

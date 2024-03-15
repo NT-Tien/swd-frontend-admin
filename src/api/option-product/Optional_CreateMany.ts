@@ -1,4 +1,5 @@
 import { ParseResponse } from '@/api/defaults'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { ProductOptional, ResponseToProductOptionalList } from '@/lib/types/ProductOptional'
 import axios from 'axios'
 
@@ -16,6 +17,9 @@ export type Optional_CreateMany_Res = ProductOptional[]
 
 export function Optional_CreateMany({ list }: Optional_CreateMany_Req) {
     return axios.post('option-products/create-many', [...list], {
+        headers: {
+            Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
+        },
         transformResponse: [
             ParseResponse,
             (res: ApiResponse<ProductOptional[]>) => {

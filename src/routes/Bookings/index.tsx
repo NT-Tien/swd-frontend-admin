@@ -22,7 +22,7 @@ export const BookingsRoute = createRoute({
     getParentRoute: () => DashboardLayoutRoute,
     path: 'bookings',
     component: lazyRouteComponent(() => import('./page')),
-    validateSearch: (data: BookingsRouteSearch) => {
+    validateSearch: (data: BookingsRouteSearch): BookingsRouteSearch => {
         return {
             page: data.page ? Number(data.page) : 1,
             size: data.size ? Number(data.size) : 8,

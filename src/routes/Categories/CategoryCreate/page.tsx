@@ -2,12 +2,13 @@ import { Category_Create } from '@/api/category/Category_Create'
 import Head from '@/common/components/Head'
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { queryClient } from '@/main'
-import ImportCategoriesModal from '@/routes/Categories/CategoryCreate/components/ImportCategoriesModal'
+import { CategoryCreateBreadcrumb } from '@/routes/Categories/CategoryCreate/breadcrumb'
 import { CategoryListRoute } from '@/routes/Categories/CategoryList'
-import { UploadSimple } from '@phosphor-icons/react'
+import { CategoryListBreadcrumb } from '@/routes/Categories/CategoryList/breadcrumb'
+import { DashboardBreadcrumb } from '@/routes/Dashboard/DashboardBreadcrumb'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import { Button, Card, Flex, Form, Input, Typography } from 'antd'
+import { Breadcrumb, Button, Card, Flex, Form, Input, Typography } from 'antd'
 
 const { Item: FormItem } = Form
 
@@ -63,16 +64,27 @@ export default function CategoryCreatePage() {
     return (
         <>
             <Head title='Create Category' />
-            <Flex vertical gap={20}>
-                <Flex justify='space-between'>
+            <Breadcrumb
+                style={{
+                    marginBottom: '5px',
+                }}
+                items={[DashboardBreadcrumb(), CategoryListBreadcrumb(), CategoryCreateBreadcrumb({ isCurrent: true })]}
+            />
+            <div>
+                <Flex
+                    justify='space-between'
+                    style={{
+                        marginBottom: '20px',
+                    }}
+                >
                     <Typography.Title level={2}>Create a new Category</Typography.Title>
-                    <ImportCategoriesModal>
+                    {/* <ImportCategoriesModal>
                         {({ handleOpen }) => (
                             <Button type='primary' icon={<UploadSimple size={14} />} onClick={handleOpen}>
                                 Import from JSON
                             </Button>
                         )}
-                    </ImportCategoriesModal>
+                    </ImportCategoriesModal> */}
                 </Flex>
                 <Card size='default' title='Category Details'>
                     <Form<FieldType>
@@ -113,7 +125,7 @@ export default function CategoryCreatePage() {
                         </Button>
                     </Form>
                 </Card>
-            </Flex>
+            </div>
         </>
     )
 }

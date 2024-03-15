@@ -1,15 +1,19 @@
 import { queryOrder_GetAll } from '@/api/order/Order_GetAll'
+import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { DeliveryStatus, Order } from '@/lib/types/Order'
+import { copyId } from '@/lib/util/copyId'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
 import { OrdersListRoute } from '@/routes/Orders/OrdersList'
 import { OrdersViewRoute } from '@/routes/Orders/OrdersView'
+import { orderStatusTag } from '@/routes/Orders/common/util/orderStatusTag'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import { Button, Table, Tag } from 'antd'
+import { Dropdown, Table } from 'antd'
 import dayjs from 'dayjs'
 
 export default function AllOrdersList() {
     const navigate = useNavigate()
+    const { messageApi } = useMessage()
     const { data: orders, isLoading, isError } = useQuery(queryOrder_GetAll())
     const page = OrdersListRoute.useSearch({
         select: data => data.page!,
@@ -26,12 +30,13 @@ export default function AllOrdersList() {
 
     return (
         <Table
+            key='all-orders-list'
             dataSource={orders ?? []}
             columns={[
                 {
                     title: 'No.',
                     render: (_, __, index) => index + 1,
-                    width: 50,
+                    width: 70,
                 },
                 {
                     title: 'Created At',
@@ -53,6 +58,8 @@ export default function AllOrdersList() {
                     title: 'Email',
                     dataIndex: 'email',
                     key: 'email',
+                    width: '200px',
+                    ellipsis: true,
                     ...searchColumnProps('email'),
                 },
                 {
@@ -66,26 +73,13 @@ export default function AllOrdersList() {
                     title: 'Status',
                     dataIndex: 'status_delivery',
                     key: 'status_delivery',
-                    render: value => (
-                        <Tag
-                            color={
-                                value === DeliveryStatus.CANCELED
-                                    ? 'red-inverse'
-                                    : value === DeliveryStatus.DELIVERED
-                                      ? 'green-inverse'
-                                      : value === DeliveryStatus.PENDING
-                                        ? 'default'
-                                        : 'blue-inverse'
-                            }
-                        >
-                            {value}
-                        </Tag>
-                    ),
+                    render: value => orderStatusTag(value),
                     filters: Object.values(DeliveryStatus).map(status => ({
                         text: status,
                         value: status,
                     })),
                     onFilter: (value, record) => record.status_delivery === value,
+                    align: 'center',
                 },
                 {
                     title: 'Action',
@@ -93,18 +87,21 @@ export default function AllOrdersList() {
                     key: 'action',
                     render: (_, record) => {
                         return (
-                            <Button
+                            <Dropdown.Button
+                                menu={{
+                                    items: [copyId(record.id, messageApi)],
+                                }}
                                 onClick={() => {
                                     navigate({
                                         to: OrdersViewRoute.to,
                                         params: {
-                                            id: record.id.toString(),
+                                            id: record.id,
                                         },
                                     })
                                 }}
                             >
                                 View
-                            </Button>
+                            </Dropdown.Button>
                         )
                     },
                 },

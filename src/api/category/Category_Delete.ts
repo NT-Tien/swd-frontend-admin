@@ -1,4 +1,5 @@
 import { ParseResponse } from '@/api/defaults'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import axios from 'axios'
 
 export type Category_Delete_Req = {
@@ -11,6 +12,9 @@ export type Category_Delete_Res = {
 
 export async function Category_Delete({ id }: Category_Delete_Req) {
     return await axios.delete<Category_Delete_Res>('category/delete/' + encodeURIComponent(id), {
+        headers: {
+            Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
+        },
         transformResponse: [
             ParseResponse,
             (res: ApiResponse<DeleteResponse>) => {

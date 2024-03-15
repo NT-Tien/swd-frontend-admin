@@ -73,10 +73,7 @@ export default function OrderDetails() {
                       ]
                     : []),
             ]}
-            pagination={{
-                pageSize: 5,
-                total: order.products.length,
-            }}
+            pagination={false}
         />
     )
 }

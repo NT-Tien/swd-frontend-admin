@@ -1,5 +1,5 @@
 import { queryAccount_GetById } from '@/api/account/Account_GetById'
-import { query_File_Show } from '@/api/file/File_Show'
+import { query_File_ShowPDF } from '@/api/file/File_ShowPDF'
 import { queryStaff_OrderDesigns_GetAll } from '@/api/staff/Staff_OrderDesigns_GetAll'
 import { DashboardLayoutRoute } from '@/layouts/DashboardLayout'
 import AuthenticationHandler from '@/lib/AuthenticationHandler'
@@ -34,7 +34,7 @@ export const OrderDesignViewRoute = createRoute({
         }
 
         const currentAccount = queryClient.ensureQueryData(queryAccount_GetById({ id: currentOrderDesign.user_id }))
-        const currentFile = queryClient.ensureQueryData(query_File_Show({ path: currentOrderDesign.file }))
+        const currentFile = queryClient.ensureQueryData(query_File_ShowPDF({ path: currentOrderDesign.file }))
 
         return {
             orderDesign: currentOrderDesign,

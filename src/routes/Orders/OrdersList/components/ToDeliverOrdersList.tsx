@@ -1,15 +1,18 @@
 import { queryDStaff_GetAll_OrderToDeliver } from '@/api/dstaff/DStaff_GetAll_OrderToDeliver'
+import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { Order } from '@/lib/types/Order'
+import { copyId } from '@/lib/util/copyId'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
 import { OrdersListRoute } from '@/routes/Orders/OrdersList'
 import { OrdersViewRoute } from '@/routes/Orders/OrdersView'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import { Button, Table } from 'antd'
+import { Dropdown, Table } from 'antd'
 import dayjs from 'dayjs'
 
 export default function ToDeliverOrdersList() {
     const navigate = useNavigate()
+    const { messageApi } = useMessage()
     const { data: orders, isLoading, isError } = useQuery(queryDStaff_GetAll_OrderToDeliver())
     const page = OrdersListRoute.useSearch({
         select: data => data.page!,
@@ -65,28 +68,26 @@ export default function ToDeliverOrdersList() {
                     ...searchColumnProps('total'),
                 },
                 {
-                    title: 'Status',
-                    dataIndex: 'status_delivery',
-                    key: 'status_delivery',
-                },
-                {
                     title: 'Action',
                     dataIndex: 'action',
                     key: 'action',
                     render: (_, record) => {
                         return (
-                            <Button
+                            <Dropdown.Button
+                                menu={{
+                                    items: [copyId(record.id, messageApi)],
+                                }}
                                 onClick={() => {
                                     navigate({
                                         to: OrdersViewRoute.to,
                                         params: {
-                                            id: record.id.toString(),
+                                            id: record.id,
                                         },
                                     })
                                 }}
                             >
                                 View
-                            </Button>
+                            </Dropdown.Button>
                         )
                     },
                 },

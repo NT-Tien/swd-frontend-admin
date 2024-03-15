@@ -2,6 +2,7 @@ import axios from 'axios'
 import { ParseResponse } from '../defaults'
 import { Product, ResponseToProduct } from '../../lib/types/Product'
 import { queryOptions } from '@tanstack/react-query'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
 
 export type Product_GetByName_Req = {
     name: string
@@ -11,6 +12,9 @@ export type Product_GetByName_Res = Product | null
 
 export async function Product_GetByName({ name }: Product_GetByName_Req) {
     return await axios.get<Product_GetByName_Res>('product/get-by-name/' + encodeURIComponent(name), {
+        headers: {
+            Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
+        },
         responseType: 'json',
         transformResponse: [
             ParseResponse,

@@ -1,4 +1,5 @@
 import { ParseResponse } from '@/api/defaults'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { Product, ResponseToProduct } from '@/lib/types/Product'
 import { queryOptions } from '@tanstack/react-query'
 import axios from 'axios'
@@ -11,6 +12,9 @@ export type Product_GetOne_Res = Product
 
 export async function Product_GetOne({ id }: Product_GetOne_Req) {
     return axios.get<Product_GetOne_Res>('product/get-one/' + encodeURIComponent(id), {
+        headers: {
+            Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
+        },
         responseType: 'json',
         transformResponse: [
             ParseResponse,

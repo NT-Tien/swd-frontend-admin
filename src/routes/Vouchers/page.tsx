@@ -1,22 +1,30 @@
 import Head from '@/common/components/Head'
 import RefreshButton from '@/common/components/RefreshButton'
+import { DashboardBreadcrumb } from '@/routes/Dashboard/DashboardBreadcrumb'
 import { VouchersRoute } from '@/routes/Vouchers'
+import { VouchersBreadcrumb } from '@/routes/Vouchers/breadcrumb'
 import CreateOrUpdateVoucherModal from '@/routes/Vouchers/modals/CreateOrUpdateVoucherModal'
 import { tabItems, tabKeys } from '@/routes/Vouchers/util/tabItems'
 import { Plus } from '@phosphor-icons/react'
-import { Button, Flex, Tabs, Typography } from 'antd'
-import { useState } from 'react'
+import { useNavigate } from '@tanstack/react-router'
+import { Breadcrumb, Button, Flex, Tabs, Typography } from 'antd'
 
 export default function VouchersPage() {
     const tab = VouchersRoute.useSearch({
         select: data => data.tab,
     })
-    const [currentTab, setCurrentTab] = useState(tab)
+    const navigate = useNavigate()
 
     return (
         <>
             <Head title='Vouchers' />
-            <Flex vertical gap={0}>
+            <Breadcrumb
+                style={{
+                    marginBottom: '5px',
+                }}
+                items={[DashboardBreadcrumb(), VouchersBreadcrumb({ isCurrent: true })]}
+            />
+            <Flex vertical>
                 <Typography.Title
                     level={2}
                     style={{
@@ -26,14 +34,19 @@ export default function VouchersPage() {
                     }}
                 >
                     Vouchers List
-                    <RefreshButton isLoading={false} queryKey={currentTab === 'all' ? ['vouchers'] : ['vouchers-disabled']} />
+                    <RefreshButton isLoading={false} queryKey={tab === 'all' ? ['vouchers'] : ['vouchers-disabled']} />
                 </Typography.Title>
                 <Tabs
-                    defaultActiveKey={currentTab}
-                    activeKey={currentTab}
+                    defaultActiveKey={tab}
+                    activeKey={tab}
                     items={tabItems}
                     onTabClick={tab => {
-                        setCurrentTab(tab as tabKeys)
+                        navigate({
+                            to: VouchersRoute.to,
+                            search: {
+                                tab: tab as tabKeys,
+                            },
+                        })
                     }}
                     tabBarExtraContent={
                         <CreateOrUpdateVoucherModal>

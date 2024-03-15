@@ -4,15 +4,24 @@ import RefreshButton from '@/common/components/RefreshButton'
 import { useMessage } from '@/common/context/MessageContext/useMessage'
 import { WalletTransaction } from '@/lib/types/WalletTransaction'
 import GetColumnSearchProps from '@/lib/util/getColumnSearchProps'
+import { DashboardBreadcrumb } from '@/routes/Dashboard/DashboardBreadcrumb'
+import { TransactionListRoute } from '@/routes/Transactions/TransactionList'
+import { TransactionListBreadcrumb } from '@/routes/Transactions/TransactionList/breadcrumb'
 import { useQuery } from '@tanstack/react-query'
-import { Dropdown, Flex, Table, Typography } from 'antd'
+import { useNavigate } from '@tanstack/react-router'
+import { Breadcrumb, Dropdown, Flex, Table, Typography } from 'antd'
 import dayjs from 'dayjs'
-import { useState } from 'react'
 
 export default function TransactionListPage() {
+    const navigate = useNavigate()
     const { data: transactions, isLoading, isError } = useQuery(queryWalletTransaction_GetAll())
-    const [pageSize, setPageSize] = useState(8)
     const { messageApi } = useMessage()
+    const page = TransactionListRoute.useSearch({
+        select: data => data.page,
+    })
+    const size = TransactionListRoute.useSearch({
+        select: data => data.size,
+    })
 
     const searchColumnProps = GetColumnSearchProps<WalletTransaction>()
 
@@ -23,7 +32,13 @@ export default function TransactionListPage() {
     return (
         <>
             <Head title='Wallet Transactions' />
-            <Flex vertical gap={0}>
+            <Flex vertical>
+                <Breadcrumb
+                    style={{
+                        marginBottom: '5px',
+                    }}
+                    items={[DashboardBreadcrumb(), TransactionListBreadcrumb({ isCurrent: true })]}
+                />
                 <Typography.Title
                     level={2}
                     style={{
@@ -102,12 +117,28 @@ export default function TransactionListPage() {
                         },
                     ]}
                     pagination={{
-                        pageSize,
+                        defaultCurrent: page,
+                        pageSize: size,
                         total: transactions?.length,
                         pageSizeOptions: ['8', '16', '24', '32'],
                         showSizeChanger: true,
-                        onShowSizeChange(_, size) {
-                            setPageSize(size)
+                        onShowSizeChange(page, size) {
+                            navigate({
+                                to: TransactionListRoute.to,
+                                search: {
+                                    page,
+                                    size,
+                                },
+                            })
+                        },
+                        onChange: (page, size) => {
+                            navigate({
+                                to: TransactionListRoute.to,
+                                search: {
+                                    page,
+                                    size,
+                                },
+                            })
                         },
                         showTotal: (total, range) => {
                             return `${range[0]}-${range[1]} of ${total} items`

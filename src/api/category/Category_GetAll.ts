@@ -1,4 +1,5 @@
 import { ParseResponse } from '@/api/defaults'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { Category, ResponseToCategoryList } from '@/lib/types/Category'
 import { queryOptions } from '@tanstack/react-query'
 import axios from 'axios'
@@ -12,6 +13,9 @@ export type Category_GetAll_Res = GetResponse<Category>
  */
 export async function Category_GetAll() {
     return await axios.get<Category_GetAll_Res>('/category/get-all', {
+        headers: {
+            Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
+        },
         transformResponse: [
             ParseResponse,
             (res: ApiResponse<string[]>) => {

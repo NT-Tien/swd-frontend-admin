@@ -1,4 +1,5 @@
 import { ParseResponse } from '@/api/defaults'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { ResponseToVoucher, Voucher } from '@/lib/types/Voucher'
 import { queryOptions } from '@tanstack/react-query'
 import axios from 'axios'
@@ -18,6 +19,9 @@ export type Voucher_GetOneByCode_Res = Voucher | null
  */
 export function Voucher_GetOneByCode({ code }: Voucher_GetOneByCode_Req) {
     return axios.get<Voucher_GetOneByCode_Res>('voucher/get-one-with-code/' + encodeURIComponent(code), {
+        headers: {
+            Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
+        },
         responseType: 'json',
         transformResponse: [
             ParseResponse,

@@ -6,6 +6,7 @@
  * @throws {Error} If an error occurs while creating the category.
  */
 import { ParseResponse } from '@/api/defaults'
+import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { Category, ResponseToCategory } from '@/lib/types/Category'
 import axios from 'axios'
 
@@ -16,6 +17,9 @@ export type Category_Create_Res = Category
 
 export async function Category_Create(payload: Category_Create_Req) {
     return await axios.post<Category_Create_Res>('category/create', payload, {
+        headers: {
+            Authorization: `Bearer ${AuthenticationHandler.getMemoryToken()}`,
+        },
         transformResponse: [
             ParseResponse,
             (data: ApiResponse<Category>) => {
