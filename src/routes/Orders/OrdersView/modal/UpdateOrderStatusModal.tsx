@@ -4,7 +4,7 @@ import { OrdersViewRoute } from '@/routes/Orders/OrdersView'
 import { updateOrderStatusFn } from '@/routes/Orders/OrdersView/util/UpdateOrderStatusFn'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import { Button, Form, Modal, Select } from 'antd'
+import { Button, Form, Modal, Popconfirm, Select } from 'antd'
 import { ReactNode, useState } from 'react'
 
 type UpdateOrderStatusModalProps = {
@@ -86,17 +86,22 @@ export default function UpdateOrderStatusModal({ children }: UpdateOrderStatusMo
                         <Button onClick={handleClose}>Cancel</Button>,
                         <Form.Item<FieldType> shouldUpdate={(prev, curr) => prev !== curr} noStyle>
                             {() => (
-                                <Button
-                                    form='add-category-form'
-                                    htmlType='submit'
-                                    color='primary'
-                                    type='primary'
-                                    onClick={() => form.submit()}
-                                    loading={updateOrderStatusMutation.isPending}
-                                    disabled={form.getFieldsValue().status === order?.currentStatus}
+                                <Popconfirm
+                                    title="Warning. This action can't be undone."
+                                    description={`Are you sure you want to update the order status to ${form.getFieldsValue().status}?`}
+                                    onConfirm={form.submit}
                                 >
-                                    Submit
-                                </Button>
+                                    <Button
+                                        form='add-category-form'
+                                        htmlType='submit'
+                                        color='primary'
+                                        type='primary'
+                                        loading={updateOrderStatusMutation.isPending}
+                                        disabled={form.getFieldsValue().status === order?.currentStatus}
+                                    >
+                                        Submit
+                                    </Button>
+                                </Popconfirm>
                             )}
                         </Form.Item>,
                     ]}
