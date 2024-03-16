@@ -1,5 +1,6 @@
 import { queryAccount_GetById } from '@/api/account/Account_GetById'
 import { Order_GetAll, queryKeyOrder_GetAll } from '@/api/order/Order_GetAll'
+import LoadingComponent from '@/common/components/LoadingComponent'
 import { DashboardLayoutRoute } from '@/layouts/DashboardLayout'
 import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { Role } from '@/lib/types/Account'
@@ -55,7 +56,7 @@ export const OrdersViewRoute = createRoute({
         return <Navigate to={OrdersListRoute.to} search={{ tab: 'all' }} />
     },
     pendingComponent: () => {
-        return <div>LOADING...</div>
+        return <LoadingComponent />
     },
     validateSearch: (search: Record<string, unknown>) => {
         return {

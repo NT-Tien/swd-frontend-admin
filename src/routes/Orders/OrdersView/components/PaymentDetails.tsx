@@ -92,7 +92,14 @@ export default function PaymentDetails() {
                     />
                 </>
             ) : (
-                <Typography.Text type='danger'>Payment details not found</Typography.Text>
+                <Card
+                    style={{
+                        display: 'grid',
+                        placeItems: 'center',
+                    }}
+                >
+                    <Typography.Title level={4}>No payments have been made</Typography.Title>
+                </Card>
             )}
         </div>
     )

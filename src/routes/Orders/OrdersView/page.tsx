@@ -1,5 +1,3 @@
-// TODO: Check breadcrumb back navigation for roles
-
 import Head from '@/common/components/Head'
 import AuthenticationHandler from '@/lib/AuthenticationHandler'
 import { Role, isAuthorized } from '@/lib/types/Account'

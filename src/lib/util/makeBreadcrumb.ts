@@ -29,7 +29,10 @@ export default function makeBreadcrumb({ show = true, isCopyable = false, ...pro
                           window.navigator.clipboard.writeText(title ?? '')
                           message.success('Copied to clipboard!')
                       }
-                    : props.onClick,
+                    : show
+                      ? props.onClick
+                      : undefined,
+
             className: 'enabled-breadcrumb',
         }) satisfies Partial<BreadcrumbItemType & BreadcrumbSeparatorType>
 }
