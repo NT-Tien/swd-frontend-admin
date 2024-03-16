@@ -68,7 +68,7 @@ export default function QuickStats() {
                         <Card
                             bordered={false}
                             style={{
-                                boxShadow: token.boxShadowSecondary,
+                                // boxShadow: token.boxShadowSecondary,
                                 borderRadius: token.borderRadiusLG,
                             }}
                         >

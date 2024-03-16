@@ -144,8 +144,8 @@ export default function AllOrdersList() {
                 showQuickJumper: true,
             }}
             loading={isLoading}
-            summary={data => {
-                const totalRevenue = data.reduce((acc, curr) => acc + parseFloat(curr.total), 0)
+            summary={() => {
+                const totalRevenue = orders?.reduce((acc, curr) => acc + parseFloat(curr.total), 0) ?? 0
 
                 return (
                     <Table.Summary.Row>
