@@ -27,7 +27,7 @@ export default function AllAccountsList() {
     const size = AccountListRoute.useSearch({
         select: data => data.size!,
     })
-    const { data: accounts, isLoading, isError } = useQuery(queryAccount_GetAll({ page, size }))
+    const { data: accounts, isLoading, isError } = useQuery(queryAccount_GetAll({ page: 1, size: 1000 }))
     const searchColumnProps = GetColumnSearchProps<Account>()
     const searchDateColumnProps = GetColumnDateSearchProps<Account>()
     const { messageApi } = useMessage()
@@ -79,7 +79,7 @@ export default function AllAccountsList() {
                                             title: 'Created At',
                                             dataIndex: 'createdAt',
                                             key: 'createdAt',
-                                            render: value => dayjs(value).format('DD-MM-YYYY'),
+                                            render: value => dayjs(value).format('DD-MM-YYYY HH:mm:ss'),
                                             sorter: (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
                                             sortDirections: ['ascend', 'descend'],
                                             defaultSortOrder: 'descend',
@@ -89,7 +89,7 @@ export default function AllAccountsList() {
                                             title: 'Updated At',
                                             dataIndex: 'updatedAt',
                                             key: 'updatedAt',
-                                            render: value => dayjs(value).format('DD-MM-YYYY'),
+                                            render: value => dayjs(value).format('DD-MM-YYYY HH:mm:ss'),
                                             sorter: (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime(),
                                             sortDirections: ['ascend', 'descend'],
                                             ...searchDateColumnProps('updatedAt'),
