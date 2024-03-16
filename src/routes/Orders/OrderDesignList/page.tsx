@@ -59,7 +59,7 @@ export default function OrderDesignListPage() {
                         {
                             title: 'No.',
                             render: (_, __, i) => i + 1,
-                            width: 50,
+                            width: 70,
                         },
                         {
                             title: 'Username',

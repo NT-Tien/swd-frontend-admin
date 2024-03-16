@@ -112,6 +112,11 @@ export default function OrdersViewPage() {
                             children: order.email,
                         },
                         {
+                            label: 'Address',
+                            key: 'address',
+                            children: order.address,
+                        },
+                        {
                             label: 'Phone',
                             key: 'phone',
                             children: order.phone,

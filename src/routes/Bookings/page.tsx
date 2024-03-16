@@ -56,6 +56,7 @@ export default function BookingsPage() {
                                 {
                                     title: 'No.',
                                     render: (_, __, index) => index + 1 + (page - 1) * size,
+                                    width: 70,
                                 },
                                 {
                                     key: 'customer_name',

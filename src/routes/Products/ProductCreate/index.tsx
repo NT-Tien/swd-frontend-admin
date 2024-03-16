@@ -6,7 +6,7 @@ import { createRoute, defer, lazyRouteComponent, redirect } from '@tanstack/reac
 
 export const ProductCreateRoute = createRoute({
     beforeLoad: async () => {
-        await AuthenticationHandler.authorize(Role.STAFF, loginRoute => {
+        await AuthenticationHandler.authorize(Role.ADMIN, loginRoute => {
             throw redirect({
                 to: loginRoute,
                 search: {

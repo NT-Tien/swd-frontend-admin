@@ -115,7 +115,7 @@ function DashboardLayout() {
                             getItem_2({
                                 key: ProductCreateRoute.to,
                                 label: 'Create Product',
-                                shown: isAuthorized(Role.STAFF, currentRole),
+                                shown: isAuthorized(Role.ADMIN, currentRole),
                                 onClick: () => navigate({ to: ProductCreateRoute.to }),
                             }),
                         ],
