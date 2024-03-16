@@ -139,7 +139,10 @@ export default class AuthenticationHandler {
 
             // * No idea if this works lmao
             const currentToken = this.getCookieToken()
-            const decodedJwt = jwtDecode(currentToken || '') as {
+            if (!currentToken) {
+                return 'placeholder@email.com'
+            }
+            const decodedJwt = jwtDecode(currentToken) as {
                 email: string
             }
             Cookies.set('token_email', decodedJwt.email)

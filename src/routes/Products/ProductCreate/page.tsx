@@ -210,7 +210,9 @@ export default function ProductCreatePage() {
                                 fileList={form.getFieldValue('images')}
                                 listType='picture'
                                 showUploadList
-                                beforeUpload={() => false}
+                                beforeUpload={() => {
+                                    return false
+                                }}
                                 onRemove={file => {
                                     form.setFieldValue(
                                         'images',
@@ -219,7 +221,11 @@ export default function ProductCreatePage() {
                                 }}
                                 // onPreview={file => handleOpen(file)}
                                 onChange={info => {
-                                    form.setFieldValue('images', info.fileList)
+                                    const fileList = info.fileList.filter(file => file.type?.startsWith('image/'))
+                                    if (fileList.length !== info.fileList.length) {
+                                        messageApi.error('You can only upload image files!')
+                                    }
+                                    form.setFieldValue('images', fileList)
                                     refresh()
                                 }}
                             >
