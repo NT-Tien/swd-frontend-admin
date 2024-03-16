@@ -189,6 +189,10 @@ export default function CreateOrUpdateVoucherModal({ children }: CreateVoucherMo
                                 },
                                 {
                                     validator: async (_, value) => {
+                                        if (currentVoucher !== undefined) {
+                                            return Promise.resolve()
+                                        }
+
                                         const exists = await Voucher_GetOneByCode({ code: value })
                                         if (exists.data === null) {
                                             return Promise.resolve()

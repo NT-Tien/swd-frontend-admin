@@ -21,7 +21,7 @@ export default function BookingsPage() {
     const size = BookingsRoute.useSearch({
         select: data => data.size!,
     })
-    const { data: bookings, isLoading, isError } = useQuery(queryBookingVisit_GetAll({ page, limit: size }))
+    const { data: bookings, isLoading, isError } = useQuery(queryBookingVisit_GetAll({ page: 1, limit: 2000 }))
     const searchColumnProps = GetColumnSearchProps<BookingVisit>()
     const searchColumnDateProps = GetColumnDateSearchProps<BookingVisit>()
 
